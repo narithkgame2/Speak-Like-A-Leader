@@ -144,6 +144,7 @@ main{ max-width:680px; margin:0 auto; padding:24px 18px calc(var(--tabh) + 44px 
 .row-actions{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:12px; }
 .legend{ font-size:0.8rem; color:var(--dim); display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
 .builder{ display:grid; gap:12px; }
+.builder input.need{ border-color:var(--red); box-shadow:0 0 0 3px color-mix(in srgb, var(--red) 18%, transparent); }
 .builder label, .settings label{ display:grid; gap:6px; font-size:0.86rem; font-weight:500; color:var(--dim); }
 input:not([type]), input[type=text], select, textarea{ width:100%; background:var(--card); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font:400 0.98rem/1.5 var(--sans); }
 input:focus, select:focus, textarea:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent); }
@@ -487,13 +488,13 @@ const LESSONS = [
   { title:"Introduce yourself",
     sub:"Your name alone is forgettable. The sentence after your name is what people remember and repeat.",
     rule:"Short name, then one line that says what you do for people. Match the setting.",
-    why:"\"I'm Nick, CEO of a real estate company\" gives people a name, a title and a category, and they forget all three. A strong intro has <b>one memorable line</b>: who you help, and what you help them get or avoid. The setting decides the order. <b>Across a table</b>: a short name first, then the line. <b>On a stage or in a pitch</b>: an idea first, then your name. <b>In a formal Japanese meeting</b>: name and company first, done properly, and you stand out later through calm and precision.",
+    why:"\"I'm Alex, head of sales at a software company\" gives people a name, a title and a category, and they forget all three. A strong intro has <b>one memorable line</b>: who you help, and what you help them get or avoid. The setting decides the order. <b>Across a table</b>: a short name first, then the line. <b>On a stage or in a pitch</b>: an idea first, then your name. <b>In a formal meeting abroad</b>: follow their greeting ritual first, done properly, and stand out later through calm and precision.",
     pairs:[
-      {moment:"Across a table", normal:"Hi, my name is Nick, I'm the CEO of Property Hub Cambodia, we are a real estate company in Phnom Penh.", better:"Good to meet you. I'm Nick. ‧‧‧ I help foreign investors buy in Cambodia without making expensive mistakes.", note:"A short name, then a line they can repeat to someone else."},
-      {moment:"On a stage or in a pitch", normal:"Hello everyone, my name is Nick, and today I'm going to talk about investing in Cambodia.", better:"Many foreign buyers make one expensive mistake on their first purchase. ‧‧‧ My job is to prevent it. ‧‧‧ I'm Nick.", note:"Idea first, name last. Only make a claim you can back up if someone asks."},
-      {moment:"Formal Japanese meeting", normal:"[skipping the ritual to open with a clever line]", better:"はじめまして。Property Hub Cambodiaのニックと申します。", note:"Here the ritual is the respect. Stand out through calm and precision, not by breaking the form.", lang:"ja-JP"}],
-    drill:{ tag:"Your table intro. Short name, pause, then the line.", script:[["Good to meet you.",null],["","pause"],["I'm Nick.",null],["","pause"],["I help foreign investors buy in Cambodia","stress"],["without making expensive mistakes.","down"]],
-      note:"Once you've built your own line below, drill that instead. Say it until it sounds like something you'd say at dinner, not like a slogan." },
+      {moment:"Across a table", normal:"Hi, my name is {name}, I'm the head of a team at our company, and we do a lot of different things.", better:"Good to meet you. I'm {name}. ‧‧‧ {intro}", note:"A short name, then a line they can repeat to someone else."},
+      {moment:"On a stage or in a pitch", normal:"Hello everyone, my name is {name}, and today I'm going to talk about our work.", better:"Most teams make one expensive mistake with every new project. ‧‧‧ My job is to prevent it. ‧‧‧ I'm {name}.", note:"Idea first, name last. Only make a claim you can back up if someone asks."},
+      {moment:"Formal meeting abroad", normal:"[skipping their greeting ritual to open with a clever line]", better:"[greet the way they do: a slight bow, your card offered with both hands] ‧‧‧‧‧ Thank you for meeting us today.", note:"Here the ritual is the respect. Stand out through calm and precision, not by breaking the form.", noPlay:true}],
+    drill:{ tag:"Your table intro. Short name, pause, then the line.", script:[["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null]],
+      note:"This is your own line from your profile. Say it until it sounds like something you'd say at dinner, not like a slogan." },
     builder:true,
     practice:{ secs:10, note:"Get a setting, start the timer, and introduce yourself for that setting in under 10 seconds.", list:["Networking event, a stranger asks what you do","First meeting with a potential investor","You're on a panel, introduced third","Phone call with someone you've never met","A senior person you admire, a chance meeting","Formal meeting with a Japanese company"] },
     own:"Write your final table introduction and your final stage introduction. Say both until they sound like you, not like a script." },
@@ -503,7 +504,7 @@ const LESSONS = [
     rule:"Be precise. Ask sharp questions. Say less than they expect.",
     why:"Senior people judge intelligence by <b>precision</b> (exact numbers, short sentences), <b>questions</b> that show you understand their situation, <b>listening</b> (answering the real question, not the one you prepared for), and <b>brevity</b>. Two more signals: when you don't know, say so and give a time, because a guessed number destroys trust once it's discovered. And when you're challenged, ask instead of defending. Defending sounds nervous. A question sounds secure.",
     pairs:[
-      {moment:"Showing you did your homework", normal:"So, tell me about your company.", better:"You opened in Vietnam last year. ‧‧‧ What made Cambodia the next step?", note:"A specific question impresses people more than anything you say about yourself."},
+      {moment:"Showing you did your homework", normal:"So, tell me about your company.", better:"You opened in Singapore last year. ‧‧‧ What made this market the next step?", note:"A specific question impresses people more than anything you say about yourself."},
       {moment:"A question you can't answer", normal:"Um, I'm not sure… maybe around eight percent? I think.", better:"I don't want to give you a rough number on that. ‧‧‧ I'll send you the exact figure tomorrow.", note:"Honesty with a deadline sounds more competent than a guess."},
       {moment:"Being challenged: \"Your numbers look optimistic.\"", normal:"No, no, they're realistic, we checked very carefully, really.", better:"Fair question. ‧‧‧ Which number concerns you most?", note:"The question finds the real doubt, and shows you're not afraid of it."}],
     drill:{ tag:"Answer first, then one reason, then stop.", script:[["Fair question.",null],["","pause"],["Which number concerns you most?",null],["","pause-long"],["[they answer]","note"],["That figure is based on the last three years.",null],["","pause"],["I'll send you the full data today.","down"]],
@@ -518,8 +519,8 @@ const LESSONS = [
     pairs:[
       {moment:"Opening a meeting you asked for", normal:"Thank you so much for your time, I know you're very busy, I'll try to be quick.", better:"Thank you for your time. ‧‧‧ I'd like to cover two things, and I'd value your view on the second.", note:"Apologizing for their time tells them your time is worth less."},
       {moment:"Closing the meeting", normal:"So… yeah, that's all. Thank you.", better:"To summarize: ‧‧‧ we agree the timing works. ‧‧‧ The next step is a proposal by Friday. ‧‧‧ Does that work for you?", note:"The last thing you say is what they remember. Make it the point and the next step."}],
-    drill:{ tag:"The full opening. Record a video of this, from sitting down to the purpose.", script:[["[sit, settle, breathe out, look up]","note"],["Good to meet you.",null],["","pause"],["I'm Nick.",null],["","pause"],["I help foreign investors buy in Cambodia without making expensive mistakes.",null],["","pause-long"],["Thank you for your time.",null],["","pause"],["I'd like to cover two things today,",null],["and I'd value your view on the second.","down"]],
-      note:"Final check: compare this video with your first recording from Lesson 1. The difference is your progress. Then replace the introduction line with your own from Lesson 6." },
+    drill:{ tag:"The full opening. Record a video of this, from sitting down to the purpose.", script:[["[sit, settle, breathe out, look up]","note"],["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null],["","pause-long"],["Thank you for your time.",null],["","pause"],["I'd like to cover two things today,",null],["and I'd value your view on the second.","down"]],
+      note:"Final check: compare this video with your first recording from Lesson 1. The difference is your progress." },
     own:"Write the opening and closing for a real meeting you have coming up. Practice both out loud the day before." }
 ];
 const SCENARIOS = [
@@ -543,7 +544,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Good to meet you, Mr. *Lee*. I'm *Nick*. ‧‧‧ I help foreign *investors* buy property in Cambodia without making *expensive* mistakes.",
+    "Good to meet you, Mr. *Lee*. I'm {name}. ‧‧‧ {intro}",
     "Short name, then the line he can repeat to James."
    ],
    [
@@ -552,25 +553,25 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "*Two* things. ‧‧‧ Where the *market* is going, ‧‧‧ and whether it *fits* what you're looking for. ↘",
+    "*Two* things. ‧‧‧ Where our *market* is going, ‧‧‧ and whether it *fits* what you're looking for. ↘",
     "Purpose first. No apology for his time."
    ],
    [
     "them",
-    "I've heard Cambodia is risky for foreigners."
+    "I've heard your market is risky right now."
    ],
    [
     "you",
-    "‧‧‧ It *can* be. ‧‧‧ Most of the risk comes from *three* things: ‧‧‧ *ownership* structure, ‧‧‧ *developer* quality, ‧‧‧ and *paperwork*. ↘ ‧‧‧ Each one can be *checked* before you buy.",
+    "‧‧‧ It *can* be. ‧‧‧ Most of the risk comes from *three* things: ‧‧‧ *timing*, ‧‧‧ *execution*, ‧‧‧ and *cash* flow. ↘ ‧‧‧ Each one can be *checked* before you commit.",
     "Agree with what's true. Then a structure of three."
    ],
    [
     "them",
-    "And why should I trust you to check them?"
+    "And why should I trust your judgment on that?"
    ],
    [
     "you",
-    "Fair *question*. ‧‧‧ You *shouldn't* trust me yet. ‧‧‧ Ask me to *show* you how I checked the last project I recommended, ‧‧‧ and *decide* from that. ↘",
+    "Fair *question*. ‧‧‧ You *shouldn't* trust me yet. ‧‧‧ Ask me to *show* you how we handled our last big decision, ‧‧‧ and *decide* from that. ↘",
     "The strongest line in the meeting. Don't defend: offer proof."
    ],
    [
@@ -584,11 +585,11 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "Mostly rental income. Maybe two hundred thousand to start."
+    "Mostly steady income. Maybe two hundred thousand to start."
    ],
    [
     "you",
-    "That's *clear*. ‧‧‧ Here's what I *suggest*. ‧‧‧ I'll send you *two* options that fit, with the full *risk* check, ‧‧‧ by *Friday*. ‧‧‧ Then we meet for *thirty* minutes, ‧‧‧ and *you* decide if it's worth going further. ↘",
+    "That's *clear*. ‧‧‧ Here's what I *suggest*. ‧‧‧ I'll send you *two* options that fit, with the full *risk* picture, ‧‧‧ by *Friday*. ‧‧‧ Then we meet for *thirty* minutes, ‧‧‧ and *you* decide if it's worth going further. ↘",
     "Summary, next step, a date. He decides, which feels respectful and confident."
    ],
    [
@@ -634,16 +635,16 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "Mostly new clients from Japan, actually."
+    "Mostly new clients from abroad, actually."
    ],
    [
     "you",
-    "*Interesting*. ‧‧‧ I work with many *Japanese* clients too. ‧‧‧ What have *you* learned about working with them?",
+    "*Interesting*. ‧‧‧ We've been growing *internationally* too. ‧‧‧ What have *you* learned about working across borders?",
     "Common ground, then his opinion. People like people who value their view."
    ],
    [
     "them",
-    "That they decide slowly. But once they decide, they stay."
+    "That new clients decide slowly. But once they decide, they stay."
    ],
    [
     "you",
@@ -676,26 +677,26 @@ const SCENARIOS = [
   "lines": [
    [
     "them",
-    "And Nick, tell us a bit about yourself."
+    "And {name}, tell us a bit about yourself."
    ],
    [
     "you",
-    "‧‧‧ Thank you. ‧‧‧ I help foreign *investors* buy property in *Cambodia*, ‧‧‧ without making *expensive* mistakes. ↘",
+    "‧‧‧ Thank you. ‧‧‧ {intro} ↘",
     "Pause, then your one line. Not your CV."
    ],
    [
     "you",
-    "‧‧‧ I started because I saw how many buyers trusted the *brochure*, ‧‧‧ instead of the *paperwork*. ↘",
-    "The reason you started, in one sentence. Use your real reason."
+    "‧‧‧ I started because I saw how many good ideas *died* in meetings, ‧‧‧ because nobody could *explain* them. ↘",
+    "The reason you started, in one sentence. Replace it with your real reason."
    ],
    [
     "you",
-    "‧‧‧ Today we work in *four* languages, ‧‧‧ so every buyer understands *exactly* what they sign. ↘",
-    "One concrete fact that makes you different."
+    "‧‧‧ Today my team works across *four* countries, ‧‧‧ so we see the *same* mistakes everywhere. ↘",
+    "One concrete fact that makes you different. Use a true one."
    ],
    [
     "you",
-    "‧‧‧ And the *one* thing I tell every client: ‧‧‧ *never* pay before you've read the contract. ↘",
+    "‧‧‧ And the *one* thing I tell every team: ‧‧‧ *decide* before you discuss the details. ↘",
     "End with a message, not \"so yeah, that's me\"."
    ],
    [
@@ -704,7 +705,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ Buying the *view*, ‧‧‧ not the *building*. ↘",
+    "‧‧‧ Talking about the *plan*, ‧‧‧ not the *decision*. ↘",
     "Short answers get remembered and quoted."
    ],
    [
@@ -713,7 +714,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "A beautiful *view* sells the unit. ‧‧‧ But the building's *management* decides if it keeps its value. ‧‧‧ Check the *management*, ‧‧‧ not just the *balcony*. ↘",
+    "A good plan gets *attention*. ‧‧‧ But only a clear *decision* moves the work. ‧‧‧ Ask for the *decision*, ‧‧‧ not just the *feedback*. ↘",
     "Explain in three short sentences, then stop."
    ]
   ]
@@ -721,7 +722,7 @@ const SCENARIOS = [
  {
   "cat": "Presenting and persuading",
   "title": "Opening and Closing a Presentation",
-  "setting": "An industry event. Thirty people, ten minutes, and you're the third speaker. Half the room is on their phones.",
+  "setting": "A conference. Thirty people, ten minutes, and you're the third speaker. Half the room is on their phones.",
   "goal": "Get attention in the first 20 seconds, and leave one message they remember.",
   "them": "Audience",
   "lessons": [
@@ -738,17 +739,17 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Many foreign buyers make *one* expensive mistake on their *first* purchase here. ↘",
+    "Most teams make *one* expensive mistake with every new *project*. ↘",
     "Idea first, not your name."
    ],
    [
     "you",
-    "‧‧‧‧‧ They trust the *brochure*, ‧‧‧ instead of the *paperwork*. ↘",
+    "‧‧‧‧‧ They start with the *solution*, ‧‧‧ instead of the *problem*. ↘",
     "Let the silence do the work before this line."
    ],
    [
     "you",
-    "‧‧‧ I'm *Nick*. ‧‧‧ My job is to *prevent* that mistake. ‧‧‧ In the next *ten* minutes, ‧‧‧ I'll show you the *three* documents to check before you pay anything. ↘",
+    "‧‧‧ I'm {name}. ‧‧‧ My job is to *prevent* that mistake. ‧‧‧ In the next *ten* minutes, ‧‧‧ I'll show you the *three* questions to ask before you start anything. ↘",
     "Name, then a promise the room can hold you to."
    ],
    [
@@ -757,12 +758,12 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "So: *three* documents. ‧‧‧ The *title*. ‧‧‧ The developer's *license*. ‧‧‧ And the contract terms for *delays*. ↘",
+    "So: *three* questions. ‧‧‧ *Who* is it for? ‧‧‧ What *problem* does it solve? ‧‧‧ And how will we *know* it worked? ↘",
     "Summary in one breath."
    ],
    [
     "you",
-    "‧‧‧‧‧ If you remember *one* thing today: ‧‧‧ *never* pay before you've seen all *three*. ↘",
+    "‧‧‧‧‧ If you remember *one* thing today: ‧‧‧ *never* start before you can answer all *three*. ↘",
     "The line they'll repeat tomorrow."
    ],
    [
@@ -772,11 +773,11 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "What if the developer refuses to show the license?"
+    "What if the boss has already decided on the solution?"
    ],
    [
     "you",
-    "‧‧‧ Then you *have* your answer. ‧‧‧ Walk *away*. ↘",
+    "‧‧‧ Then ask the *three* questions *anyway*. ‧‧‧ Out *loud*. ↘",
     "Short answers show more authority than long ones."
    ]
   ]
@@ -784,9 +785,9 @@ const SCENARIOS = [
  {
   "cat": "Presenting and persuading",
   "title": "A Story That Persuades",
-  "setting": "An investor challenges the value of your work. Instead of arguing, you tell one short, true story. Replace this story with a real one from your own experience.",
+  "setting": "A client challenges the value of your work. Instead of arguing, you tell one short, true story. Replace this story with a real one from your own experience.",
   "goal": "Persuade with one story in under 60 seconds.",
-  "them": "Investor",
+  "them": "Client",
   "lessons": [
    2,
    3,
@@ -795,31 +796,31 @@ const SCENARIOS = [
   "lines": [
    [
     "them",
-    "Honestly, why do I need an advisor? I can buy directly from the developer."
+    "Honestly, why do we need you? We could do this ourselves."
    ],
    [
     "you",
-    "‧‧‧ You *can*. ‧‧‧ Let me tell you about a *client* from last year. ↘",
+    "‧‧‧ You *could*. ‧‧‧ Let me tell you about a *client* from last year. ↘",
     "Agree with what's true, then a story instead of an argument."
    ],
    [
     "you",
-    "He found a unit he *loved*, ‧‧‧ at a *good* price, ‧‧‧ directly from the *developer*.",
+    "They had a plan they *loved*, ‧‧‧ a *good* budget, ‧‧‧ and a team ready to *start*.",
     "Set the scene fast. One sentence."
    ],
    [
     "you",
-    "‧‧‧ Before he *signed*, ‧‧‧ we checked the *contract*. ‧‧‧ There was *no* penalty if the handover was late. ‧‧‧ *None*. ↘",
+    "‧‧‧ Before they *signed*, ‧‧‧ we checked the *contract*. ‧‧‧ There was *no* penalty if the supplier was late. ‧‧‧ *None*. ↘",
     "The turning point. Slow down here."
    ],
    [
     "you",
-    "‧‧‧‧‧ We asked for a *clause*. ‧‧‧ The developer *agreed*. ‧‧‧ The handover was *fourteen* months late, ‧‧‧ and he was compensated for *every* month. ↘",
+    "‧‧‧‧‧ We asked for a *clause*. ‧‧‧ The supplier *agreed*. ‧‧‧ The delivery was *fourteen* months late, ‧‧‧ and they were compensated for *every* month. ↘",
     "The result, with a specific number."
    ],
    [
     "you",
-    "‧‧‧ *That's* what an advisor is for. ‧‧‧ Not *finding* the unit. ‧‧‧ *Protecting* you after you find it. ↘",
+    "‧‧‧ *That's* what we're for. ‧‧‧ Not *making* the plan. ‧‧‧ *Protecting* you after you make it. ↘",
     "State the point once, at the end."
    ],
    [
@@ -987,12 +988,12 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ Last year's approach worked for *local* buyers. ‧‧‧ *This* year, ‧‧‧ most of our inquiries come from *overseas*. ↘",
+    "‧‧‧ Last year's approach worked for *local* customers. ‧‧‧ *This* year, ‧‧‧ most of our new customers come from *online*. ↘",
     "Connect to what was said, then the new fact."
    ],
    [
     "you",
-    "‧‧‧‧‧ Overseas buyers *can't* visit before they decide. ‧‧‧ So we need to show them *everything* online first. ↘",
+    "‧‧‧‧‧ Online customers *can't* meet us before they decide. ‧‧‧ So we need to show them *everything* on the website first. ↘",
     "The pause before this line makes the room look at you."
    ],
    [
@@ -1001,7 +1002,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "*Three* things: ‧‧‧ video *walkthroughs*, ‧‧‧ documents in *their* language, ‧‧‧ and *one* advisor they can call. ↘ ‧‧‧ I can bring a *proposal* next week.",
+    "*Three* things: ‧‧‧ short *videos*, ‧‧‧ answers in *their* language, ‧‧‧ and *one* person they can call. ↘ ‧‧‧ I can bring a *proposal* next week.",
     "Structure of three, then offer to own it."
    ],
    [
@@ -1047,11 +1048,11 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "They mainly find the property and handle the paperwork."
+    "They mainly deliver the report and stop there."
    ],
    [
     "you",
-    "That's what *most* do. ‧‧‧ We *also* check the developer, ‧‧‧ the *title*, ‧‧‧ and the *contract*, ‧‧‧ before you pay *anything*. ‧‧‧‧‧ *One* bad contract costs more than our *entire* fee. ↘",
+    "That's what *most* do. ‧‧‧ We *also* test the plan, ‧‧‧ train your *team*, ‧‧‧ and check the *results*, ‧‧‧ before we close the project. ‧‧‧‧‧ *One* failed launch costs more than our *entire* fee. ↘",
     "Show the difference, then one sentence that makes the price look small."
    ],
    [
@@ -1060,7 +1061,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧‧‧ Then let's adjust the *scope*, ‧‧‧ not the *value*. ‧‧‧ I can remove the *rental management* part, ‧‧‧ and the fee comes down by *that* amount. ↘",
+    "‧‧‧‧‧ Then let's adjust the *scope*, ‧‧‧ not the *value*. ‧‧‧ I can remove the *monthly reporting* part, ‧‧‧ and the fee comes down by *that* amount. ↘",
     "Trade, don't discount. She gets a lower number, you keep your price."
    ],
    [
@@ -1082,7 +1083,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Good. ‧‧‧ I'll send the updated agreement *today*. ‧‧‧ If you want rental management *later*, ‧‧‧ we can add it *back*. ↘",
+    "Good. ‧‧‧ I'll send the updated agreement *today*. ‧‧‧ If you want monthly reporting *later*, ‧‧‧ we can add it *back*. ↘",
     "Leave the door open for the full service."
    ]
   ]
@@ -1090,7 +1091,7 @@ const SCENARIOS = [
  {
   "cat": "Negotiation",
   "title": "The Lowball Offer",
-  "setting": "You represent a property listed at $320,000. The buyer, Mr. Tanaka, opens at $250,000 to test you.",
+  "setting": "You're selling a one-year service contract quoted at $320,000. The buyer, Mr. Tanaka, opens at $250,000 to test you.",
   "goal": "Don't react, don't split the difference, and keep control of the numbers.",
   "them": "Mr. Tanaka",
   "lessons": [
@@ -1116,20 +1117,20 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "Similar units in the area sold for around that."
+    "Similar providers quoted around that."
    ],
    [
     "you",
-    "‧‧‧ Which *units* are you comparing with?",
+    "‧‧‧ Which *providers* are you comparing with?",
     "A precise question. Vague comparisons fall apart when examined."
    ],
    [
     "them",
-    "The lower-floor units in the building next door."
+    "The smaller firms we spoke to last month."
    ],
    [
     "you",
-    "Those are a fair reference for *lower* floors. ‧‧‧ This unit is on the *twenty-first* floor, ‧‧‧ with the *river* view, ‧‧‧ and it's *already* rented. ↘",
+    "Those are a fair reference for a *smaller* scope. ‧‧‧ This contract includes *round-the-clock* support, ‧‧‧ a *dedicated* team, ‧‧‧ and it's *already* proven with clients like you. ↘",
     "Accept the fair part, then show the difference with facts."
    ],
    [
@@ -1138,16 +1139,16 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ The owner is *firm* on three hundred twenty. ‧‧‧ If you can close within *thirty* days, ‧‧‧ I can ask about three hundred *ten*. ↘",
+    "‧‧‧ Our price is *firm* at three hundred twenty. ‧‧‧ If you can sign within *thirty* days, ‧‧‧ I can ask about three hundred *ten*. ↘",
     "Any move you make is traded for something."
    ],
    [
     "them",
-    "Two eighty, and I close in two weeks."
+    "Two eighty, and I sign in two weeks."
    ],
    [
     "you",
-    "‧‧‧‧‧ I'll take three hundred *ten* and *two weeks* to the owner. ‧‧‧ I *won't* take two eighty. ↘",
+    "‧‧‧‧‧ I'll take three hundred *ten* and *two weeks* to my director. ‧‧‧ I *won't* take two eighty. ↘",
     "You decide which number you present."
    ],
    [
@@ -1156,7 +1157,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Of course. ‧‧‧ I'll hold it for you until *Friday*. ↘",
+    "Of course. ‧‧‧ I'll hold this price until *Friday*. ↘",
     "A gentle deadline. Then stop talking."
    ]
   ]
@@ -1194,7 +1195,7 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "Your client base, and your reputation with foreign investors. We don't have that."
+    "Your client base, and your reputation in this market. We don't have that."
    ],
    [
     "you",
@@ -1233,7 +1234,7 @@ const SCENARIOS = [
  {
   "cat": "People and hard conversations",
   "title": "Reading a Quiet Client",
-  "setting": "Mrs. Sato has listened politely to your whole presentation. She nods but says little and asks nothing. In many cultures, silence isn't agreement.",
+  "setting": "Mrs. Sato has listened politely to your whole proposal. She nods but says little and asks nothing. In many cultures, silence isn't agreement.",
   "goal": "Find out what she's really thinking, without pushing.",
   "them": "Mrs. Sato",
   "lessons": [
@@ -1262,7 +1263,7 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "…Well. My husband is worried about what happens if the developer doesn't finish."
+    "…Well. My business partner is worried about what happens if the project runs over budget."
    ],
    [
     "you",
@@ -1280,7 +1281,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Then let's find a time when your *husband* can join. ↘",
+    "Then let's find a time when your *partner* can join. ↘",
     "Include the real decision-maker."
    ]
   ]
@@ -1288,7 +1289,7 @@ const SCENARIOS = [
  {
   "cat": "People and hard conversations",
   "title": "Saying No and Staying Likable",
-  "setting": "Mr. Wong, a long-time partner you like, asks you to recommend his cousin's project to your clients. You've reviewed it, and it isn't good enough.",
+  "setting": "Mr. Wong, a long-time partner you like, asks you to recommend his cousin's company to your clients. You've looked at it, and it isn't ready.",
   "goal": "Say no clearly and keep the relationship warm.",
   "them": "Mr. Wong",
   "lessons": [
@@ -1299,7 +1300,7 @@ const SCENARIOS = [
   "lines": [
    [
     "them",
-    "So, will you recommend my cousin's project to your clients? It would mean a lot to me."
+    "So, will you recommend my cousin's company to your clients? It would mean a lot to me."
    ],
    [
     "you",
@@ -1317,7 +1318,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ The title documents aren't *complete* yet. ‧‧‧ My clients trust me because I only recommend what I'd *buy* myself. ↘",
+    "‧‧‧ Their track record is too *short* yet. ‧‧‧ My clients trust me because I only recommend what I'd *use* myself. ↘",
     "One reason, framed as your principle, not as criticism."
    ],
    [
@@ -1326,7 +1327,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ I *understand*. ‧‧‧ Here's what I *can* do. ‧‧‧ Once the title is *complete*, ‧‧‧ I'll review it again *myself*, ‧‧‧ *first*. ↘",
+    "‧‧‧ I *understand*. ‧‧‧ Here's what I *can* do. ‧‧‧ Once they have a *year* of results, ‧‧‧ I'll review them again *myself*, ‧‧‧ *first*. ↘",
     "An offer, not a retreat."
    ],
    [
@@ -1403,7 +1404,7 @@ const SCENARIOS = [
  {
   "cat": "People and hard conversations",
   "title": "Delivering Bad News",
-  "setting": "You must tell Mr. Müller, an investor, that his project will be six months late. He doesn't know yet.",
+  "setting": "You must tell Mr. Müller, a key client, that his project will be six months late. He doesn't know yet.",
   "goal": "Tell him first, clearly, and with a plan, before he hears it from anyone else.",
   "them": "Mr. Müller",
   "lessons": [
@@ -1420,7 +1421,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧‧‧ The handover will be *six* months late. ‧‧‧ The new date is *September* next year. ↘",
+    "‧‧‧‧‧ The launch will be *six* months late. ‧‧‧ The new date is *September* next year. ↘",
     "The news in the first two sentences. No build-up."
    ],
    [
@@ -1438,12 +1439,12 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "*Two* reasons: ‧‧‧ a *permit* delay, ‧‧‧ and a change of *contractor*. ‧‧‧ I've *seen* the documents for both. ↘",
+    "*Two* reasons: ‧‧‧ a *regulatory* delay, ‧‧‧ and a change of *supplier*. ‧‧‧ I've *seen* the documents for both. ↘",
     "Short and factual. Evidence, not excuses."
    ],
    [
     "you",
-    "‧‧‧ Here's what I've *already* done. ‧‧‧ Your contract includes *compensation* for delays. ‧‧‧ I've asked the developer to confirm the amount in *writing*. ↘",
+    "‧‧‧ Here's what I've *already* done. ‧‧‧ Your contract includes *compensation* for delays. ‧‧‧ I've asked our supplier to confirm the amount in *writing*. ↘",
     "Action already taken is what rebuilds trust."
    ],
    [
@@ -1452,7 +1453,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "By *Friday*. ‧‧‧ And I'll update you every *two* weeks until handover, ‧‧‧ *even* when there's no news. ↘",
+    "By *Friday*. ‧‧‧ And I'll update you every *two* weeks until launch, ‧‧‧ *even* when there's no news. ↘",
     "A promise of contact. Silence is what destroys trust in bad times."
    ],
    [
@@ -1532,7 +1533,7 @@ let state={ route:{name:'home'}, done:{}, own:{}, notes:{}, ratings:{}, rate:0.8
 function load(){ try{ const r=localStorage.getItem(KEY); if(r){ const o=JSON.parse(r); delete o.view; delete o.current; state=Object.assign(state,o); if(!state.route||!state.route.name) state.route={name:'home'}; if(state.scVer!==2){ state.scDone={}; state.scOwn={}; state.lastSc=null; if(state.route.name==='scenario') state.route={name:'scenarios'}; state.scVer=2; } } }catch(e){} }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 function esc(t){ return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function fmt(line){ return esc(line).replace(/‧‧‧‧‧/g,'<span class="pause">‧‧‧‧‧</span>').replace(/‧‧‧(?!‧)/g,'<span class="pause">‧‧‧</span>').replace(/↘/g,'<span class="down" aria-label="falling pitch">↘</span>').replace(/\*([^*]+)\*/g,'<span class="stress">$1</span>'); }
+function fmt(line){ return esc(personal(line)).replace(/‧‧‧‧‧/g,'<span class="pause">‧‧‧‧‧</span>').replace(/‧‧‧(?!‧)/g,'<span class="pause">‧‧‧</span>').replace(/↘/g,'<span class="down" aria-label="falling pitch">↘</span>').replace(/\*([^*]+)\*/g,'<span class="stress">$1</span>'); }
 const $=id=>document.getElementById(id);
 const letter=i=>String.fromCharCode(65+i);
 
@@ -1557,7 +1558,7 @@ function say(text,t,opts={}){ return new Promise(res=>{ if(t!==tok) return res(f
   const u=new SpeechSynthesisUtterance(text); const v=opts.voice!==undefined?opts.voice:pickVoice();
   if(v&&!opts.lang) try{ u.voice=v; }catch(e){} u.lang=opts.lang||(v?v.lang:'en-US'); u.rate=state.rate; u.pitch=opts.pitch||1;
   if(opts.onb) u.onboundary=opts.onb; u.onend=()=>res(t===tok); u.onerror=()=>res(t===tok); speechSynthesis.speak(u); }); }
-function segsOf(line){ const out=[]; line.split(/(‧‧‧‧‧|‧‧‧)/).forEach(p=>{ if(p==='‧‧‧') out.push(['','pause']); else if(p==='‧‧‧‧‧') out.push(['','pause-long']); else { const t=p.replace(/\[[^\]]*\]/g,'').trim(); if(t.replace(/↘/g,'').trim()) out.push([t.replace(/[↘*]/g,'').trim(), t.includes('↘')?'down':null]); } }); return out; }
+function segsOf(line){ line=personal(line); const out=[]; line.split(/(‧‧‧‧‧|‧‧‧)/).forEach(p=>{ if(p==='‧‧‧') out.push(['','pause']); else if(p==='‧‧‧‧‧') out.push(['','pause-long']); else { const t=p.replace(/\[[^\]]*\]/g,'').trim(); if(t.replace(/↘/g,'').trim()) out.push([t.replace(/[↘*]/g,'').trim(), t.includes('↘')?'down':null]); } }); return out; }
 async function playSegs(btn, segs, lang){
   if(!hasTTS){ alert('Voice playback is not supported in this browser.'); return; }
   const same=activeBtn===btn; stopAll(); if(same) return;
@@ -1733,11 +1734,11 @@ function viewLessons(){
       <span class="row-body"><span class="row-title">${l.title}</span></span>
       <span class="chev" aria-hidden="true">›</span></button>`; }).join('')}</div>`;
 }
-function renderScript(arr){ return arr.map(([t,type])=>{
+function renderScript(arr){ return arr.map(([t,type])=>{ t=personal(t);
   if(type==='pause') return '<span class="pause">‧‧‧</span>'; if(type==='pause-long') return '<span class="pause">‧‧‧‧‧</span>';
   if(type==='breath') return '<span class="breath" aria-label="breathe">/</span>'; if(type==='stress') return `<span class="stress">${t}</span>`;
   if(type==='down') return `${t} <span class="down" aria-label="falling pitch">↘</span>`; if(type==='note') return `<span class="note">${t}</span>`; return t; }).join(' '); }
-function introLine(){ const n=state.intro; if(!n.who||!n.get) return ''; return `Good to meet you. I'm ${n.name||'[your name]'}. ‧‧‧ I help ${n.who} ${n.get}${n.avoid?` without ${n.avoid}`:''}.`; }
+function introLine(){ const n=state.intro; if(!n.who||!n.get) return ''; return `Good to meet you. I'm ${n.name||'[your name]'}. ‧‧‧ ${introBody()}`; }
 
 function viewLesson(i){
   if(lsess&&lsess.i===i) return viewLessonSession();
@@ -1758,9 +1759,9 @@ function viewLesson(i){
   if(l.builder){ const n=state.intro;
     h+=`${S('Build your introduction')}<div class="card builder">
       <label>Your name<input id="bName" placeholder="Your name" value="${esc(n.name)}"></label>
-      <label>Who do you help?<input id="bWho" placeholder="e.g. foreign investors" value="${esc(n.who)}"></label>
-      <label>What do they get?<input id="bGet" placeholder="e.g. buy property in Cambodia" value="${esc(n.get)}"></label>
-      <label>Without what problem? (optional)<input id="bAvoid" placeholder="e.g. making expensive mistakes" value="${esc(n.avoid)}"></label>
+      <label>Who do you help?<input id="bWho" placeholder="e.g. leadership teams" value="${esc(n.who)}"></label>
+      <label>What do they get?<input id="bGet" placeholder="e.g. make faster decisions" value="${esc(n.get)}"></label>
+      <label>Without what problem? (optional)<input id="bAvoid" placeholder="e.g. wasting months on the wrong plan" value="${esc(n.avoid)}"></label>
       <div class="built" id="built">${introLine()?fmt(introLine()):'Fill in the fields to see your line.'}</div>
       <div>${playBtn('id="bPlay"')}</div>
       </div>`; }
@@ -1790,7 +1791,7 @@ function viewScenarios(){
 }
 
 /* scenario parsing & player */
-function parseLine(text){ const segs=[]; text.split(/(‧‧‧‧‧|‧‧‧)/).forEach(p=>{ if(p==='‧‧‧') segs.push({type:'pause'}); else if(p==='‧‧‧‧‧') segs.push({type:'pause-long'}); else { const clean=p.replace(/↘/g,'').trim(); if(clean){ const raw=clean.replace(/\[[^\]]*\]/g,'').trim(); segs.push({type:'text',raw,speak:raw.replace(/\*/g,''),down:p.includes('↘')}); } else if(p.includes('↘')) segs.push({type:'down'}); } }); return segs; }
+function parseLine(text){ text=personal(text); const segs=[]; text.split(/(‧‧‧‧‧|‧‧‧)/).forEach(p=>{ if(p==='‧‧‧') segs.push({type:'pause'}); else if(p==='‧‧‧‧‧') segs.push({type:'pause-long'}); else { const clean=p.replace(/↘/g,'').trim(); if(clean){ const raw=clean.replace(/\[[^\]]*\]/g,'').trim(); segs.push({type:'text',raw,speak:raw.replace(/\*/g,''),down:p.includes('↘')}); } else if(p.includes('↘')) segs.push({type:'down'}); } }); return segs; }
 function segHTML(seg,li,si){ if(seg.type==='pause') return '<span class="pause">‧‧‧</span>'; if(seg.type==='pause-long') return '<span class="pause">‧‧‧‧‧</span>'; if(seg.type==='down') return '<span class="down">↘</span>';
   /* *word* marks sentence stress; it can span several words. data-c indexes the spoken text (without the marks). */
   let pos=0, on=false; return seg.raw.split(/(\s+)/).map(w=>{ if(/^\s+$/.test(w)||!w){ pos+=w.length; return w; } const n=(w.match(/\*/g)||[]).length, st=on||n>0, plain=w.replace(/\*/g,''); if(n%2) on=!on;
@@ -1808,7 +1809,7 @@ const IDB={ db:null,
   get(k){ return this.req('readonly',s=>s.get(k)); }, set(k,v){ return this.req('readwrite',s=>s.put(v,k)); },
   del(k){ return this.req('readwrite',s=>s.delete(k)); }, keys(){ return this.req('readonly',s=>s.getAllKeys()); } };
 async function loadMine(){ try{ for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(v&&v.blob) MINE[k]={url:URL.createObjectURL(v.blob), start:v.start, stop:v.stop}; } }catch(e){} }
-function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||(useFiles()&&AUDIO[id])||null; }
+function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||(useFiles()&&!isPersonal(sc.lines[li][1])&&AUDIO[id])||null; }
 function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&AUDIO[id]?'built-in voice':'device voice'; }
 /* Voiced-time envelope of a clip, so the highlight pauses during silences. null if the clip can't be read. */
 const ENV={};
@@ -1920,6 +1921,23 @@ async function exportTakes(btn){ btn.disabled=true; const files=[], manifest={};
   files.push({name:'manifest.json', blob:new Blob([JSON.stringify(manifest,null,1)],{type:'application/json'})});
   const a=document.createElement('a'); a.href=URL.createObjectURL(await makeZip(files)); a.download='speak-like-an-advisor-voice.zip'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000); btn.disabled=false; }
 
+/* ---------------- PROFILE ----------------
+   Scripts are general. Where you introduce yourself they say {name} and {intro}, filled from your profile
+   (asked once on first open, editable in Settings). Those lines use the device voice: a recording can't say every name. */
+function introBody(){ const n=state.intro; return `I help *${n.who||'my clients'}* ${n.get||'make better decisions'}${n.avoid?` without ${n.avoid}`:''}.`; }
+function personal(t){ return String(t??'').replace(/\{name\}/g, state.intro.name||'Alex').replace(/\{intro\}/g, introBody()); }
+const isPersonal=t=>/\{(name|intro)\}/.test(t||'');
+function viewWelcome(){ const n=state.intro;
+  return `<div class="u-green"><div class="ls-ico">${LICO[5]}</div><p class="eyebrow">Welcome</p><h1 class="fx-title">How do you introduce yourself?</h1>
+    <div class="card builder">
+      <label>Your name<input id="bName" value="${esc(n.name)}" autocomplete="given-name"></label>
+      <label>Who do you help?<input id="bWho" placeholder="leadership teams" value="${esc(n.who)}"></label>
+      <label>What do they get?<input id="bGet" placeholder="make faster decisions" value="${esc(n.get)}"></label>
+      <label>Without what? (optional)<input id="bAvoid" placeholder="wasting months on the wrong plan" value="${esc(n.avoid)}"></label>
+      <div class="built" id="built">${introLine()?fmt(introLine()):'Your line appears here.'}</div></div>
+    <p class="hint">The scripts use this whenever you introduce yourself. Change it anytime in Settings.</p></div>
+    <div class="fx-foot"><div class="fx-foot-in"><div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="welcome-done">Start</button></div></div></div>`; }
+
 /* ---------------- LESSON SESSIONS ----------------
    A lesson runs as short cards, one idea per screen (Duolingo style):
    idea → one quiz per example ("Which is stronger?") → say it → drill → [builder] → [timed] → done.
@@ -1939,8 +1957,8 @@ function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧�
 function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'}];
   l.pairs.forEach((p,k)=>cards.push({type:'quiz',k}));
   const k=l.pairs.findIndex(p=>!p.noPlay&&!p.lang);
-  if(k>=0) cards.push({type:'say',text:l.pairs[k].better,clip:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
-  cards.push({type:'say',text:drillMarkup(l.drill.script),clip:`l${i}-d`,label:'Drill',title:l.drill.tag});
+  if(k>=0) cards.push({type:'say',text:l.pairs[k].better,clip:isPersonal(l.pairs[k].better)?null:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
+  const dm=drillMarkup(l.drill.script); cards.push({type:'say',text:dm,clip:isPersonal(dm)?null:`l${i}-d`,label:'Drill',title:l.drill.tag});
   if(l.builder) cards.push({type:'builder'});
   if(l.practice) cards.push({type:'timed'});
   cards.push({type:'done'}); return cards; }
@@ -1986,7 +2004,7 @@ async function lsRecord(){ const c=lsess.cards[lsess.n], key=lsess.n; stopAll();
       const k=judgeRes(r,c.modelDur,innerPauses(c.text),key).key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); c.step='rec'; render(); }
-const quizText=t=>esc(t.replace(/[‧↘*]/g,'').replace(/\s+/g,' ').trim()).replace(/\[([^\]]*)\]/g,'<i>$1</i>');
+const quizText=t=>esc(personal(t).replace(/[‧↘*]/g,'').replace(/\s+/g,' ').trim()).replace(/\[([^\]]*)\]/g,'<i>$1</i>');
 function lessonAct(a,btn){
   if(a==='nextup') return nextUp();
   if(a==='ls-start') return startLesson(+btn.dataset.i);
@@ -2046,9 +2064,9 @@ function viewLessonSession(){
   else if(c.type==='builder'){ const n=state.intro;
     body=`<p class="eyebrow">Your line</p><h1 class="fx-title">Build your introduction</h1><div class="card builder">
       <label>Your name<input id="bName" value="${esc(n.name)}"></label>
-      <label>Who do you help?<input id="bWho" placeholder="foreign investors" value="${esc(n.who)}"></label>
-      <label>What do they get?<input id="bGet" placeholder="buy property in Cambodia" value="${esc(n.get)}"></label>
-      <label>Without what problem?<input id="bAvoid" placeholder="making expensive mistakes" value="${esc(n.avoid)}"></label>
+      <label>Who do you help?<input id="bWho" placeholder="leadership teams" value="${esc(n.who)}"></label>
+      <label>What do they get?<input id="bGet" placeholder="make faster decisions" value="${esc(n.get)}"></label>
+      <label>Without what problem?<input id="bAvoid" placeholder="wasting months on the wrong plan" value="${esc(n.avoid)}"></label>
       <div class="built" id="built">${introLine()?fmt(introLine()):'Your line appears here.'}</div><div>${playBtn('id="bPlay"')}</div></div>`;
     ft=cont(); }
   else if(c.type==='timed'){ const P=l.practice;
@@ -2211,6 +2229,8 @@ function viewSession(){
     ${last?'':legend}${body}</div>${foot('',ft)}`;
 }
 function act(a,btn){
+  if(a==='welcome-done'){ if(!state.intro.name){ $('bName').classList.add('need'); $('bName').focus(); return; } state.onboarded=true; save(); return go('home'); }
+  if(a==='profile'){ state.onboarded=false; save(); render(); window.scrollTo(0,0); return; }
   if(a.startsWith('ls-')||a==='nextup') return lessonAct(a,btn);
   if(a==='speed'){ state.rate=SPEEDS.find(x=>x>state.rate+0.001)??SPEEDS[0]; save(); btn.textContent=(+state.rate.toFixed(2))+'×'; return; }
   if(a==='node'){ pathOpen=pathOpen===btn.dataset.k?null:btn.dataset.k; return render(); }
@@ -2262,6 +2282,7 @@ function viewSettings(){
   <div class="card settings">
     <label>Speed <span class="rate-val" id="rateVal">${state.rate.toFixed(2)}×</span><input type="range" id="rate" min="0.6" max="1.2" step="0.05" value="${state.rate}"></label>
     <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice</label>
+    <div><button class="ghost-btn" type="button" data-act="profile">Your introduction · ${esc(state.intro.name||'not set')}</button></div>
     <div><button class="ghost-btn" type="button" data-go="studio">Voice studio · ${SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))).filter(id=>MINE[id]).length} recorded</button></div>
   </div>
   <p class="sec-k">Model voice</p>
@@ -2280,7 +2301,8 @@ const TABS=[['home','Learn','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4
 function render(){
   const r=state.route, n=r.name;
   const parent = n==='lesson'?'lessons':n==='scenario'?'scenarios':n==='studio'?'settings':null;
-  document.body.classList.toggle('focus', (n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess));
+  const welcome=!state.onboarded;
+  document.body.classList.toggle('focus', welcome||(n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess));
   const tt=$('topTitle'); tt.textContent = n==='lesson'?`Lesson ${r.i+1}`:n==='scenario'?`Scenario ${letter(r.i)}`:n==='studio'?'Voice studio':'Speak Like an Advisor'; tt.classList.toggle('logo',!parent);
   $('backBtn').hidden=!parent; $('backBtn').dataset.go=parent||'';
   const done=Object.values(state.done).filter(Boolean).length+Object.values(state.scDone).filter(Boolean).length;
@@ -2288,13 +2310,14 @@ function render(){
   $('tabbar').innerHTML=TABS.map(([k,label,icon])=>{ const on=(k===n)||(k===parent);
     return `<button type="button" class="tb ${on?'on':''}" data-go="${k}" ${on?'aria-current="page"':''}><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><span>${label}</span></button>`; }).join('');
   const main=$('main'); main.className=n==='home'?'home':'';
-  main.innerHTML = n==='lessons'?viewLessons(): n==='lesson'?viewLesson(r.i): n==='scenarios'?viewScenarios(): n==='scenario'?viewScenario(r.i): n==='settings'?viewSettings(): n==='studio'?viewStudio(): viewHome();
+  main.innerHTML = welcome?viewWelcome(): n==='lessons'?viewLessons(): n==='lesson'?viewLesson(r.i): n==='scenarios'?viewScenarios(): n==='scenario'?viewScenario(r.i): n==='settings'?viewSettings(): n==='studio'?viewStudio(): viewHome();
+  if(welcome){ bindBuilder(); return; }
   bind(n,r.i);
   if(n==='home') drawScene();
 }
 function bindBuilder(){ const map={bName:'name',bWho:'who',bGet:'get',bAvoid:'avoid'};
   Object.keys(map).forEach(id=>$(id).addEventListener('input',e=>{ state.intro[map[id]]=e.target.value.trim(); save(); const t=introLine(); $('built').innerHTML=t?fmt(t):'Your line appears here.'; }));
-  $('bPlay').addEventListener('click',e=>{ const t=introLine(); if(t) playSegs(e.currentTarget, segsOf(t)); }); }
+  $('bPlay')?.addEventListener('click',e=>{ const t=introLine(); if(t) playSegs(e.currentTarget, segsOf(t)); }); }
 function bind(n,i){
   document.querySelectorAll('#main [data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go, b.dataset.i!==undefined?+b.dataset.i:undefined)));
   if(n==='lesson'){ if(lsess){ if(lsess.cards[lsess.n].type==='builder') bindBuilder(); return; } const l=LESSONS[i];

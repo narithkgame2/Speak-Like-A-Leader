@@ -1,8 +1,9 @@
 # Speak Like an Advisor: High-Stakes Presence
 
-A mobile-first training app for speaking and presence in high-stakes meetings
-(investors, negotiations, senior partners, hard conversations). Not limited to real estate.
-Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
+A mobile-first, high-level communication trainer for any professional: speaking and presence in the moments
+that matter (investors, executives, clients, negotiations, senior rooms, hard conversations). Industry-neutral.
+Owner: Nick (CEO, Property Hub Cambodia), but the product is deliberately NOT specific to his company or to
+real estate (his direction, 2026-09-29).
 
 ## What it is
 - Single self-contained file: `index.html` (HTML + CSS + JS inline, no build step).
@@ -68,6 +69,11 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
 - Recording uses `getUserMedia` + `MediaRecorder` and needs a secure context (https or localhost).
   Recordings stay in memory only. `analyze()` measures speaking time, pauses (>=360ms), and `end` = volume of the
   last ~300ms of voice vs the whole line (below 0.55 = "last word faded", Lesson 2).
+- Profile: a one-time welcome screen (`viewWelcome`, `state.onboarded`) asks name + who you help / what they get
+  / without what (`state.intro`, same data as the Lesson 6 builder; Settings → "Your introduction" reopens it).
+  Script text may contain `{name}` and `{intro}`; `personal()` fills them everywhere text is parsed or shown
+  (`parseLine`, `fmt`, `segsOf`, `renderScript`, `quizText`). Personal lines have no recorded clip
+  (`isPersonal`; the generator skips them) and play in the device voice.
 - Scenario lines render as chat bubbles: `them` left, `you` right, a second speaker gets `.alt`.
 
 ## Teaching principles (keep these when adding content)
