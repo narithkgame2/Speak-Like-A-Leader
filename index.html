@@ -367,7 +367,7 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .mcamp > span:last-child{ font-family:var(--serif); font-weight:600; font-size:.9rem; line-height:1.2; }
 .mcamp b{ display:block; font-family:var(--sans); font-size:.58rem; font-weight:600; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-text); }
 .mcamp .camp-dot{ flex:0 0 8px; height:8px; }
-.msummit{ translate:0 -50%; text-align:left; font-family:var(--serif); font-weight:600; font-size:1.2rem; white-space:nowrap; pointer-events:none;
+.msummit{ translate:calc(-100% - 10px) -50%; text-align:right; font-family:var(--serif); font-weight:600; font-size:1.2rem; white-space:nowrap; pointer-events:none;
   padding:6px 12px; border-radius:12px; background:color-mix(in srgb, var(--card) 70%, transparent); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
 .msummit b{ display:block; font-family:var(--sans); font-size:.58rem; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:var(--dim); }
 .msummit.reached{ color:var(--gold-text); }
@@ -462,7 +462,7 @@ main.home{ padding-bottom:0; }
 .br-circle span{ font-size:.8rem; font-weight:600; color:var(--pri); } .br-circle b{ font-family:var(--serif); font-size:2.4rem; font-weight:600; color:var(--pri); line-height:1; }
 .br-round{ text-align:center; color:var(--dim); font-size:.9rem; }
 @media (prefers-reduced-motion: reduce){ .br-circle{ transition:none; } }
-.u-slate{ --u:#4A6378; --u-d:#324555; } .u-indigo{ --u:#474F8C; --u-d:#2F3566; }
+.u-slate{ --u:#4A6378; --u-d:#324555; } .u-moss{ --u:#5E6B34; --u-d:#434D24; } .u-ruby{ --u:#A23B34; --u-d:#732823; } .u-plum{ --u:#7B3F73; --u-d:#562B50; } .u-indigo{ --u:#474F8C; --u-d:#2F3566; }
 .qchip.stress-on{ border-color:var(--gold); background:var(--gold-soft); box-shadow:inset 0 -2px 0 var(--gold); }
 .kp{ display:flex; flex-wrap:wrap; gap:8px; } .kp span, .kpb{ font:600 .86rem var(--sans); color:var(--text); padding:7px 12px; border-radius:999px; background:var(--bg-2); border:1px solid var(--line); }
 .kpb{ cursor:pointer; } .kpb.on{ background:var(--pri-soft); border-color:var(--pri); color:var(--pri); }
@@ -680,7 +680,108 @@ const LESSONS = [
       {moment:"Someone's audio cuts out", normal:"Sorry, you broke up, sorry, can you, sorry, say that again?", better:"You broke up for a *moment*. ‧‧‧ Could you repeat the *last* part?", note:"One clear request, no apologies."}],
     drill:{ tag:"After the question, count two full seconds before you speak again.", script:[["Maria,",null],["","pause"],["how does this look from finance?",null],["","pause-long"],["[wait]","note"],["Thank you. That helps.","down"]],
       note:"On your next call, count the silence after each question. Two seconds is shorter than it feels." },
-    own:"Write the names of the people on your next call, and the one question you'll ask each." }
+    own:"Write the names of the people on your next call, and the one question you'll ask each." },
+
+  { title:"Ask one question", unit:"Listen and ask",
+    sub:"Two questions at once get half an answer to each.",
+    rule:"Ask one question. Then stop talking.",
+    why:"When you stack questions, people answer the easiest one, or the last one. Ask <b>one clear question</b>, then <b>stop</b>. Don't soften it with a second version, and don't answer it for them. The silence after a good question is where the real answer comes from.",
+    pairs:[
+      {moment:"Asking about their needs", normal:"So what are your goals, and also your budget, and when do you want to start, roughly?", better:"What would make this a *success* for you? ‧‧‧‧‧", note:"One question, then silence. You'll learn more than from three."},
+      {moment:"Checking a plan with your team", normal:"Does that make sense? Is that okay? Any questions or anything?", better:"What's the *weakest* part of this plan?", note:"A specific question gets a real answer. \"Any questions?\" gets silence."},
+      {moment:"Right after you ask", normal:"How did the launch go? Was it good? I heard it was good.", better:"How did the *launch* go? ‧‧‧‧‧ [wait]", note:"Don't answer your own question. Let them fill the silence."}],
+    drill:{ tag:"Ask it once, then hold the silence for two full seconds.", script:[["What would make this a",null],["success","stress"],["for you?",null],["","pause-long"],["[wait for the answer]","note"]],
+      note:"In your next meeting, count your questions. One at a time, then wait." },
+    own:"Write the one question you most need answered in your next meeting." },
+
+  { title:"Listen to the end", unit:"Listen and ask",
+    sub:"Most people listen until they know what to say. Then they stop listening.",
+    rule:"Let them finish. Pause. Then answer what they actually said.",
+    why:"Interrupting, even to agree, tells people your point matters more than theirs. Let the other person <b>finish the sentence and the thought</b>. Then take a <b>one-second pause</b> before you reply: it shows you heard them, and it stops you answering the question you expected instead of the one they asked.",
+    pairs:[
+      {moment:"They are still explaining", normal:"Yes, yes, I know, we had the same problem, what we did was…", better:"[let them finish] ‧‧‧ So the *real* issue is the *timing*.", note:"Wait for the end, then show you heard the point."},
+      {moment:"They pause to think", normal:"[you finish their sentence for them]", better:"[stay quiet, nod once, wait]", note:"A pause is not your turn. The important part often comes after it.", noPlay:true},
+      {moment:"They disagree with you", normal:"No, but that's not what I said, what I meant was…", better:"*Tell* me more. ‧‧‧ What *worries* you about it?", note:"Understand the objection before you answer it."}],
+    drill:{ tag:"Say it slowly, as if they just finished a long point.", script:[["[wait one second]","note"],["So the real issue is the",null],["timing.","stress"],["","pause"],["Tell me more.","down"]],
+      note:"In your next conversation, count one second after they stop, before you speak." },
+    own:"Write down one person you tend to interrupt, and what you'll do instead." },
+
+  { title:"Play it back", unit:"Listen and ask",
+    sub:"Showing you understood builds more trust than agreeing.",
+    rule:"Sum up their point in one line. Then check it.",
+    why:"Before you answer a complex point, <b>play it back</b>: say their point in your words, in one sentence, then ask \"Is that right?\". They feel heard, you catch misunderstandings early, and your answer lands on the right problem. Keep it short: a summary longer than their point sounds like a speech.",
+    pairs:[
+      {moment:"After a long complaint", normal:"Okay, I understand, I totally understand, we'll look into it.", better:"So the *delays* are costing you *customers*. ‧‧‧ Is that *right*?", note:"A specific summary proves you listened. \"I understand\" doesn't."},
+      {moment:"In a negotiation", normal:"Right, okay. So anyway, our position is…", better:"You need *certainty* on the *date* ‧‧‧ more than a lower *price*. ‧‧‧ Have I got that *right*?", note:"Name what matters most to them. Then check."}],
+    drill:{ tag:"One line, then a calm \"Is that right?\"", script:[["So the",null],["delays","stress"],["are costing you customers.",null],["","pause"],["Is that right?","down"]],
+      note:"Use one play-back in your next meeting. Watch their face when you get it right." },
+    own:"Think of a recent disagreement. Write their point in one sentence, the way they would say it." },
+
+  { title:"Open with the goal", unit:"Lead the room",
+    sub:"The first thirty seconds decide whether the meeting has a leader.",
+    rule:"Say the goal, the time, and the decision. Then begin.",
+    why:"People relax when they know where a meeting ends. Open with three things: the <b>goal</b> (what we decide today), the <b>time</b> (and that you'll keep it), and the <b>decision</b> you need. It takes twenty seconds, and it quietly makes you the person running the room.",
+    pairs:[
+      {moment:"Starting a team meeting", normal:"Okay, so, um, let's get started I guess, there's a few things to talk about…", better:"Good *morning*. ‧‧‧ In *thirty* minutes, ‧‧‧ we decide the *launch* date. ‧‧‧ Let's *begin*. ↘", note:"Goal and time first. Everyone relaxes when they know the end."},
+      {moment:"A meeting with senior people", normal:"I don't want to take too much of your time, so I'll try to be quick…", better:"We have *twenty* minutes. ‧‧‧ I need *one* decision from you: ‧‧‧ the *budget*. ↘", note:"Respect their time by being clear, not by apologizing for it."}],
+    drill:{ tag:"Three short sentences. A full pause between each.", script:[["Good morning.",null],["","pause"],["In thirty minutes, we decide the",null],["launch","stress"],["date.",null],["","pause"],["Let's begin.","down"]],
+      note:"Write your next meeting's opening on a card: goal, time, decision." },
+    own:"Write the first three sentences of your next meeting." },
+
+  { title:"Hold the floor", unit:"Lead the room",
+    sub:"When someone talks over you, the room watches what you do next.",
+    rule:"Don't speed up or get louder. Pause, use their name, finish your point.",
+    why:"When you're interrupted, the instinct is to talk faster or louder to keep your turn. Both look anxious. Instead <b>stop</b>, use their <b>name</b> and one calm line: \"Let me finish this point, then I want your view.\" Finish <b>slower</b> than before. Then give them the floor as promised: that's what makes it respectful.",
+    pairs:[
+      {moment:"Someone interrupts you", normal:"Sorry, sorry, can I just, sorry, if I could just finish…", better:"*James*, ‧‧‧ let me *finish* this point, ‧‧‧ then I want your *view*. ↘", note:"Name, pause, a promise. No apologies, no speed."},
+      {moment:"Two people start arguing", normal:"Okay guys, okay, let's, um, calm down maybe…", better:"Let's *pause* there. ‧‧‧ Both points *matter*. ‧‧‧ *Anna* first, ‧‧‧ then *Tom*. ↘", note:"You decide the order. That's what leading the room means."}],
+    drill:{ tag:"Slow and even. The name, then a full pause.", script:[["James,",null],["","pause"],["let me finish this point,",null],["","pause"],["then I want your view.","down"]],
+      note:"Say the line out loud until it comes out without any heat." },
+    own:"Who interrupts you most? Write the exact line you'll use next time." },
+
+  { title:"Close with owners", unit:"Lead the room",
+    sub:"A meeting without a clear ending is a meeting you'll have again.",
+    rule:"End with the decision, who does what, and by when.",
+    why:"Most meetings fade out: \"Great, thanks everyone.\" Five minutes before the end, <b>stop the discussion</b> and close it: the <b>decision</b> in one sentence, then each action with an <b>owner</b> and a <b>date</b>. Ask \"Can everyone live with that?\" and wait for each yes. People remember the last minute of a meeting.",
+    pairs:[
+      {moment:"The meeting runs out of time", normal:"Okay, we're out of time, great discussion, let's follow up on email.", better:"*Decision*: ‧‧‧ we launch in *June*. ‧‧‧ *Anna* sends the plan by *Friday*. ↘ ‧‧‧ Can everyone *live* with that?", note:"Decision, owner, date. Then check."},
+      {moment:"No decision was reached", normal:"Well, let's all think about it and maybe meet again sometime.", better:"We haven't *decided*. ‧‧‧ *Tom* brings *two* options on *Monday*, ‧‧‧ and we decide *then*. ↘", note:"Even no decision needs an owner and a date."}],
+    drill:{ tag:"Each part as its own short sentence.", script:[["Decision: we launch in",null],["June.","stress"],["","pause"],["Anna sends the plan by Friday.","down"],["","pause"],["Can everyone live with that?",null]],
+      note:"Set an alarm five minutes before your next meeting ends. Use it to close." },
+    own:"Write the closing lines of your next meeting, with owners and dates." },
+
+  { title:"Take the hard question", unit:"Tough Q&A",
+    sub:"A hostile question tests your composure more than your facts.",
+    rule:"Pause. Restate it in neutral words. Answer the fair part, briefly.",
+    why:"When a question arrives with an edge, don't match the edge. <b>Pause</b>, then restate the question in <b>neutral words</b>: it takes the heat out and buys you time. Answer the fair question underneath, <b>briefly</b>, and stop. Never repeat the loaded words: \"Why are you wasting money?\" becomes \"You're asking whether this is worth it.\"",
+    pairs:[
+      {moment:"\"Why are you wasting our money on this?\"", normal:"We're not wasting money! That's not fair, we've worked really hard on…", better:"‧‧‧ You're asking whether this is *worth* it. ‧‧‧ *Fair* question. ‧‧‧ It pays back in *eighteen* months. ↘", note:"Neutral words, a short answer, no defence of your feelings."},
+      {moment:"\"Isn't this just another failed project?\"", normal:"No, no, it's totally different, this time we…", better:"‧‧‧ The question is what's *different* this time. ‧‧‧ *Two* things. ↘", note:"Don't repeat \"failed\". Restate it, then give structure."}],
+    drill:{ tag:"Pause first. Restate calmly. A short answer.", script:[["[pause]","note"],["You're asking whether this is worth it.",null],["","pause"],["Fair question.",null],["","pause"],["It pays back in eighteen months.","down"]],
+      note:"Write the three hardest questions you could get this month. Restate each one in neutral words." },
+    own:"Write the question you fear most, and your neutral restatement." },
+
+  { title:"Admit you don't know", unit:"Tough Q&A",
+    sub:"Guessing under pressure costs more trust than saying \"I don't know\".",
+    rule:"Say what you don't know, what you do know, and when you'll have the answer.",
+    why:"Bluffing is easy to spot, and one wrong number undoes an hour of credibility. Say it cleanly: \"I don't know <b>yet</b>.\" Then give what you <b>do</b> know, and a <b>specific time</b> for the answer. Said with a steady voice and no apology, not knowing sounds honest and in control.",
+    pairs:[
+      {moment:"A question you can't answer", normal:"Um, I think it's maybe around, sort of, I'd have to guess, maybe forty?", better:"I don't know *yet*. ‧‧‧ I'll have the *exact* number by *Thursday*. ↘", note:"Honest, specific, and with a time. That builds trust."},
+      {moment:"You know part of the answer", normal:"Sorry, I'm not sure, sorry, I should know this…", better:"I know the *cost*. ‧‧‧ The *timeline* I'll confirm by *tomorrow*. ↘", note:"Lead with what you know. No apology for the rest."}],
+    drill:{ tag:"A steady voice. No apology.", script:[["I don't know",null],["yet.","stress"],["","pause"],["I'll have the exact number by Thursday.","down"]],
+      note:"Use it once this week, and keep the promise on time." },
+    own:"Write your own way of saying \"I don't know yet\", with what you'd offer instead." },
+
+  { title:"Bridge back", unit:"Tough Q&A",
+    sub:"Every question is a chance to return to your main point.",
+    rule:"Answer briefly. Then bridge back to your key message.",
+    why:"In Q&A you don't control the questions, but you control the <b>last sentence</b> of each answer. Answer honestly and <b>briefly</b>, then use a bridge, \"What matters most is…\", \"The key point is…\", to return to your <b>one key message</b>. Don't dodge: answer first, bridge second.",
+    pairs:[
+      {moment:"A side question in Q&A", normal:"That's a good point, and there's also this, and that reminds me of another thing…", better:"*Yes*, ‧‧‧ it costs *more* up front. ‧‧‧ What *matters* most ‧‧‧ is the *saving* over three years. ↘", note:"Answer, bridge, key message. Every time."},
+      {moment:"A question off the topic", normal:"Oh, well, I don't really know about that, um, anyway…", better:"That's for the *next* meeting. ‧‧‧ *Today*, ‧‧‧ the key point is the *budget*. ↘", note:"Park it politely, then bring the room back."}],
+    drill:{ tag:"A short answer, a pause, then the bridge.", script:[["Yes, it costs more up front.",null],["","pause"],["What matters most",null],["","pause"],["is the saving over three years.","down"]],
+      note:"Write your one key message. Practise bridging to it from three random questions." },
+    own:"Write the key message of your next presentation in one sentence." }
 ];
 const SCENARIOS = [
  {
@@ -1894,6 +1995,286 @@ const SCENARIOS = [
     "Decision, owner, time. Then end on time."
    ]
   ]
+ },
+ {
+  "cat": "Listen and ask",
+  "title": "The Discovery Meeting",
+  "setting": "A first meeting with Ms. Novak, head of operations at a company that might buy from you. She has thirty minutes and a lot on her mind.",
+  "goal": "Ask, listen and play back her real problem before you pitch anything.",
+  "them": "Ms. Novak",
+  "lessons": [
+   14,
+   15,
+   16
+  ],
+  "lines": [
+   [
+    "you",
+    "Thank you for the *time*. ‧‧‧ Before I show you *anything*, ‧‧‧ what would make this meeting *useful* for you?",
+    "Start with her agenda, not yours."
+   ],
+   [
+    "them",
+    "Honestly, I want to know if you can fix our delivery delays. Every week something arrives late, and our customers notice."
+   ],
+   [
+    "you",
+    "‧‧‧ How *often* does it happen?",
+    "One short question. Then wait."
+   ],
+   [
+    "them",
+    "Two or three times a week. Last month we lost a big customer over it."
+   ],
+   [
+    "stage",
+    "[she stops and looks down for a moment]"
+   ],
+   [
+    "them",
+    "And my team is tired of apologizing."
+   ],
+   [
+    "you",
+    "So the *delays* are costing you *customers*, ‧‧‧ and your team's *energy*. ‧‧‧ Is that *right*?",
+    "Play it back in one line, then check."
+   ],
+   [
+    "them",
+    "Yes. Exactly that."
+   ],
+   [
+    "you",
+    "Then let's *start* there. ‧‧‧ What have you *tried* so far?",
+    "Stay curious. The pitch can wait."
+   ]
+  ]
+ },
+ {
+  "cat": "Listen and ask",
+  "title": "The Quiet Team Member",
+  "setting": "A one-to-one with Dara, a capable team member who has gone quiet in meetings for weeks.",
+  "goal": "Find out what's really going on, without leading the answer.",
+  "them": "Dara",
+  "lessons": [
+   14,
+   15,
+   16
+  ],
+  "lines": [
+   [
+    "you",
+    "Thanks for making *time*. ‧‧‧ I've noticed you've been *quieter* in meetings lately. ‧‧‧ How are things, *really*?",
+    "Say what you noticed, without judging. Then one question."
+   ],
+   [
+    "them",
+    "It's fine. Just busy, I guess."
+   ],
+   [
+    "you",
+    "‧‧‧‧‧ *Busy* with what?",
+    "Wait out the silence first. Then ask about their own words."
+   ],
+   [
+    "them",
+    "Mostly the reports. I spend half my week on them, and I don't think anyone reads them."
+   ],
+   [
+    "you",
+    "So half your *week* goes on work that feels *pointless*. ‧‧‧ Is that *it*?",
+    "Play it back, including the feeling."
+   ],
+   [
+    "them",
+    "Yes. And when I raised it before, nobody listened."
+   ],
+   [
+    "you",
+    "*I'm* listening now. ‧‧‧ What would you *change*, ‧‧‧ if it were *your* call?",
+    "Hand them the problem. People support what they help design."
+   ]
+  ]
+ },
+ {
+  "cat": "Lead the room",
+  "title": "Running the Weekly Meeting",
+  "setting": "You chair a weekly meeting with six people. It usually runs over, and nothing gets decided.",
+  "goal": "Open with the goal, keep it on track, and close with owners and dates.",
+  "them": "Mr. Grant",
+  "lessons": [
+   17,
+   18,
+   19
+  ],
+  "lines": [
+   [
+    "you",
+    "Good *morning*. ‧‧‧ We have *thirty* minutes, ‧‧‧ and *one* decision: ‧‧‧ the *supplier* for next year. ↘",
+    "Goal, time, decision. Twenty seconds, and you're leading."
+   ],
+   [
+    "them",
+    "Before that, can we talk about the office move? It's a mess."
+   ],
+   [
+    "you",
+    "It *matters*, Mr. Grant. ‧‧‧ Let's give it *five* minutes at the *end*. ‧‧‧ *Supplier* first. ↘",
+    "Acknowledge it, park it with a time, return to the goal."
+   ],
+   [
+    "them:Ms. Ruiz",
+    "Supplier A is cheaper. Supplier B is faster. I'd go with B."
+   ],
+   [
+    "them",
+    "B is twenty percent more expensive. That's crazy."
+   ],
+   [
+    "you",
+    "Let's *pause* there. ‧‧‧ Both points *matter*. ‧‧‧ Ms. *Ruiz*, ‧‧‧ what does *faster* save us?",
+    "You decide who speaks. Ask the question that settles it."
+   ],
+   [
+    "them:Ms. Ruiz",
+    "Two weeks on every order. That's worth more than the price difference."
+   ],
+   [
+    "you",
+    "*Decision*: ‧‧‧ we go with *B*. ‧‧‧ Ms. *Ruiz* sends the contract by *Friday*. ↘ ‧‧‧ Can everyone *live* with that?",
+    "Decision, owner, date. Then check."
+   ]
+  ]
+ },
+ {
+  "cat": "Lead the room",
+  "title": "The Interrupter",
+  "setting": "You're presenting a plan to your department. Mr. Brooks, a senior colleague, keeps interrupting with objections.",
+  "goal": "Hold the floor calmly, give him a fair turn, and finish your point.",
+  "them": "Mr. Brooks",
+  "lessons": [
+   18,
+   15,
+   17
+  ],
+  "lines": [
+   [
+    "you",
+    "The plan has *three* parts. ‧‧‧ *First*, ‧‧‧ we cut the approval steps from *five* to *two*.",
+    "Structure first. It makes interruptions easier to handle."
+   ],
+   [
+    "them",
+    "That will never work here. We tried it before, and—"
+   ],
+   [
+    "you",
+    "Mr. *Brooks*, ‧‧‧ let me *finish* this point, ‧‧‧ then I want your *view*. ↘",
+    "Name, pause, promise. Slower than before."
+   ],
+   [
+    "you",
+    "*Two* approval steps ‧‧‧ means decisions in *days*, ‧‧‧ not *weeks*. ↘",
+    "Finish the point at an even pace."
+   ],
+   [
+    "you",
+    "Mr. *Brooks*, ‧‧‧ your *view*?",
+    "Keep the promise. That's what makes it respectful."
+   ],
+   [
+    "them",
+    "Last time we cut steps, mistakes went up."
+   ],
+   [
+    "you",
+    "*Fair* point. ‧‧‧ So the *second* part of the plan ‧‧‧ is a *weekly* check on errors. ↘",
+    "His objection leads into your next point."
+   ]
+  ]
+ },
+ {
+  "cat": "Tough Q&A",
+  "title": "The Hostile Question",
+  "setting": "You've presented your project to the board. In Q&A, Mr. Hale, a board member, leans forward.",
+  "goal": "Stay calm, restate the question in neutral words, answer briefly, and bridge back.",
+  "them": "Mr. Hale",
+  "lessons": [
+   20,
+   22,
+   2
+  ],
+  "lines": [
+   [
+    "them",
+    "Frankly, this looks like another expensive project that will fail. Why should we believe you?"
+   ],
+   [
+    "you",
+    "‧‧‧ You're asking what's *different* this time. ‧‧‧ *Fair* question. ↘",
+    "Pause. Restate in neutral words. Never repeat \"fail\"."
+   ],
+   [
+    "you",
+    "*Two* things. ‧‧‧ We start *small*, ‧‧‧ with *one* team. ‧‧‧ And we stop if it doesn't pay back in *six* months. ↘",
+    "Short, structured, with a clear limit."
+   ],
+   [
+    "them",
+    "And if it doesn't work, who takes responsibility?"
+   ],
+   [
+    "you",
+    "*I* do. ‧‧‧ You'll get a *monthly* report, ‧‧‧ with the *numbers*. ↘",
+    "Short answers under pressure sound confident."
+   ],
+   [
+    "you",
+    "What *matters* most ‧‧‧ is that we *learn* in six months, ‧‧‧ at a *small* cost. ↘",
+    "Bridge back to your key message."
+   ]
+  ]
+ },
+ {
+  "cat": "Tough Q&A",
+  "title": "The Question You Can't Answer",
+  "setting": "You're presenting quarterly results to senior leaders. Ms. Adler asks for a number you don't have.",
+  "goal": "Say you don't know without losing the room, commit to a time, and get back on track.",
+  "them": "Ms. Adler",
+  "lessons": [
+   21,
+   22,
+   1
+  ],
+  "lines": [
+   [
+    "them",
+    "What's the exact return on the new project so far?"
+   ],
+   [
+    "you",
+    "I don't know the *exact* figure *yet*. ‧‧‧ I'll send it to you by *Thursday*. ↘",
+    "A steady voice. No apology. A specific time."
+   ],
+   [
+    "them",
+    "You don't know? Isn't that your job?"
+   ],
+   [
+    "you",
+    "‧‧‧ I know the *cost* ‧‧‧ and the *timeline*. ‧‧‧ The *return* I'll confirm with *finance*, ‧‧‧ so you get the *right* number. ↘",
+    "Lead with what you know. Don't guess under pressure."
+   ],
+   [
+    "them",
+    "Fine. Thursday."
+   ],
+   [
+    "you",
+    "*Thursday*. ‧‧‧ And the key point *today*: ‧‧‧ we're *ahead* of plan on *cost*. ↘",
+    "Confirm, then bridge back."
+   ]
+  ]
  }
 ];
 const KEY='sla-highstakes-v1';
@@ -1955,7 +2336,8 @@ function lastRating(i){ const r=state.ratings[i]; return r&&r.length?r[r.length-
 /* Units in climbing order. Foundation holds the lessons without a unit; other units gather lessons with that
    "unit" and scenarios with that "cat". Each unit is a camp on the mountain. */
 const UNIT_DEF=[{name:'Foundation',color:'green'},{name:'Clarity',color:'slate'},{name:'First impressions',color:'blue'},{name:'Presenting and persuading',color:'purple'},
-  {name:'Under pressure',color:'orange'},{name:'Negotiation',color:'teal'},{name:'Video calls',color:'indigo'},{name:'People and hard conversations',color:'pink'}];
+  {name:'Under pressure',color:'orange'},{name:'Negotiation',color:'teal'},{name:'Video calls',color:'indigo'},{name:'People and hard conversations',color:'pink'},
+  {name:'Listen and ask',color:'moss'},{name:'Lead the room',color:'ruby'},{name:'Tough Q&A',color:'plum'}];
 const CATS=UNIT_DEF.map(u=>u.name).filter(n=>SCENARIOS.some(s=>s.cat===n));
 const catColor=cat=>(UNIT_DEF.find(u=>u.name===cat)||UNIT_DEF[0]).color;
 const ICO={
@@ -1988,9 +2370,9 @@ function units(){
 }
 /* The home path is a climb: base camp at the bottom, the summit at the top.
    Each unit is a camp at a higher altitude, and a rank is earned at each one. */
-const RANKS=['Newcomer','Composed','Clear','Credible','Persuasive','Unshakable','Commanding','Present','Trusted Leader'];
-const CAMPS=['Base Camp','Camp I','Camp II','Camp III','Camp IV','Camp V','Camp VI','High Camp'];
-const ALTS=[800,1300,1900,2500,3100,3600,4100,4550,5000];
+const RANKS=['Newcomer','Composed','Clear','Credible','Persuasive','Unshakable','Commanding','Present','Attentive','Authoritative','Respected','Trusted Leader'];
+const CAMPS=['Base Camp','Camp I','Camp II','Camp III','Camp IV','Camp V','Camp VI','Camp VII','Camp VIII','Camp IX','High Camp'];
+const ALTS=[800,1200,1600,2000,2400,2750,3100,3450,3800,4150,4550,5000];
 const fmtM=m=>`${Math.round(m/10)*10}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')+' m';
 function climb(us){ const r0=us.findIndex(u=>!u.items.every(x=>x.done)), r=r0<0?us.length:r0;
   if(r>=us.length) return {r,alt:ALTS[ALTS.length-1]};
@@ -2021,7 +2403,7 @@ function viewJourney(us){
    mountain, and it zooms in as you climb. Drag to look around; "Whole mountain" zooms out.
    World units: 1000 × 1600, peak at the top. */
 const MW=1000, MH=1600, PEAK=[500,118], BASE_Y=1470;
-const ZONES={ light:['#AFC6A0','#9BBC92','#7FA588','#B9B893','#A99D90','#9F9A94','#C4CCD4','#E8EDF1'], dark:['#243A2E','#213A2C','#1E3528','#34352A','#312D2A','#2D2C2C','#2B323B','#3A424C'] };
+const ZONES={ light:['#AFC6A0','#9BBC92','#7FA588','#8FA886','#B9B893','#AEA58F','#A99D90','#9F9A94','#B3B6B9','#C4CCD4','#E8EDF1'], dark:['#243A2E','#213A2C','#1E3528','#26382A','#34352A','#33312B','#312D2A','#2D2C2C','#2B2F35','#2B323B','#3A424C'] };
 function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 function isDark(){ const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); return parseInt(bg.slice(1,3),16)<80; }
 function shade(hex,f){ const n=parseInt(hex.slice(1),16), c=[n>>16,n>>8&255,n&255].map(v=>Math.max(0,Math.min(255,Math.round(v*f)))); return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''); }
@@ -2142,7 +2524,7 @@ function drawScene(){ const st=$('mstage'); if(!st) return;
   const myCamp=now?now.ui:-1;
   layer.querySelectorAll('.mcamp').forEach(el=>{ const k=+el.dataset.u, ss=MTN.steps.filter(x=>x.ui===k), s=ss[0], nx=MTN.steps[MTN.steps.indexOf(ss[ss.length-1])+1];
     const side=s.x<500?1:-1; els.push({el,x:500+side*(trailHW(s.y)*0.74+26),y:s.y,kind:'camp',side,span:s.y-(nx?nx.y:PEAK[1]),mine:k===myCamp}); });
-  els.push({el:layer.querySelector('.msummit'),x:PEAK[0]+46,y:PEAK[1]-36,kind:'summit'});
+  els.push({el:layer.querySelector('.msummit'),x:PEAK[0]-8,y:PEAK[1]+6,kind:'summit'});
   els.push({el:layer.querySelector('.mflag'),kind:'flag'}); MTN.els=els;
   layer.querySelectorAll('.mcamp').forEach(el=>el.classList.toggle('locked',+el.dataset.u>myU));
   if(camMode==='camp') camMode='you'; zoomLabel();
@@ -2188,7 +2570,7 @@ function award(key,n,first){ state.stars=state.stars||{}; const was=state.stars[
 function gateHTML(k){ const top=k>=UNIT_DEF.length;
   return `<div class="gate" id="gate" role="dialog" aria-label="${top?'Summit reached':CAMPS[k]+' reached'}"><div class="gate-card"><hr class="rule"><div class="gate-k">${top?'Summit reached':CAMPS[k]+' reached'}</div>
   <div class="gate-t">${top?'The summit':esc(UNIT_DEF[k].name)}</div><div class="gate-m">${fmtM(top?ALTS[ALTS.length-1]:ALTS[k])}</div>
-  <svg class="gate-peak" viewBox="0 0 120 50" aria-hidden="true"><path d="M0 50L30 22L42 30L62 6L84 28L96 20L120 50Z" fill="var(--bg-2)"/><path d="M62 6L55 15L60 14L64 18L69 13L62 6Z" fill="var(--card)"/><circle cx="${[18,30,42,50,56,60,62,62,62][k]}" cy="${[42,34,28,20,15,12,9,7,6][k]}" r="4" fill="var(--gold)"/></svg>
+  <svg class="gate-peak" viewBox="0 0 120 50" aria-hidden="true"><path d="M0 50L30 22L42 30L62 6L84 28L96 20L120 50Z" fill="var(--bg-2)"/><path d="M62 6L55 15L60 14L64 18L69 13L62 6Z" fill="var(--card)"/><circle cx="${(18+44*Math.min(1,k/UNIT_DEF.length)).toFixed(1)}" cy="${(42-36*Math.min(1,k/UNIT_DEF.length)).toFixed(1)}" r="4" fill="var(--gold)"/></svg>
   <div class="gate-r">${top?'Your rank':'New rank'}</div><div class="gate-rank">${RANKS[Math.min(k,RANKS.length-1)]}</div>
   <button class="solid-btn" type="button" id="gateGo">${top?'Look back down':'Keep climbing'}</button></div></div>`; }
 function playUnlock(prev){ const j=MTN.steps.indexOf(prev), next=MTN.steps[j+1], key=prev.kind[0]+prev.i, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2464,7 +2846,16 @@ const LESSON_QUIZ = {
  "10": [{"type": "choice", "prompt": "Your voice sounds thin in a big room. The fix?", "options": ["Push harder from your throat", "Breathe low and aim at the back wall", "Speak faster to keep the energy"], "answer": 1, "why": "Power comes from the breath. Pushing from the throat raises your pitch."}],
  "11": [{"type": "choice", "prompt": "On a call, where do you look for your key point?", "options": ["At their face on screen", "At your notes", "Into the camera lens"], "answer": 2, "why": "The lens is the only eye contact a screen allows."}],
  "12": [{"type": "choice", "prompt": "Where should the light be?", "options": ["Behind you, from the window", "In front of you, facing you", "Only above you"], "answer": 1, "why": "Light in front shows your face. Light behind turns you into a shadow."}],
- "13": [{"type": "pause", "prompt": "Where do you wait for the answer?", "text": "Maria, how does this look from finance?", "answer": 6, "why": "Ask, then wait the full pause. Two seconds feels long to you, normal to them."}, {"type": "choice", "prompt": "Nobody answers your question on a call. Next?", "options": ["Ask again, louder", "Add more context to fill the silence", "Name one person and ask them"], "answer": 2, "why": "An open question to a silent grid gets silence. A name gets an answer."}]
+ "13": [{"type": "pause", "prompt": "Where do you wait for the answer?", "text": "Maria, how does this look from finance?", "answer": 6, "why": "Ask, then wait the full pause. Two seconds feels long to you, normal to them."}, {"type": "choice", "prompt": "Nobody answers your question on a call. Next?", "options": ["Ask again, louder", "Add more context to fill the silence", "Name one person and ask them"], "answer": 2, "why": "An open question to a silent grid gets silence. A name gets an answer."}],
+ "14": [{"type": "choice", "prompt": "You asked a question. Nobody answers for two seconds. You…", "options": ["Rephrase it to help them", "Wait. Let them think.", "Answer it yourself to move on"], "answer": 1, "why": "Two seconds is thinking time. Fill it and you lose the answer."}, {"type": "stress", "prompt": "Which word carries the question?", "text": "What would make this a success for you?", "answer": 5, "why": "Stress the word that matters to them: success."}],
+ "15": [{"type": "choice", "prompt": "They pause in the middle of a thought. You…", "options": ["Finish the sentence for them", "Stay quiet and wait", "Jump in with your point"], "answer": 1, "why": "A pause is not your turn. The important part often comes after it."}],
+ "16": [{"type": "choice", "prompt": "Which is the best play-back?", "options": ["\"I totally understand how you feel.\"", "\"So the delays are costing you customers. Is that right?\"", "\"Okay, noted. Let's move on.\""], "answer": 1, "why": "Specific, short, and checked. That's what makes people feel heard."}],
+ "17": [{"type": "pause", "prompt": "Where does the pause go?", "text": "In thirty minutes we decide the launch date.", "answer": 2, "why": "Pause after the time. Then the goal lands on its own."}],
+ "18": [{"type": "choice", "prompt": "Someone talks over you. Your first move?", "options": ["Talk louder to keep your turn", "Stop, then use their name", "Go quiet and let them take over"], "answer": 1, "why": "Stopping shows control. Their name gets attention without a fight."}],
+ "19": [{"type": "weak", "prompt": "Tap the words that make it vague", "text": "Let's maybe follow up on this sometime soon.", "answer": [1, 6, 7], "why": "Replace them with a name and a date."}],
+ "20": [{"type": "choice", "prompt": "\"Why are you wasting our money?\" You say…", "options": ["\"We're not wasting money!\"", "\"You're asking whether this is worth it.\"", "\"Why would you say that?\""], "answer": 1, "why": "Neutral words take the heat out. Never repeat the loaded ones."}],
+ "21": [{"type": "choice", "prompt": "You don't know the number. You say…", "options": ["\"Probably around forty.\"", "\"Sorry, I should know this.\"", "\"I don't know yet. You'll have it by Thursday.\""], "answer": 2, "why": "A guess can be wrong. A promise with a date can be kept."}],
+ "22": [{"type": "choice", "prompt": "A question pulls you off topic. After a short answer, you…", "options": ["Keep going on the new topic", "Bridge back to your key message", "Ask if there are more questions"], "answer": 1, "why": "You don't control the questions. You control the last sentence."}]
 };
 /* Round 3, "Your words": per scenario, questions without a script and the points to hit (self-checked).
    "coach": true = an instruction read by the coach; otherwise the other person asks it. Clips r3-{scenario}-{k}. */
@@ -2488,7 +2879,13 @@ const ROUND3 = {
  "16": [{"q": "Sorry, what did you say the price was?", "points": ["Slower, not louder", "The number, finished", "Confirm it"]}, {"q": "Give your three key results in one breath.", "points": ["Say three first", "Land every ending", "Stop cleanly"], "coach": true}],
  "17": [{"q": "I have one minute. What's the status?", "points": ["How many points", "The headline first", "The decision you need"]}, {"q": "Why should we choose your option?", "points": ["Answer first", "Two short reasons", "Land the last word"]}],
  "18": [{"q": "Your audio dropped during your price. Take it back.", "points": ["No apology", "Say it again, slower", "Look at the lens"], "coach": true}, {"q": "Share your screen and walk them through one chart.", "points": ["Guide their eyes", "One sentence at a time", "The takeaway"], "coach": true}],
- "19": [{"q": "Nobody answers your question on the call. What now?", "points": ["Wait the full pause", "Name a person", "One clear question"], "coach": true}, {"q": "Close the call with a decision.", "points": ["Summarize", "Check everyone can live with it", "Owner and time"], "coach": true}]
+ "19": [{"q": "Nobody answers your question on the call. What now?", "points": ["Wait the full pause", "Name a person", "One clear question"], "coach": true}, {"q": "Close the call with a decision.", "points": ["Summarize", "Check everyone can live with it", "Owner and time"], "coach": true}],
+ "20": [{"q": "Tell me what you do, and why I should care.", "points": ["Ask about their needs first", "One question at a time", "Play back what you heard"]}, {"q": "Open your next client meeting with a question about their goals.", "points": ["No pitch first", "One clear question", "Stop and wait"], "coach": true}],
+ "21": [{"q": "I'm fine, really. Why are you asking?", "points": ["Say what you noticed", "No judgement", "One open question"]}, {"q": "Play back what a quiet team member told you, and check it.", "points": ["Their point in one line", "Include the feeling", "Is that right?"], "coach": true}],
+ "22": [{"q": "Can we discuss the office move first? It's urgent.", "points": ["Acknowledge it", "Park it with a time", "Back to the goal"]}, {"q": "Close the meeting.", "points": ["The decision", "Owner and date", "Can everyone live with that?"], "coach": true}],
+ "23": [{"q": "Sorry, but that won't work. We tried it before.", "points": ["Use his name", "Finish your point", "Promise him the floor"]}, {"q": "Give the floor back to the person you stopped.", "points": ["Use their name", "Ask for their view", "Link it to your plan"], "coach": true}],
+ "24": [{"q": "Why are you wasting our money on this?", "points": ["Pause first", "Restate it in neutral words", "A short answer, then bridge"]}, {"q": "Who takes responsibility if it fails?", "points": ["Answer directly", "Short sentences", "Back to your key message"]}],
+ "25": [{"q": "What's the exact number? You should know this.", "points": ["I don't know yet", "What you do know", "A specific time"]}, {"q": "A question takes you off topic. Answer it, then bridge back.", "points": ["A brief answer", "A bridge phrase", "Your key message"], "coach": true}]
 };
 function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '):[];
   const st=n=>{ if(!done) return q.type==='weak'&&c.sel&&c.sel.has(n)?'sel':'';
@@ -2625,7 +3022,16 @@ const LICO=[
  '<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>',
  '<circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>',
  '<rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M7.5 18c.8-2.5 2.5-4 4.5-4s3.7 1.5 4.5 4"/>',
- '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M10 10h.01M14 10h.01"/>'].map(p=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`);
+ '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M10 10h.01M14 10h.01"/>',
+ '<path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.7V15"/><path d="M12 18.5h.01"/>',
+ '<path d="M7 10a5 5 0 0 1 10 0c0 3-3 4-3 7a2.5 2.5 0 0 1-5 0"/><path d="M10 10a2 2 0 0 1 4 0"/>',
+ '<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/>',
+ '<path d="M6 21V4M6 4h11l-2.5 4L17 12H6"/>',
+ '<path d="M8 13V6a1.5 1.5 0 0 1 3 0v5M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v7c0 4-2.5 7-6 7-2.5 0-4-1.5-5.5-4L4 13a1.5 1.5 0 0 1 2.5-1.5L8 13"/>',
+ '<path d="M4 6l1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17M11 6h9M11 12h9M11 18h9"/>',
+ '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+ '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',
+ '<path d="M3 16h18M5 16v-3a7 7 0 0 1 14 0v3M9 16v-4M15 16v-4"/>'].map(p=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`);
 let lsess=null;
 /* A lesson drill as script markup, so it plays and highlights like a scenario line. */
 function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧‧‧':type==='pause-long'?'‧‧‧‧‧':type==='note'||type==='breath'?'':type==='down'?`${t} ↘`:type==='stress'?`*${t}*`:t).filter(Boolean).join(' '); }

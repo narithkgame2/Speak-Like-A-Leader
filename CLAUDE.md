@@ -18,9 +18,11 @@ real estate (his direction, 2026-09-29).
   `icons/` (source `icons/icon.svg`, PNGs rendered with headless Chrome), `manifest.webmanifest`; opens full screen
   from the Home Screen as "Speak Leader".
 - Units (`UNIT_DEF`, climbing order): Foundation, Clarity, First impressions, Presenting and persuading, Under pressure,
-  Negotiation, Video calls, People and hard conversations. A lesson joins a unit with `unit:"Clarity"` (none =
+  Negotiation, Video calls, People and hard conversations, Listen and ask, Lead the room, Tough Q&A (the last three
+  added 2026-09-29 at the top so nobody's progress moves back; Tough Q&A is High Camp). A lesson joins a unit with `unit:"Clarity"` (none =
   Foundation); a scenario joins by its `cat`. Each unit is a camp (`CAMPS`, `ALTS` up to 5,000 m, `RANKS` one per
-  camp, `ZONES` scenery). 14 lessons (8 Foundation, 3 Clarity, 3 Video calls), 20 scenarios. Keep new lessons in
+  camp, `ZONES` scenery, 11 each; `ALTS`/`RANKS` 12 with the summit). 23 lessons (8 Foundation, 3 each for Clarity, Video
+  calls, Listen and ask, Lead the room, Tough Q&A), 26 scenarios (A–Z: a 27th needs `letter()` to go past Z), 49 steps. Keep new lessons in
   the form `  { title:"…", unit:"…",` so tools/make_voice.py can read them.
 - More session kinds on the lesson card engine (`lsess.kind`): 'lesson', 'r3', 'prep', 'breathe'; non-lesson kinds
   run on route `session`.
@@ -78,7 +80,7 @@ real estate (his direction, 2026-09-29).
   (`RANKS`, one per camp), altitude and a mini mountain profile; sticky right rail at >=1200px. The Lessons tab is
   one numbered list of all lessons (row tinted by unit) plus the five principles.
   Practice sessions run full screen (`body.focus`).
-- Levels and stars (Candy Crush-style, 2026-09-29): steps show numbers 1–34; finished steps show 1–3 brass stars
+- Levels and stars (Candy Crush-style, 2026-09-29): steps show numbers 1–49; finished steps show 1–3 brass stars
   (`state.stars`, key `l{i}` / `s{i}`, best kept; steps finished before stars existed show 3). Lesson stars = quizzes
   right + say cards with a "good" verdict; scenario stars = round-2 lines with "good" (`sess.good`); >=85% 3, >=50% 2,
   else 1 (`scoreStars`, `award`). The done card shows the stars. The first time a step is finished, `pendingUnlock`
