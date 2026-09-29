@@ -128,7 +128,14 @@ real estate (his direction, 2026-09-29).
   / without what (`state.intro`, same data as the Lesson 6 builder; Settings → "Your introduction" reopens it).
   Script text may contain `{name}` and `{intro}`; `personal()` fills them everywhere text is parsed or shown
   (`parseLine`, `fmt`, `segsOf`, `renderScript`, `quizText`). Personal lines have no recorded clip
-  (`isPersonal`; the generator skips them) and play in the device voice.
+  (`isPersonal`; the generator skips them). The phone makes them itself in the same Kokoro voices (`pvBuild`, kokoro-js
+  from jsdelivr + the q8 model from Hugging Face, ~90 MB once, cached by the browser): after the profile is saved and
+  4s after each app open, all personal lines (`pvJobs`, cast via `kCast` = the generator's `speakers()`) are made in
+  the background, same pauses and loudness as make_voice.py, repeated phrases made once, "Introduce yourself" first,
+  stored in IndexedDB `takes` as `pv:<fnv hash of filled text|voice|speed>` and played via `pvClip` (hooked into
+  `clipFor`, `lsModel`, `qzPlay`, the intro builder). A new name/intro = new keys; old ones are deleted. Until
+  ready, or if the model can't run, those lines use the device voice. Settings shows the status (`#pvRow`).
+  ~2.5 min on a Mac; slower on a phone.
 - Scenario lines render as chat bubbles: `them` left, `you` right, a second speaker gets `.alt`.
 
 ## Teaching principles (keep these when adding content)

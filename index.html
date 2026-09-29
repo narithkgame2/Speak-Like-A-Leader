@@ -2695,8 +2695,8 @@ const IDB={ db:null,
   get(k){ return this.req('readonly',s=>s.get(k)); }, set(k,v){ return this.req('readwrite',s=>s.put(v,k)); },
   del(k){ return this.req('readwrite',s=>s.delete(k)); }, keys(){ return this.req('readonly',s=>s.getAllKeys()); } };
 async function loadMine(){ try{ for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(v&&v.blob) MINE[k]={url:URL.createObjectURL(v.blob), start:v.start, stop:v.stop}; } }catch(e){} }
-function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||(useFiles()&&!isPersonal(sc.lines[li][1])&&AUDIO[id])||null; }
-function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&AUDIO[id]?'built-in voice':'device voice'; }
+function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li), [who,text]=sc.lines[li]; return (state.useMine!==false&&MINE[id])||(useFiles()&&!isPersonal(text)&&AUDIO[id])||(who!=='stage'&&pvClip(text,kCast(sc)[who]))||null; }
+function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&(AUDIO[id]||pvClip(sc.lines[li][1],kCast(sc)[sc.lines[li][0]]))?'built-in voice':'device voice'; }
 /* Voiced-time envelope of a clip, so the highlight pauses during silences. null if the clip can't be read. */
 const ENV={};
 function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
@@ -2806,7 +2806,7 @@ async function makeZip(files){ const parts=[], cen=[]; let off=0; const enc=new 
   [[0,0x06054b50,4],[8,files.length,2],[10,files.length,2],[12,size,4],[16,off,4]].forEach(([o,v,n])=>n===4?e.setUint32(o,v,true):e.setUint16(o,v,true));
   return new Blob([...parts,...cen,e],{type:'application/zip'}); }
 async function exportTakes(btn){ btn.disabled=true; const files=[], manifest={};
-  for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(!v||!v.blob) continue; const ext=/mp4|m4a|aac/.test(v.type)?'m4a':/ogg/.test(v.type)?'ogg':'webm';
+  for(const k of (await IDB.keys())||[]){ if(String(k).startsWith('pv:')) continue; const v=await IDB.get(k); if(!v||!v.blob) continue; const ext=/mp4|m4a|aac/.test(v.type)?'m4a':/ogg/.test(v.type)?'ogg':'webm';
     files.push({name:`${k}.${ext}`, blob:v.blob}); manifest[k]={url:`audio/${k}.${ext}`, start:+v.start.toFixed(2), stop:+v.stop.toFixed(2)}; }
   files.push({name:'manifest.json', blob:new Blob([JSON.stringify(manifest,null,1)],{type:'application/json'})});
   const a=document.createElement('a'); a.href=URL.createObjectURL(await makeZip(files)); a.download='speak-like-an-advisor-voice.zip'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000); btn.disabled=false; }
@@ -2815,6 +2815,56 @@ async function exportTakes(btn){ btn.disabled=true; const files=[], manifest={};
    Scripts are general. Where you introduce yourself they say {name} and {intro}, filled from your profile
    (asked once on first open, editable in Settings). Those lines use the device voice: a recording can't say every name. */
 function introBody(){ const n=state.intro; return `I help *${n.who||'my clients'}* ${n.get||'make better decisions'}${n.avoid?` without ${n.avoid}`:''}.`; }
+
+/* ---------------- YOUR NAME IN THE SAME VOICE ----------------
+   Lines with {name} / {intro} can't be pre-recorded, so the phone makes them itself with the same Kokoro voices
+   (kokoro-js, a one-time ~90 MB model download, cached by the browser). They're built in the background after the
+   profile is saved or the app opens, stored in IndexedDB as "pv:<hash of the filled text + voice>" (so a new name or
+   intro simply makes new ones), and play like any clip. Until they're ready, or if the phone can't run the model,
+   those lines use the device voice as before. Same cast, pauses and loudness as tools/make_voice.py. */
+const KCAST={ you:['am_michael',0.92], coach:['af_heart',1], male:[['am_fenrir',1],['bm_george',1]], female:[['af_bella',1],['bf_emma',1],['af_nicole',1]],
+  neutral:{Host:['af_nicole',1],Audience:['bf_emma',1],Investor:['am_fenrir',1],Client:['am_fenrir',1],Dara:['af_bella',1]} };
+function kCast(sc){ const cast={you:KCAST.you}; let m=0,f=0;
+  [...new Set(sc.lines.map(l=>l[0]).filter(w=>w!=='you'&&w!=='stage'))].forEach(k=>{ const name=k==='them'?sc.them:k.split(':')[1];
+    cast[k]=KCAST.neutral[name]||(/^(Ms|Mrs|Miss)\.?\s/.test(name)?KCAST.female[f++%3]:KCAST.male[m++%2]); }); return cast; }
+function fnv(t){ let h=0x811c9dc5; for(let i=0;i<t.length;i++){ h^=t.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(16); }
+const pvKey=(text,v)=>'pv:'+fnv(personal(text)+'|'+v[0]+'|'+v[1]);
+function pvClip(text,v){ return useFiles()&&isPersonal(text)&&MINE[pvKey(text,v||KCAST.you)]||null; }
+function pvJobs(){ const jobs=new Map(), add=(t,v)=>{ if(isPersonal(t)) jobs.set(pvKey(t,v),[t,v]); };
+  SCENARIOS.forEach(sc=>{ const c=kCast(sc); sc.lines.forEach(([w,t])=>{ if(w!=='stage') add(t,c[w]); }); });
+  LESSONS.forEach(l=>{ l.pairs.forEach(p=>{ if(!p.noPlay&&!p.lang){ add(p.normal,KCAST.you); add(p.better,KCAST.you); } }); add(drillMarkup(l.drill.script),KCAST.you); });
+  add("Good to meet you. I'm {name}. ‧‧‧ {intro}",KCAST.you); return jobs; }
+let PV={state:'idle',done:0,total:0}, pvTTS=null, pvRun=false;
+function pvStatusText(){ const p=PV; if(p.state==='ready') return 'Your name and introduction play in the same voice.';
+  if(p.state==='work') return `Preparing your name and introduction in the lesson voice… ${p.done}/${p.total}`;
+  if(p.state==='fail') return 'Your name and introduction use the device voice on this browser.'; return ''; }
+function pvShow(){ const el=$('pvRow'); if(el) el.textContent=pvStatusText(); }
+async function pvBuild(){ if(pvRun||!useFiles()||!state.onboarded||!state.intro.name) return; pvRun=true;
+  try{ const jobs=pvJobs(), keys=new Set(jobs.keys());
+    for(const k of Object.keys(MINE)) if(k.startsWith('pv:')&&!keys.has(k)){ URL.revokeObjectURL(MINE[k].url); delete MINE[k]; try{ await IDB.del(k); }catch(e){} }
+    const todo=[...jobs].filter(([k])=>!MINE[k]).sort((a,b)=>/^Good to meet you/.test(b[1][0])-/^Good to meet you/.test(a[1][0])); PV={state:todo.length?'work':'ready',done:jobs.size-todo.length,total:jobs.size}; pvShow();
+    if(!todo.length) return;
+    if(!pvTTS){ const { KokoroTTS }=await import('https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm');
+      pvTTS=await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX',{dtype:'q8',device:'wasm'}); }
+    const seg=new Map();   // the same phrase in the same voice is made once (the introduction appears in several lines)
+    for(const [k,[text,v]] of todo){ if(!state.intro.name) break;
+      const parts=[]; let sr=24000;
+      for(const [t,type] of segsOf(text)){
+        if(type==='pause'||type==='pause-long'){ parts.push(new Float32Array(Math.round(sr*(type==='pause'?0.65:1.3)))); continue; }
+        if(!t) continue; const sk=t+'|'+v[0]+'|'+v[1]; if(!seg.has(sk)){ const a=await pvTTS.generate(t,{voice:v[0],speed:v[1]}); seg.set(sk,[a.audio,a.sampling_rate]); }
+        const [au,r]=seg.get(sk); sr=r; parts.push(au); }
+      const n=parts.reduce((x,a)=>x+a.length,0), pcm=new Float32Array(n); let o=0; for(const a of parts){ pcm.set(a,o); o+=a.length; }
+      let sum=0,cnt=0,peak=0; for(const x of pcm){ const ax=Math.abs(x); if(ax>peak) peak=ax; if(ax>0.01){ sum+=x*x; cnt++; } }
+      const g=cnt?Math.min(0.07/Math.sqrt(sum/cnt),0.9/(peak||1)):1, wav=new DataView(new ArrayBuffer(44+n*2)), str=(off,t)=>[...t].forEach((c,i)=>wav.setUint8(off+i,c.charCodeAt(0)));
+      str(0,'RIFF'); wav.setUint32(4,36+n*2,true); str(8,'WAVEfmt '); wav.setUint32(16,16,true); wav.setUint16(20,1,true); wav.setUint16(22,1,true);
+      wav.setUint32(24,sr,true); wav.setUint32(28,sr*2,true); wav.setUint16(32,2,true); wav.setUint16(34,16,true); str(36,'data'); wav.setUint32(40,n*2,true);
+      for(let i=0;i<n;i++) wav.setInt16(44+i*2,Math.max(-1,Math.min(1,pcm[i]*g))*32767,true);
+      const blob=new Blob([wav],{type:'audio/wav'}); await IDB.set(k,{blob,type:blob.type,at:Date.now(),pv:true});
+      MINE[k]={url:URL.createObjectURL(blob)}; PV.done++; pvShow(); }
+    PV.state=PV.done>=PV.total?'ready':'work'; pvShow();
+  }catch(e){ PV.state='fail'; pvShow(); }
+  finally{ pvRun=false; } }
+
 function personal(t){ return String(t??'').replace(/\{name\}/g, state.intro.name||'Alex').replace(/\{intro\}/g, introBody()); }
 const isPersonal=t=>/\{(name|intro)\}/.test(t||'');
 function viewWelcome(){ const n=state.intro;
@@ -2898,7 +2948,7 @@ function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '
    says "Right." or "Not quite." and why. Spoken answers use the model voice; described actions ("[sitting still…]")
    are read by the coach. Clips: qz{i}-a / qz{i}-b (first example), qz{i}-{k}-o{n} (choice), qz{i}-{k}-t (tap quizzes). */
 const spokenText=t=>segsOf(t).some(s=>s[0]);
-async function qzPlay(id,text,coach,t){ const c=useFiles()&&AUDIO[id]; if(c) return playClip(c,[],t);
+async function qzPlay(id,text,coach,t){ const c=(useFiles()&&AUDIO[id])||pvClip(text,coach?KCAST.coach:KCAST.you); if(c) return playClip(c,[],t);
   if(!hasTTS) return true;
   if(coach||!spokenText(text)) return say(plainText(personal(text).replace(/[\[\]]/g,'')),t,{voice:themVoice(pickVoice())});
   for(const [txt,type] of segsOf(text)){
@@ -3068,7 +3118,7 @@ function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=ls
 async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
-async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip]); let ok=true;
+async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you); let ok=true;
   if(clip) ok=await playClip(clip,[...document.querySelectorAll('.w[data-l="L"]')],t);
   else for(const s of parseLine(c.text)){
     if(s.type==='pause'){ if(!(ok=await wait(800/state.rate,t))) break; }
@@ -3364,7 +3414,7 @@ function viewSession(){
 function act(a,btn){
   if(a==='tomap'){ endSession(); endLesson(); return go('home'); }
   if(a.startsWith('pp-')) return prepAct(a,btn);
-  if(a==='welcome-done'){ if(!state.intro.name){ $('bName').classList.add('need'); $('bName').focus(); return; } state.onboarded=true; save(); return go('home'); }
+  if(a==='welcome-done'){ if(!state.intro.name){ $('bName').classList.add('need'); $('bName').focus(); return; } state.onboarded=true; save(); setTimeout(pvBuild,1500); return go('home'); }
   if(a==='profile'){ state.onboarded=false; save(); render(); window.scrollTo(0,0); return; }
   if(a.startsWith('ls-')||a==='nextup') return lessonAct(a,btn);
   if(a==='speed'){ state.rate=SPEEDS.find(x=>x>state.rate+0.001)??SPEEDS[0]; save(); btn.textContent=(+state.rate.toFixed(2))+'×'; return; }
@@ -3422,7 +3472,7 @@ function viewSettings(){
   <div class="card settings">
     <label>Speed <span class="rate-val" id="rateVal">${state.rate.toFixed(2)}×</span><input type="range" id="rate" min="0.6" max="1.2" step="0.05" value="${state.rate}"></label>
     <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice</label>
-    <div><button class="ghost-btn" type="button" data-act="profile">Your introduction · ${esc(state.intro.name||'not set')}</button></div>
+    <div><button class="ghost-btn" type="button" data-act="profile">Your introduction · ${esc(state.intro.name||'not set')}</button><p class="hint" id="pvRow" style="margin:8px 0 0">${pvStatusText()}</p></div>
     <div><button class="ghost-btn" type="button" data-go="studio">Voice studio · ${SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))).filter(id=>MINE[id]).length} recorded</button></div>
   </div>
   <p class="sec-k">Model voice</p>
@@ -3459,7 +3509,8 @@ function render(){
 }
 function bindBuilder(){ const map={bName:'name',bWho:'who',bGet:'get',bAvoid:'avoid'};
   Object.keys(map).forEach(id=>$(id).addEventListener('input',e=>{ state.intro[map[id]]=e.target.value.trim(); save(); const t=introLine(); $('built').innerHTML=t?fmt(t):'Your line appears here.'; }));
-  $('bPlay')?.addEventListener('click',e=>{ const t=introLine(); if(t) playSegs(e.currentTarget, segsOf(t)); }); }
+  $('bPlay')?.addEventListener('click',e=>{ const t=introLine(), c=state.intro.name&&pvClip("Good to meet you. I'm {name}. ‧‧‧ {intro}",KCAST.you);
+    if(c&&t===personal("Good to meet you. I'm {name}. ‧‧‧ {intro}")) return runBtn(e.currentTarget,tk=>playClip(c,[],tk)); if(t) playSegs(e.currentTarget, segsOf(t)); }); }
 function bind(n,i){
   document.querySelectorAll('#main [data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go, b.dataset.i!==undefined?+b.dataset.i:undefined)));
   if(n==='lesson'){ if(lsess){ if(lsess.cards[lsess.n].type==='builder') bindBuilder(); return; } const l=LESSONS[i];
@@ -3500,8 +3551,8 @@ if(document.fonts) document.fonts.ready.then(()=>{ if(state.route.name==='home')
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{ if(state.route.name==='home') drawScene(); });
 $('backBtn').addEventListener('click',()=>{ if(sess) act('exit'); else go($('backBtn').dataset.go); });
 $('main').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act,b); });
-load(); render(); if(state.route.name==='home') scrollToNow(); offlineInit();
-loadMine().then(()=>{ if(['studio','settings'].includes(state.route.name)) render(); });
+load(); render(); if(state.route.name==='home') scrollToNow(); offlineInit(); setTimeout(()=>loadMineReady.then(pvBuild),4000);
+const loadMineReady=loadMine().then(()=>{ if(['studio','settings'].includes(state.route.name)) render(); });
 
 </script>
 </body>
