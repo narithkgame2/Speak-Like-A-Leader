@@ -365,6 +365,8 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 @media (min-width:900px){ .scene{ margin:0; padding:0 24px 10px; border-radius:24px; box-shadow:0 30px 60px -40px rgba(0,0,0,.5); } }
 @media (prefers-reduced-motion: reduce){ .me{ animation:none; } }
 .trail{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+.coach-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 20px; }
+.coach-btn{ color:var(--gold-text); }
 .studio-head{ display:grid; gap:4px; margin-bottom:6px; }
 .studio-head .j-bar{ margin:10px 0 12px; }
 .studio-btns{ margin-top:12px; }
@@ -1710,6 +1712,7 @@ function viewLesson(i){
   const l=LESSONS[i]; let step=0; const S=t=>`<h2 class="step"><span class="step-n">${++step}</span>${t}</h2>`;
   const hist=(state.ratings[i]||[]).slice(-5);
   let h=`<p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h1 class="page-title">${l.title}</h1><p class="lead">${l.sub}</p>
+  <div class="coach-row">${coachBtn(`c-lesson${i}-intro`,'Hear the coach')}<span class="hint" style="margin:0">The rule and why it works, read aloud</span></div>
   ${S('The rule')}<div class="rule">${l.rule}</div>
   <details class="fold"><summary>Why this works</summary><p class="body">${l.why}</p></details>
   ${S('Compare')}<p class="hint">What most people say, and what to say instead.</p>
@@ -1717,7 +1720,7 @@ function viewLesson(i){
     <p class="pair-normal"><span>Most people</span>${esc(p.normal)}</p>
     <div class="pair-better"><span>Instead</span>${fmt(p.better)}</div>
     <div class="pair-foot">${p.noPlay?'':playBtn(`data-pair="${k}"`)}<p class="pair-note">${p.note}</p></div></div>`).join('')}
-  ${S('Drill out loud')}<p class="hint">${l.drill.tag}</p>
+  ${S('Drill out loud')}<p class="hint">${l.drill.tag}</p><div class="coach-row">${coachBtn(`c-lesson${i}-drill`,'Coach instructions')}</div>
   <div class="script">${renderScript(l.drill.script)}</div>
   <div class="row-actions">${playBtn('id="drillPlay"','▶ Play drill')}<span class="legend"><span class="pause">‧‧‧</span> pause <span class="down">↘</span> voice falls <span class="stress">word</span> stress</span></div>
   <p class="body small">${l.drill.note}</p>`;
@@ -1788,8 +1791,9 @@ function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
   const so=[...rms].sort((a,b)=>a-b), lo=so[Math.floor(n*0.1)]||0, hi=so[Math.floor(n*0.98)]||0, thr=lo+(hi-lo)*0.12, cum=new Float32Array(n+1);
   for(let f=0;f<n;f++) cum[f+1]=cum[f]+(rms[f]>thr?1:0); return cum; }catch(e){ return null; } })()); }
 /* Play a clip and move the word highlight through the line in proportion to word length, over voiced time only. */
+const PLAYER=new Audio();
 function playClip(c,spans,t){ return new Promise(async res=>{ if(t!==tok) return res(false); const env=spans.length?await clipEnv(c.url):null; if(t!==tok) return res(false);
-  const a=new Audio(c.url); recAudio=a; a.playbackRate=Math.min(1.35,Math.max(.7,state.rate/0.85));
+  const a=PLAYER; a.pause(); a.src=c.url; recAudio=a; a.defaultPlaybackRate=a.playbackRate=Math.min(1.35,Math.max(.7,state.rate/0.85));
   const w=spans.map(s=>s.textContent.length+1), tot=w.reduce((x,y)=>x+y,0)||1; let raf=0, done=false;
   const end=ok=>{ if(done) return; done=true; cancelAnimationFrame(raf); spans.forEach(s=>s.classList.remove('on')); a.pause(); res(ok&&t===tok); };
   const tick=()=>{ if(t!==tok) return end(false); const t0=c.start||0, t1=c.stop||a.duration||0;
@@ -1800,6 +1804,33 @@ function playClip(c,spans,t){ return new Promise(async res=>{ if(t!==tok) return
   a.onended=()=>end(true); a.onerror=()=>end(false);
   a.onloadedmetadata=()=>{ if(c.start) a.currentTime=c.start; a.play().then(()=>{ raf=requestAnimationFrame(tick); }).catch(()=>end(false)); };
 }); }
+
+/* ---------------- COACH VOICE ----------------
+   A separate coach voice guides practice and lessons. Clips "c-..." come from tools/make_voice.py (which reads
+   COACH_FX below); without a clip the coach falls back to the browser voice. */
+const COACH_FX = {
+ "r1": "Round one. Read along. Listen to the model, then say each line yourself, matching the pauses.",
+ "r2": "Round two. This time, from memory. Your line stays hidden until you've said it.",
+ "turn": "Your turn.",
+ "good": "Well delivered. Continue when you're ready.",
+ "pace": "A little fast. Slow down, and let the pauses land.",
+ "pause": "Hold each pause for a full beat. Silence reads as confidence.",
+ "end": "Your last word faded. Keep it strong, all the way to the end.",
+ "nospeech": "I didn't hear anything. Check the microphone, and try again.",
+ "done1": "Round one complete. Next, say it from memory.",
+ "done2": "Scenario complete. Now rewrite the key lines in your own words."
+};
+const plainText=h=>String(h).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+function coachText(k){ let m;
+  if((m=k.match(/^c-fx-(\w+)$/))) return COACH_FX[m[1]]||'';
+  if((m=k.match(/^c-s(\d+)-l(\d+)$/))) return plainText(SCENARIOS[+m[1]].lines[+m[2]][2]||'');
+  if((m=k.match(/^c-lesson(\d+)-intro$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.sub} The rule. ${l.rule} ${l.why}`); }
+  if((m=k.match(/^c-lesson(\d+)-drill$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.drill.tag} ${l.drill.note}`); }
+  return ''; }
+const coachOn=()=>state.coachVoice!==false;
+function coachSay(k,t){ const c=AUDIO[k]; if(c) return playClip(c,[],t); const txt=coachText(k);
+  return txt&&hasTTS?say(txt,t,{}):Promise.resolve(true); }
+const coachBtn=(k,label)=>`<button class="small-btn coach-btn" type="button" data-act="coach" data-k="${k}">▶ ${label}</button>`;
 
 /* ---------------- VOICE STUDIO ---------------- */
 let stRec=null; const studioOpen=new Set([0]);
@@ -1893,12 +1924,13 @@ async function runBtn(btn,fn){ const same=activeBtn===btn; stopAll(); if(same) r
 function startSession(i,round){ endSession(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false}; enterLine(); window.scrollTo(0,0); }
 function endSession(){ stopAll(); cancelRec(); if(sess&&sess.url) URL.revokeObjectURL(sess.url); sess=null; }
 function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); Object.assign(sess,{url:null,res:null,err:null,peek:false}); listen(); }
-async function listen(){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv);
+async function listen(){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv), note=sc.lines[li][2];
   stopAll(); sess.step='listen'; render();
-  if(!hasTTS){ sess.step='ready'; render(); return; }
-  const t=++tok;
+  const t=++tok, coach=coachOn();
+  if(coach&&!sess.introDone){ sess.introDone=true; if(!await coachSay(sess.round===1?'c-fx-r1':'c-fx-r2',t)||!await wait(300,t)) return; }
   for(const c of contextOf(sc,li)){ if(!await speakLine(sc,c,t,yv,tv)) return; if(!await wait(350/state.rate,t)) return; }
-  if(sess.round===1&&!await speakModel(t)) return;
+  if(sess.round===1){ if(coach&&note&&(!await coachSay(`c-s${sess.i}-l${li}`,t)||!await wait(250,t))) return; if(!await speakModel(t)) return; }
+  else if(coach&&!await coachSay('c-fx-turn',t)) return;
   if(t===tok){ sess.step='ready'; render(); } }
 
 async function startRec(){ stopAll();
@@ -1912,7 +1944,7 @@ async function startRec(){ stopAll();
   mr.onstop=async()=>{ releaseMic(); if(!sess||sess.k!==key) return;
     const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'});
     if(sess.url) URL.revokeObjectURL(sess.url); sess.url=URL.createObjectURL(blob); sess.step='review'; sess.res='wait'; render();
-    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; render(); } };
+    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; render(); const k=judge().key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); sess.step='rec'; sess.err=null; render(); }
 function stopRec(){ if(!rec) return; clearInterval(rec.timer); const r=rec; rec=null; if(r.mr.state!=='inactive') r.mr.stop(); }
@@ -1938,16 +1970,16 @@ function waveSVG(bars){ return `<svg class="wave" viewBox="0 0 120 32" preserveA
 function judge(){ const r=sess.res, li=sess.lines[sess.k], text=SCENARIOS[sess.i].lines[li][1], md=sess.modelDur[li], exp=innerPauses(text);
   if(r==='wait') return {v:'neutral',t:'Listening back…',items:[]};
   if(!r) return {v:'neutral',t:'Recorded',items:['Play it back and compare it with the model.']};
-  if(r.empty) return {v:'almost',t:'No speech heard',items:['Check the microphone is allowed, then try again.']};
-  const items=[]; let ok=true;
+  if(r.empty) return {v:'almost',t:'No speech heard',items:['Check the microphone is allowed, then try again.'],key:'nospeech'};
+  const items=[]; let ok=true, fail=null;
   if(md){ const ratio=r.speech/md, nums=`${r.speech.toFixed(1)}s, model ${md.toFixed(1)}s.`;
-    if(ratio<0.8){ ok=false; items.push(`<b>Pace</b> ${nums} Slow down and let the pauses land.`); }
+    if(ratio<0.8){ ok=false; fail=fail||'pace'; items.push(`<b>Pace</b> ${nums} Slow down and let the pauses land.`); }
     else items.push(`<b>Pace</b> ${nums} ${ratio>1.4?'Slower is fine if the pauses were on purpose.':'Close to the model.'}`); }
-  if(exp){ if(r.pauses<exp){ ok=false; items.push(`<b>Pauses</b> ${r.pauses} of ${exp}. Hold each ‧‧‧ for a full beat.`); }
+  if(exp){ if(r.pauses<exp){ ok=false; fail=fail||'pause'; items.push(`<b>Pauses</b> ${r.pauses} of ${exp}. Hold each ‧‧‧ for a full beat.`); }
     else items.push(`<b>Pauses</b> ${r.pauses} of ${exp}. ${r.pauses>exp+2?'Fine if deliberate, not if you were searching for words.':'Right where they belong.'}`); }
-  if(r.end!=null){ if(r.end<0.55){ ok=false; items.push(`<b>Ending</b> your last word dropped to ${Math.round(r.end*100)}% of your volume. Keep it strong to the final word.`); }
+  if(r.end!=null){ if(r.end<0.55){ ok=false; fail=fail||'end'; items.push(`<b>Ending</b> your last word dropped to ${Math.round(r.end*100)}% of your volume. Keep it strong to the final word.`); }
     else items.push('<b>Ending</b> held to the last word.'); }
-  return {v:ok?'good':'almost', t:ok?['Well delivered','Steady and clear','That lands'][sess.k%3]:'Almost there', items, foot:true};
+  return {v:ok?'good':'almost', t:ok?['Well delivered','Steady and clear','That lands'][sess.k%3]:'Almost there', items, foot:true, key:ok?'good':fail};
 }
 const MIC_ERR={insecure:'The microphone only works on a secure link. On iPhone, open the <b>https://</b> address, not http://.',denied:'Microphone access was blocked. Allow it for this site in your browser settings, then try again.',nomic:'This browser can\'t record audio. Try Safari or Chrome.'};
 
@@ -1956,6 +1988,7 @@ function viewSession(){
   const pct=step==='done'?100:Math.round(sess.k/total*100);
   const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="exit" aria-label="End practice">${ICO.x}</button>
     <div class="pbar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${step==='done'?total:sess.k}"><i style="width:${pct}%"></i></div>
+    <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button>
     <button class="speed" type="button" data-act="speed" aria-label="Playback speed">${+state.rate.toFixed(2)}×</button></div>`;
   const foot=(cls,inner)=>`<div class="fx-foot ${cls}"><div class="fx-foot-in">${inner}</div></div>`;
   if(step==='done') return `<div class="u-${catColor(sc.cat)}">${top}<div class="done-wrap">
@@ -1992,6 +2025,8 @@ function viewSession(){
 function act(a,btn){
   if(a==='node'){ pathOpen=pathOpen===btn.dataset.k?null:btn.dataset.k; return render(); }
   if(a.startsWith('st-')) return studioAct(a,btn);
+  if(a==='coach') return runBtn(btn,t=>coachSay(btn.dataset.k,t));
+  if(a==='coachv'){ state.coachVoice=!coachOn(); save(); btn.textContent=coachOn()?'Coach on':'Coach off'; btn.setAttribute('aria-pressed',coachOn()); return; }
   if(!sess&&a!=='start1'&&a!=='start2') return;
   const i=sess?sess.i:state.route.i;
   if(a==='start1'||a==='round1') return startSession(i,1);
@@ -2008,7 +2043,7 @@ function act(a,btn){
   if(a==='again'){ stopAll(); cancelRec(); sess.step='ready'; sess.err=null; return render(); }
   if(a==='next'){ stopAll(); cancelRec(); if(sess.step==='review') markDay();
     if(sess.k<sess.lines.length-1){ sess.k++; enterLine(); window.scrollTo(0,0); }
-    else { if(sess.round===2) state.scDone[i]=true; markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); } return; }
+    else { if(sess.round===2) state.scDone[i]=true; markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(sess.round===2?'c-fx-done2':'c-fx-done1',t); } } return; }
   if(a==='speed'){ state.rate=SPEEDS.find(x=>x>state.rate+0.001)??SPEEDS[0]; save(); btn.textContent=(+state.rate.toFixed(2))+'×'; }
 }
 
@@ -2043,6 +2078,7 @@ function viewSettings(){
   <p class="hint">Choose a voice marked <b>Enhanced</b> or <b>Premium</b> if you have one. Shadowing a robotic voice teaches robotic intonation. On iPhone: Settings → Accessibility → Spoken Content → Voices → English, then download an Enhanced voice.<br><br>Use playback for timing and pauses. Warmth and authority have to come from you.</p>
   <h2 class="sec-h">Model voice</h2>
   <div class="card settings"><p class="body small" style="margin:0">${(()=>{ const ids=SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))), m=ids.filter(id=>MINE[id]).length, ai=ids.filter(id=>!MINE[id]&&AUDIO[id]).length; return `<b>${m}</b> of ${ids.length} lines in your voice · <b>${ai}</b> in the Mac voice${ai<ids.length-m?' · the rest use the browser voice':''}.`; })()}</p>
+  <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice guides practice and lessons</label>
   <div><button class="solid-btn" type="button" data-go="studio">Open voice studio</button></div></div>
   <h2 class="sec-h">Progress</h2>
   <div class="card settings"><p class="body small" style="margin:0">Progress, ratings and notes are saved on this device only.</p>
@@ -2095,6 +2131,7 @@ function bind(n,i){
   }
   if(n==='settings'){
     $('voiceSel').addEventListener('change',e=>{ state.voice=e.target.value; save(); });
+    $('coachVoiceT').addEventListener('change',e=>{ state.coachVoice=e.target.checked; save(); });
     $('rate').addEventListener('input',e=>{ state.rate=+e.target.value; $('rateVal').textContent=state.rate.toFixed(2)+'×'; save(); });
     $('testVoice').addEventListener('click',e=>playSegs(e.currentTarget, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')));
     $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress, ratings and notes? This cannot be undone.')){ const keep={rate:state.rate,voice:state.voice}; try{ localStorage.removeItem(KEY); }catch(e){} state=Object.assign({route:{name:'home'},done:{},own:{},notes:{},ratings:{},intro:{name:'',who:'',get:'',avoid:''},scMode:'shadow',coach:true,scOwn:{},scDone:{},lastSc:null},keep); save(); render(); } });

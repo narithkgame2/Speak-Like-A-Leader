@@ -39,6 +39,12 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   any script line; only changed lines are regenerated. To upgrade quality, download a Premium voice in macOS
   Spoken Content settings and set `YOU` (and the cast) at the top of the script. Clips highlight words proportionally to word length; speechSynthesis uses
   `onboundary` (not supported by every voice). Settings → "Use my recordings as the model" (`state.useMine`).
+- Coach voice (the trainer, Moira): clips `c-fx-*` (session cues and spoken feedback, texts in `COACH_FX`),
+  `c-s{si}-l{li}` (the coach note for each "you" line), `c-lesson{i}-intro` / `-drill` (lesson "Hear the coach" and
+  "Coach instructions" buttons). In practice: intro at round start, then per line their line → coach tip → model
+  (round 2: "Your turn."), spoken verdict after each recording (`judge().key`), and a line at round end. Toggle:
+  "Coach on/off" in the practice bar and Settings (`state.coachVoice`). Missing clips fall back to the browser voice.
+  All clips play through one shared `PLAYER` element so iPhones allow the spoken feedback after the first tap.
 - Scenario practice is guided shadowing (modelled on BoldVoice / ELSA), one of your lines at a time:
   Listen (their line, then the model line) → Record (mic) → Compare (play model / me / both, rough pace and
   pause feedback from the recording) → Try again or Good, next. Round 1 = read along, Round 2 = line hidden,

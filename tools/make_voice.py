@@ -17,14 +17,42 @@ OUT = os.path.join(ROOT, "audio")
 YOU = ("Daniel", 165)                                  # your lines: calm, unhurried
 MALE = [("Rishi", 180), ("Aman", 180)]                 # Mr. ...; a second man gets the second voice
 FEMALE = [("Samantha", 180), ("Karen", 180), ("Moira", 180)]
-NEUTRAL = {"Host": ("Samantha", 180), "Audience": ("Karen", 180), "Investor": ("Rishi", 175), "Dara": ("Moira", 180)}
+NEUTRAL = {"Host": ("Samantha", 180), "Audience": ("Karen", 180), "Investor": ("Rishi", 175), "Dara": ("Tessa", 180)}
+COACH = ("Moira", 175)                                # the trainer: tips, instructions, feedback
 SHORT, LONG = 650, 1300                                # ms of silence for ‧‧‧ and ‧‧‧‧‧
 
 
+def source():
+    return open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
+
+
 def scenarios():
-    s = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
+    s = source()
     i = s.index("const SCENARIOS = ") + len("const SCENARIOS = ")
     return json.loads(s[i:s.index("\n];", i) + 2])
+
+
+def plain(h):
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", h)).strip()
+
+
+def coach_lines():
+    """Every coach clip: session cues (COACH_FX), the tip for each of your lines, lesson intros and drill notes.
+    Texts match coachText() in index.html, which the app uses when a clip is missing."""
+    s = source(); out = {}
+    i = s.index("const COACH_FX = ") + len("const COACH_FX = ")
+    for k, v in json.loads(s[i:s.index("\n};", i) + 2]).items(): out[f"c-fx-{k}"] = v
+    for si, sc in enumerate(scenarios()):
+        for li, line in enumerate(sc["lines"]):
+            if line[0] == "you" and len(line) > 2 and line[2]: out[f"c-s{si}-l{li}"] = plain(line[2])
+    body = s[s.index("const LESSONS = ["):s.index("\n];", s.index("const LESSONS = ["))]
+    for n, block in enumerate(body.split("\n  { title:")[1:]):
+        f = [(k, json.loads('"' + v + '"')) for k, v in re.findall(r'(\w+):"((?:[^"\\]|\\.)*)"', "title:" + block)]
+        get = lambda key, after=0: next(v for j, (k, v) in enumerate(f) if k == key and j >= after)
+        tag_at = next(j for j, (k, _) in enumerate(f) if k == "tag")
+        out[f"c-lesson{n}-intro"] = plain(f"{get('title')}. {get('sub')} The rule. {get('rule')} {get('why')}")
+        out[f"c-lesson{n}-drill"] = plain(f"{get('tag')} {get('note', tag_at)}")
+    return out
 
 
 def speakers(sc):
@@ -57,15 +85,16 @@ def main():
     if os.path.exists(mf):
         m = re.search(r"=\s*(\{.*\});?\s*$", open(mf, encoding="utf-8").read(), re.S)
         if m: old = json.loads(m.group(1))
+    jobs = []
     for si, sc in enumerate(scenarios()):
         cast = speakers(sc)
         for li, (who, text, *_) in enumerate(sc["lines"]):
-            if who == "stage": continue
-            voice, rate = cast[who]
+            if who != "stage": jobs.append((f"s{si}-l{li}", *cast[who], to_say(text)))
+    for lid, text in coach_lines().items(): jobs.append((lid, *COACH, to_say(text)))
+    for lid, voice, rate, spoken in jobs:
             if not re.search(rf"^{re.escape(voice)}\s", installed, re.M): sys.exit(f"Voice not installed: {voice}")
-            spoken = to_say(text)
             h = hashlib.sha1(f"{voice}|{rate}|{spoken}".encode()).hexdigest()[:12]
-            lid, fn = f"s{si}-l{li}", f"s{si}-l{li}.m4a"
+            fn = f"{lid}.m4a"
             path = os.path.join(OUT, fn)
             if old.get(lid, {}).get("h") == h and os.path.exists(path):
                 manifest[lid] = old[lid]; kept += 1; continue
