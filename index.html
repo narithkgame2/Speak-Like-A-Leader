@@ -264,6 +264,7 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .fb{ list-style:none; display:grid; gap:4px; margin-top:4px; }
 .fb li{ font-size:0.88rem; line-height:1.5; color:var(--text); }
 .fb b{ font-weight:600; }
+.fb-tip{ font-size:0.95rem; color:var(--text); margin-top:2px; }
 .fb-foot{ font-size:0.74rem; color:var(--dim); margin-top:4px; }
 @keyframes slideUp{ from{ transform:translateY(24px); opacity:.5; } }
 /* round complete */
@@ -280,6 +281,7 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 
 /* settings */
 .settings{ display:grid; gap:14px; }
+.settings label.toggle{ display:flex; color:var(--text); font-size:0.92rem; }
 .rate-val{ float:right; color:var(--text); font-weight:600; }
 .settings input[type=range]{ accent-color:var(--gold); width:100%; }
 
@@ -356,6 +358,12 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .node-wrap.is-now{ margin-top:22px; }
 .path-start{ text-align:center; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.35); margin:-26px 0 18px; }
 .j-prof{ display:block; width:100%; height:auto; margin:14px 0 14px; }
+@media (max-width:1199px){
+  .journey{ display:grid; grid-template-columns:1fr 132px; column-gap:14px; align-items:center; padding:14px 16px; }
+  .journey > :not(.j-prof){ grid-column:1; } .journey .eyebrow{ margin-bottom:4px; }
+  .journey .j-rank{ font-size:1.35rem; }
+  .j-prof{ grid-column:2; grid-row:1 / span 3; margin:0; }
+}
 .j-ridge{ fill:var(--bg-2); }
 .j-todo{ fill:none; stroke:var(--mute); stroke-width:1.5; stroke-dasharray:1 4; stroke-linecap:round; }
 .j-done{ fill:none; stroke:var(--gold); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
@@ -1609,15 +1617,14 @@ function viewJourney(us){
   const all=us.flatMap(u=>u.items), c=climb(us), next=us[c.r], left=next?next.items.filter(x=>!x.done).length:0;
   const ld=LESSONS.filter((_,i)=>state.done[i]).length, sd=SCENARIOS.filter((_,i)=>state.scDone[i]).length;
   return `<aside class="journey home-rail"><p class="eyebrow">Your climb</p><div class="j-rank">${RANKS[c.r]}</div>
-    <p class="j-next">${next?`${fmtM(c.alt)} · next: <b>${RANKS[c.r+1]}</b> at ${CAMPS[c.r+1]||'the summit'}, ${left} step${left>1?'s':''} to go`:`${fmtM(c.alt)} · you reached the summit.`}</p>
-    ${profileSVG(c.alt)}
-    <div class="j-stats"><span><b>${ld}/${LESSONS.length}</b>Lessons</span><span><b>${sd}/${SCENARIOS.length}</b>Scenarios</span><span><b>${streak()}</b>Day streak</span></div></aside>`;
+    <p class="j-next">${fmtM(c.alt)}${next?` · next: ${RANKS[c.r+1]}`:''}</p>
+    ${profileSVG(c.alt)}</aside>`;
 }
 function viewHome(){
   const us=units(), now=us.flatMap(u=>u.items).find(x=>!x.done);
   const secs=us.map((u,k)=>{ const complete=u.items.every(x=>x.done);
-    const sign=`<div class="camp"><span class="camp-dot" aria-hidden="true"></span><div class="camp-t"><div class="camp-k">${CAMPS[k]} · ${fmtM(ALTS[k])}${complete?' · <span class="camp-ok">✓ Reached</span>':''}</div><div class="camp-n">${esc(u.name)}</div><div class="camp-s">${u.sub}</div></div>
-      <button class="unit-btn" type="button" data-go="${u.list}">${ICO.list}List</button></div>`;
+    const sign=`<div class="camp"><span class="camp-dot" aria-hidden="true"></span><div class="camp-t"><div class="camp-k">${CAMPS[k]} · ${fmtM(ALTS[k])}${complete?' · <span class="camp-ok">✓ Reached</span>':''}</div><div class="camp-n">${esc(u.name)}</div></div>
+      <button class="unit-btn" type="button" data-go="${u.list}" aria-label="List ${esc(u.name)}">${ICO.list}</button></div>`;
     const nodes=u.items.map((it,j)=>{ const key=it.kind[0]+it.i, x=XS[j%XS.length], isNow=it===now, open=pathOpen===key, cls=it.done?'done':isNow?'now':'todo';
       return `<div class="node-wrap${isNow?' is-now':''}" style="--x:${x}px">${isNow?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}
         <button class="node ${cls}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?ICO.star:ICO.chat}</button></div>
@@ -1695,11 +1702,11 @@ function drawScene(){
 }
 
 function viewLessons(){
-  return `<h1 class="page-title">Lessons</h1><p class="lead">Do them in order. Each builds on the one before. About 15 minutes each.</p>
+  return `<h1 class="page-title">Lessons</h1>
   <div class="list u-green">${LESSONS.map((l,i)=>{ const r=lastRating(i);
     return `<button class="row" type="button" data-go="lesson" data-i="${i}">
       <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':i+1}</span>
-      <span class="row-body"><span class="row-title">${l.title}</span><span class="row-sub">${esc(l.rule)}</span>${r?`<span class="row-meta">Last rating: ${r}/5</span>`:''}</span>
+      <span class="row-body"><span class="row-title">${l.title}</span></span>
       <span class="chev" aria-hidden="true">›</span></button>`; }).join('')}</div>`;
 }
 function renderScript(arr){ return arr.map(([t,type])=>{
@@ -1712,18 +1719,17 @@ function viewLesson(i){
   const l=LESSONS[i]; let step=0; const S=t=>`<h2 class="step"><span class="step-n">${++step}</span>${t}</h2>`;
   const hist=(state.ratings[i]||[]).slice(-5);
   let h=`<p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h1 class="page-title">${l.title}</h1><p class="lead">${l.sub}</p>
-  <div class="coach-row">${coachBtn(`c-lesson${i}-intro`,'Hear the coach')}<span class="hint" style="margin:0">The rule and why it works, read aloud</span></div>
+  <div class="coach-row">${coachBtn(`c-lesson${i}-intro`,'Listen')}</div>
   ${S('The rule')}<div class="rule">${l.rule}</div>
   <details class="fold"><summary>Why this works</summary><p class="body">${l.why}</p></details>
-  ${S('Compare')}<p class="hint">What most people say, and what to say instead.</p>
+  ${S('Compare')}
   ${l.pairs.map((p,k)=>`<div class="pair"><p class="pair-moment">${esc(p.moment)}</p>
     <p class="pair-normal"><span>Most people</span>${esc(p.normal)}</p>
     <div class="pair-better"><span>Instead</span>${fmt(p.better)}</div>
     <div class="pair-foot">${p.noPlay?'':playBtn(`data-pair="${k}"`)}<p class="pair-note">${p.note}</p></div></div>`).join('')}
-  ${S('Drill out loud')}<p class="hint">${l.drill.tag}</p><div class="coach-row">${coachBtn(`c-lesson${i}-drill`,'Coach instructions')}</div>
+  ${S('Drill out loud')}<p class="hint">${l.drill.tag}</p>
   <div class="script">${renderScript(l.drill.script)}</div>
-  <div class="row-actions">${playBtn('id="drillPlay"','▶ Play drill')}<span class="legend"><span class="pause">‧‧‧</span> pause <span class="down">↘</span> voice falls <span class="stress">word</span> stress</span></div>
-  <p class="body small">${l.drill.note}</p>`;
+  <div class="row-actions">${playBtn('id="drillPlay"','▶ Play drill')}${coachBtn(`c-lesson${i}-drill`,'How to do it')}</div>`;
   if(l.builder){ const n=state.intro;
     h+=`${S('Build your introduction')}<div class="card builder">
       <label>Your name<input id="bName" placeholder="Your name" value="${esc(n.name)}"></label>
@@ -1732,20 +1738,17 @@ function viewLesson(i){
       <label>Without what problem? (optional)<input id="bAvoid" placeholder="e.g. making expensive mistakes" value="${esc(n.avoid)}"></label>
       <div class="built" id="built">${introLine()?fmt(introLine()):'Fill in the fields to see your line.'}</div>
       <div>${playBtn('id="bPlay"')}</div>
-      <p class="hint">Test: could the other person repeat your line to a colleague tomorrow? If not, make it simpler.</p></div>`; }
+      </div>`; }
   if(l.practice){ const P=l.practice, unit=P.secs<=10?'setting':'question';
     h+=`${S(`Timed practice · ${P.secs} seconds`)}<div class="card timer-card"><p class="hint" style="margin:0">${P.note}</p>
       <div class="drill-topic" id="topic">Tap "New ${unit}" to begin.</div>
       <div class="timer-row"><button class="ghost-btn" id="newTopic" type="button">New ${unit}</button><button class="solid-btn" id="startT" type="button" disabled>Start timer</button><span class="timer" id="timer">${P.secs}</span></div></div>`; }
   h+=`${S('Make it yours')}
-    <label class="field-label" for="own">In your own words</label>
-    <textarea id="own" placeholder="${esc(l.own)}">${esc(state.own[i]||'')}</textarea>
-    <p class="hint">${l.own}</p>
-    <p class="field-label">How natural did it feel today?</p>
+    <textarea id="own" aria-label="In your own words" placeholder="${esc(l.own)}">${esc(state.own[i]||'')}</textarea>
+    <p class="field-label">How natural did it feel?</p>
     <div class="rate-row">${[1,2,3,4,5].map(s=>`<button class="rate-btn" type="button" data-s="${s}" aria-label="${s} out of 5">${s}</button>`).join('')}</div>
-    <p class="hint">1 = like reading a script · 5 = I'd say it this way in a real meeting${hist.length?`<br>Recent: ${hist.map(r=>`${r.d} → ${r.s}`).join(' · ')}`:''}</p>
-    <label class="field-label" for="note">What I noticed on my recording</label>
-    <textarea id="note" placeholder="Which line, what went wrong, what you'll change.">${esc(state.notes[i]||'')}</textarea>
+    <p class="hint">1 = reading a script · 5 = natural${hist.length?` · recent: ${hist.map(r=>r.s).join(', ')}`:''}</p>
+    <textarea id="note" aria-label="Notes" placeholder="Notes: what you noticed, what you'll change">${esc(state.notes[i]||'')}</textarea>
     <div class="end-nav">
       ${i>0?`<button class="ghost-btn" type="button" data-go="lesson" data-i="${i-1}">‹ Lesson ${i}</button>`:'<span></span>'}
       <button class="solid-btn" type="button" id="doneBtn">${state.done[i]?'Done ✓':''}${i<LESSONS.length-1?(state.done[i]?' · Next lesson ›':'Mark done & next ›'):(state.done[i]?'':'Mark done')}</button>
@@ -1754,10 +1757,10 @@ function viewLesson(i){
 }
 
 function viewScenarios(){
-  return `<h1 class="page-title">Scenarios</h1><p class="lead">Full meetings, one of your lines at a time. Finish the lessons first for the best results, or start with the situation you face soonest.</p>
+  return `<h1 class="page-title">Scenarios</h1>
   ${CATS.map(c=>`<h2 class="sec-h">${c}</h2><div class="list u-${catColor(c)}">${SCENARIOS.map((s,i)=>s.cat!==c?'':`<button class="row" type="button" data-go="scenario" data-i="${i}">
     <span class="row-n ${state.scDone[i]?'done':''}">${state.scDone[i]?'✓':letter(i)}</span>
-    <span class="row-body"><span class="row-title">${s.title}</span><span class="row-sub">${esc(s.goal)}</span><span class="row-meta">Uses lessons ${s.lessons.join(', ')}</span></span>
+    <span class="row-body"><span class="row-title">${s.title}</span></span>
     <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>`).join('')}`;
 }
 
@@ -1809,7 +1812,7 @@ function playClip(c,spans,t){ return new Promise(async res=>{ if(t!==tok) return
    A separate coach voice guides practice and lessons. Clips "c-..." come from tools/make_voice.py (which reads
    COACH_FX below); without a clip the coach falls back to the browser voice. */
 const COACH_FX = {
- "r1": "Round one. Read along. Listen to the model, then say each line yourself, matching the pauses.",
+ "r1": "Round one. Listen, then say each line yourself. Stress the underlined words, and hold the pauses.",
  "r2": "Round two. This time, from memory. Your line stays hidden until you've said it.",
  "turn": "Your turn.",
  "good": "Well delivered. Continue when you're ready.",
@@ -1856,12 +1859,11 @@ async function studioAct(a,btn){ const id=btn.dataset.id;
 function viewStudio(){
   const all=SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))), mine=all.filter(id=>MINE[id]).length;
   return `<p class="eyebrow">Settings</p><h1 class="page-title">Voice studio</h1>
-  <p class="lead">Record the model lines in your own voice. Your takes replace the other voices on this device, so every practice session sounds like you at your best.</p>
-  <div class="card studio-head"><div class="j-rank" style="font-size:1.3rem">${mine} of ${all.length} lines in your voice</div>
+  <p class="lead">Record the model lines in your own voice.</p>
+  <div class="card studio-head"><div class="j-rank" style="font-size:1.3rem">${mine} / ${all.length} recorded</div>
     <div class="j-bar"><i style="width:${Math.max(2,mine/all.length*100)}%"></i></div>
-    <label class="toggle"><input type="checkbox" id="useMine" ${state.useMine!==false?'checked':''}> Use my recordings as the model</label>
-    <div class="studio-btns"><button class="ghost-btn" type="button" data-act="st-export" ${mine?'':'disabled'}>Export my recordings</button></div></div>
-  <p class="hint"><b>How to record a good model:</b> stand up, speak as you would in the real meeting, follow the underlined stress and the pauses, and let your voice fall at ↘. Tap stop as soon as you finish. Silence before and after is trimmed automatically.</p>
+    <label class="toggle"><input type="checkbox" id="useMine" ${state.useMine!==false?'checked':''}> Use my recordings</label>
+    <div class="studio-btns"><button class="ghost-btn" type="button" data-act="st-export" ${mine?'':'disabled'}>Export</button></div></div>
   ${SCENARIOS.map((sc,si)=>{ const lines=yourLines(sc), n=lines.filter(li=>MINE[lineId(si,li)]).length;
     return `<details class="studio-sc" data-si="${si}" ${studioOpen.has(si)?'open':''}><summary><span class="studio-l">${letter(si)}</span><span class="studio-t">${esc(sc.title)}</span><span class="studio-n${n===lines.length?' full':''}">${n}/${lines.length}</span></summary>
       ${lines.map(li=>{ const id=lineId(si,li), m=!!MINE[id], recNow=stRec&&stRec.id===id;
@@ -1969,8 +1971,8 @@ function waveSVG(bars){ return `<svg class="wave" viewBox="0 0 120 32" preserveA
 /* Verdict for the result banner: good (green), almost (gold) or neutral (blue). */
 function judge(){ const r=sess.res, li=sess.lines[sess.k], text=SCENARIOS[sess.i].lines[li][1], md=sess.modelDur[li], exp=innerPauses(text);
   if(r==='wait') return {v:'neutral',t:'Listening back…',items:[]};
-  if(!r) return {v:'neutral',t:'Recorded',items:['Play it back and compare it with the model.']};
-  if(r.empty) return {v:'almost',t:'No speech heard',items:['Check the microphone is allowed, then try again.'],key:'nospeech'};
+  if(!r) return {v:'neutral',t:'Recorded',items:[],tip:'Play both and compare.'};
+  if(r.empty) return {v:'almost',t:'No speech heard',items:[],tip:'Check the microphone, then try again.',key:'nospeech'};
   const items=[]; let ok=true, fail=null;
   if(md){ const ratio=r.speech/md, nums=`${r.speech.toFixed(1)}s, model ${md.toFixed(1)}s.`;
     if(ratio<0.8){ ok=false; fail=fail||'pace'; items.push(`<b>Pace</b> ${nums} Slow down and let the pauses land.`); }
@@ -1979,7 +1981,8 @@ function judge(){ const r=sess.res, li=sess.lines[sess.k], text=SCENARIOS[sess.i
     else items.push(`<b>Pauses</b> ${r.pauses} of ${exp}. ${r.pauses>exp+2?'Fine if deliberate, not if you were searching for words.':'Right where they belong.'}`); }
   if(r.end!=null){ if(r.end<0.55){ ok=false; fail=fail||'end'; items.push(`<b>Ending</b> your last word dropped to ${Math.round(r.end*100)}% of your volume. Keep it strong to the final word.`); }
     else items.push('<b>Ending</b> held to the last word.'); }
-  return {v:ok?'good':'almost', t:ok?['Well delivered','Steady and clear','That lands'][sess.k%3]:'Almost there', items, foot:true, key:ok?'good':fail};
+  const TIP={pace:'Slow down. Let the pauses land.',pause:'Hold each pause a full beat.',end:'Keep the last word strong.'};
+  return {v:ok?'good':'almost', t:ok?['Well delivered','Steady and clear','That lands'][sess.k%3]:'Almost there', items, tip:ok?'':TIP[fail], key:ok?'good':fail};
 }
 const MIC_ERR={insecure:'The microphone only works on a secure link. On iPhone, open the <b>https://</b> address, not http://.',denied:'Microphone access was blocked. Allow it for this site in your browser settings, then try again.',nomic:'This browser can\'t record audio. Try Safari or Chrome.'};
 
@@ -1993,15 +1996,15 @@ function viewSession(){
   const foot=(cls,inner)=>`<div class="fx-foot ${cls}"><div class="fx-foot-in">${inner}</div></div>`;
   if(step==='done') return `<div class="u-${catColor(sc.cat)}">${top}<div class="done-wrap">
       <div class="done-badge">${ICO.star}</div><h1 class="done-title">${last?'Scenario complete':'Round 1 complete'}</h1>
-      <p class="lead" style="margin:0 auto">${last?'You said every line from memory. Now rewrite them in your own words, so they sound like you in the real meeting.':'You said every line with the script. Next, say them from memory.'}</p>
+      <p class="lead" style="margin:0 auto">${last?'Now put the key lines in your own words.':'Next: from memory.'}</p>
       <div class="tiles"><div class="tile t1"><span>Lines</span><b>${total}</b></div><div class="tile t2"><span>Round</span><b>${sess.round}/2</b></div><div class="tile t3"><span>Streak</span><b>${streak()}</b></div></div></div></div>
     ${foot('',`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="${last?'round2':'round1'}">${last?'Again':'Repeat'}</button><button class="solid-btn" type="button" data-act="${last?'exit':'round2'}">${last?'Continue':'Round 2 ›'}</button></div>`)}`;
   const li=sess.lines[sess.k], note=sc.lines[li][2], hide=last&&step!=='review'&&!sess.peek;
   const ctx=contextOf(sc,li).map(c=>{ const [who,text]=sc.lines[c], nm=nameOf(sc,who), alt=altSpeaker(sc,who);
     return who==='stage'?`<p class="stagenote">${esc(text)}</p>`:`<div class="char"><div class="av${alt?' alt':''}" aria-hidden="true">${esc(nm.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/,'')[0]||'?')}</div><div class="bub"><div class="sl-who">${esc(nm)}</div><div class="sl-text">${lineHTML(sc,c)}</div></div></div>`; }).join('');
   let body='', ft='';
-  const legend=`<p class="say-legend"><span class="stress">Underlined</span> words carry the stress · <span class="pause">‧‧‧</span> pause · <span class="down">↘</span> voice falls<br>Model: ${voiceOf(sc,li)}</p>`;
-  const skipBtn=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="next">Can't speak now</button></div>`;
+  const legend=sess.k===0&&!last&&!coachOn()?'<p class="say-legend"><span class="stress">Underlined</span> = stress · <span class="pause">‧‧‧</span> = pause · <span class="down">↘</span> = voice falls</p>':'';
+  const skipBtn=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="next">Skip</button></div>`;
   if(step==='listen'){ body=`<p class="listening">${eq} Listening</p>`; ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="skip">Skip audio</button></div>`; }
   else if(step==='ready'){ body=`${sess.err?`<div class="alert">${MIC_ERR[sess.err]}</div>`:''}<button class="speak-btn" type="button" data-act="rec">${ICO.mic}Tap to speak</button>
       ${last?`<button class="link-btn" type="button" data-act="peek">${sess.peek?'Hide line':'Show line'}</button>`:''}`; ft=skipBtn; }
@@ -2011,15 +2014,15 @@ function viewSession(){
     body=`<div class="card cmp">
       <div class="cmp-row"><span class="cmp-lab">Model</span><span class="cmp-wave">${sess.modelDur[li]?`${sess.modelDur[li].toFixed(1)}s`:'Not heard yet'}</span><button class="play-btn" type="button" data-act="pmodel">▶ Play</button></div>
       <div class="cmp-row"><span class="cmp-lab">You</span><span class="cmp-wave">${sess.res&&sess.res.bars?waveSVG(sess.res.bars):''}</span><button class="play-btn" type="button" data-act="pme">▶ Play</button></div>
-      <button class="small-btn both" type="button" data-act="pboth">▶ Model, then me</button></div>`;
+      <button class="small-btn both" type="button" data-act="pboth">▶ Both</button></div>`;
     ft=`<div class="res" role="status"><span class="res-ic">${j.v==='good'?ICO.check:j.v==='almost'?ICO.warn:ICO.spk}</span><div><div class="res-t">${j.t}</div>
-        ${j.items.length?`<ul class="fb">${j.items.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${j.foot?'<p class="fb-foot">A rough guide from your recording. Trust your ear first.</p>':''}</div></div>
+        ${j.tip?`<p class="fb-tip">${j.tip}</p>`:''}</div></div>
       <div class="fx-btns"><button class="ghost-btn" type="button" data-act="again">Try again</button><button class="solid-btn${j.v==='almost'?' gold':j.v==='neutral'?' blue':''}" type="button" data-act="next">Continue</button></div>`;
-    return `<div class="u-${catColor(sc.cat)}">${top}<h1 class="fx-title">${last?'Compare with the model':'How did that sound?'}</h1>${ctx}
-      <div class="say"><button class="spk" type="button" data-act="pmodel" aria-label="Play the model line">${ICO.spk}</button><div class="say-body"><div class="say-text">${lineHTML(sc,li)}</div>${note&&state.coach?`<div class="say-note">${note}</div>`:''}</div></div>
-      ${legend}${body}</div>${foot(j.v,ft)}`; }
+    return `<div class="u-${catColor(sc.cat)}">${top}<h1 class="fx-title">${last?'Compare':'How did it sound?'}</h1>${ctx}
+      <div class="say"><button class="spk" type="button" data-act="pmodel" aria-label="Play the model line">${ICO.spk}</button><div class="say-body"><div class="say-text">${lineHTML(sc,li)}</div></div></div>
+      ${body}</div>${foot(j.v,ft)}`; }
   return `<div class="u-${catColor(sc.cat)}">${top}<h1 class="fx-title">${last?'Say it from memory':'Say this line'}</h1>${ctx}
-    <div class="say${hide?' hide':''}"><button class="spk" type="button" data-act="listen" aria-label="Listen again">${ICO.spk}</button><div class="say-body"><div class="say-text">${lineHTML(sc,li)}</div>${note&&state.coach&&!hide?`<div class="say-note">${note}</div>`:''}</div></div>
+    <div class="say${hide?' hide':''}"><button class="spk" type="button" data-act="listen" aria-label="Listen again">${ICO.spk}</button><div class="say-body"><div class="say-text">${lineHTML(sc,li)}</div>${note&&state.coach&&!hide&&!coachOn()?`<div class="say-note">${note}</div>`:''}</div></div>
     ${last?'':legend}${body}</div>${foot('',ft)}`;
 }
 function act(a,btn){
@@ -2050,39 +2053,34 @@ function act(a,btn){
 function viewScenario(i){
   if(sess&&sess.i===i) return viewSession();
   const sc=SCENARIOS[i], n=yourLines(sc).length;
-  return `<div class="u-${catColor(sc.cat)}"><div class="hero"><p class="eyebrow">${sc.cat} · Scenario ${letter(i)}</p><h1 class="page-title">${sc.title}</h1><p class="hero-goal">Goal: ${sc.goal}</p></div></div>
-  <div class="card brief"><p><span>Setting</span>${sc.setting}</p><p class="uses">Uses lessons ${sc.lessons.map(n=>`<button class="link" type="button" data-go="lesson" data-i="${n-1}">${n}</button>`).join(', ')}</p></div>
+  return `<div class="u-${catColor(sc.cat)}"><div class="hero"><p class="eyebrow">${sc.cat} · Scenario ${letter(i)}</p><h1 class="page-title">${sc.title}</h1><p class="hero-goal">${sc.goal}</p></div></div>
+  <div class="card brief"><p style="margin:0">${sc.setting}</p></div>
   <button class="solid-btn start-btn" type="button" data-act="start1">${state.scDone[i]?'Practice again':'Start practice'}</button>
   ${state.scDone[i]?'<button class="ghost-btn wide" type="button" data-act="start2">Round 2 · From memory</button>':''}
-  <p class="hint" style="text-align:center">${n} lines for you, one at a time · about ${Math.max(3,Math.round(n*0.8))} minutes</p>
-  <div class="how3"><div><b>1</b>Listen<span>Hear them, then the model line</span></div><div><b>2</b>Speak<span>Tap the mic and say it</span></div><div><b>3</b>Compare<span>Play both, then try again or continue</span></div></div>
-  <details class="fold"><summary>Read the full script</summary>
+  <p class="hint" style="text-align:center">${n} lines · ${Math.max(3,Math.round(n*0.8))} min</p>
+  <details class="fold"><summary>Full script</summary>
     <div class="script-head"><label class="toggle"><input type="checkbox" id="coachT" ${state.coach?'checked':''}> Coach notes</label></div>
     <div class="sc-script ${state.coach?'':'no-coach'}">${sc.lines.map(([who,text,note],li)=>who==='stage'?`<div class="sl stage">${esc(text)}</div>`
       :`<div class="sl ${who==='you'?'you':'them'+(altSpeaker(sc,who)?' alt':'')}"><div class="sl-who">${esc(nameOf(sc,who))}</div><div class="sl-text">${lineHTML(sc,li)}</div>${note?`<div class="sl-note">${note}</div>`:''}</div>`).join('')}</div></details>
   <h2 class="step"><span class="step-n">✎</span>Make it yours</h2>
-  <textarea id="scOwn" placeholder="Rewrite your three most important lines in your own words.">${esc(state.scOwn[i]||'')}</textarea>
-  <p class="hint">Practice trains your voice. This step trains your thinking, so you don't repeat someone else's script in a real meeting.</p>
+  <textarea id="scOwn" aria-label="Make it yours" placeholder="Your three key lines, in your own words">${esc(state.scOwn[i]||'')}</textarea>
   <div class="end-nav">${i>0?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${i-1}">‹ ${letter(i-1)}</button>`:'<span></span>'}${i<SCENARIOS.length-1?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${i+1}">${letter(i+1)} ›</button>`:''}</div>`;
 }
 
 function viewSettings(){
   const cur=pickVoice();
   return `<h1 class="page-title">Settings</h1>
-  <h2 class="sec-h">Voice</h2>
   <div class="card settings">
-    <label>Practice voice<select id="voiceSel">${VOICES.length?VOICES.slice().sort((a,b)=>rankVoice(b)-rankVoice(a)).map(v=>`<option value="${esc(v.name)}" ${cur&&v.name===cur.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join(''):'<option>Default voice</option>'}</select></label>
     <label>Speed <span class="rate-val" id="rateVal">${state.rate.toFixed(2)}×</span><input type="range" id="rate" min="0.6" max="1.2" step="0.05" value="${state.rate}"></label>
-    <div>${playBtn('id="testVoice"','▶ Test voice')}</div>
+    <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice</label>
+    <div><button class="ghost-btn" type="button" data-go="studio">Voice studio · ${SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))).filter(id=>MINE[id]).length} recorded</button></div>
   </div>
-  <p class="hint">Choose a voice marked <b>Enhanced</b> or <b>Premium</b> if you have one. Shadowing a robotic voice teaches robotic intonation. On iPhone: Settings → Accessibility → Spoken Content → Voices → English, then download an Enhanced voice.<br><br>Use playback for timing and pauses. Warmth and authority have to come from you.</p>
-  <h2 class="sec-h">Model voice</h2>
-  <div class="card settings"><p class="body small" style="margin:0">${(()=>{ const ids=SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))), m=ids.filter(id=>MINE[id]).length, ai=ids.filter(id=>!MINE[id]&&AUDIO[id]).length; return `<b>${m}</b> of ${ids.length} lines in your voice · <b>${ai}</b> in the Mac voice${ai<ids.length-m?' · the rest use the browser voice':''}.`; })()}</p>
-  <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice guides practice and lessons</label>
-  <div><button class="solid-btn" type="button" data-go="studio">Open voice studio</button></div></div>
-  <h2 class="sec-h">Progress</h2>
-  <div class="card settings"><p class="body small" style="margin:0">Progress, ratings and notes are saved on this device only.</p>
-  <div><button class="ghost-btn danger" type="button" id="resetBtn">Reset all progress</button></div></div>`;
+  <details class="fold"><summary>Backup voice</summary><div class="card settings">
+    <label>Practice voice<select id="voiceSel">${VOICES.length?VOICES.slice().sort((a,b)=>rankVoice(b)-rankVoice(a)).map(v=>`<option value="${esc(v.name)}" ${cur&&v.name===cur.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join(''):'<option>Default voice</option>'}</select></label>
+    <div>${playBtn('id="testVoice"','▶ Test')}</div>
+  </div></details>
+  <p class="hint" style="margin-top:28px">Progress is saved on this device.</p>
+  <button class="ghost-btn danger" type="button" id="resetBtn">Reset progress</button>`;
 }
 
 /* ---------------- RENDER ---------------- */

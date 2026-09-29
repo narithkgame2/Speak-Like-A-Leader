@@ -69,7 +69,10 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   `.u-blue` = sapphire, ...) used as a gradient. Dark theme via `prefers-color-scheme`.
 - Fonts: Spectral (headings, script lines), Inter (UI). Small labels: tiny uppercase with wide letter spacing.
   Buttons use normal case. Small gold text uses `--gold-text` for contrast.
-- Practice results use a tinted footer banner: green = good, gold = almost, blue = neutral.
+- Practice results use a tinted footer banner: green = good, gold = almost, blue = neutral, with ONE short tip.
+- Minimal text (Nick's feedback 2026-09-29: too much text was confusing). Say a thing once, or let the coach voice
+  say it: no helper sentences under headings, no explainer cards, list rows show titles only, the written coach note
+  and marker legend only appear when the coach voice is off. Prefer short labels ("Skip", "Both", "Listen").
 
 ## Known limitations / ideas
 - Model voice today: macOS voices (Daniel for "you"). Next: a Premium macOS voice, then Nick's own studio takes.

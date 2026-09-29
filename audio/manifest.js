@@ -818,7 +818,7 @@ window.AUDIO_FILES = {
 "c-fx-r1": {
 "url": "audio/c-fx-r1.m4a",
 "voice": "Moira",
-"h": "fda220861491"
+"h": "9f16a3f2b1ac"
 },
 "c-fx-r2": {
 "url": "audio/c-fx-r2.m4a",
