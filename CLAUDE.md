@@ -45,11 +45,12 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   skip `AUDIO` for model, other speakers and coach, and use the device's best speechSynthesis voice, ranked by
   `rankVoice` so Premium/Enhanced come first; the coach uses a different voice via `themVoice`). The user's own
   studio takes still win in both modes.
-- `tools/make_voice.py` generates `audio/` + the manifest with macOS `say` (free, offline): ‧‧‧ become real
-  silences, *stressed* words get `[[emph +]]`, each character gets a voice by title (Mr./Ms.). Rerun after editing
-  any script line; only changed lines are regenerated. To upgrade quality, download a Premium voice in macOS
-  Spoken Content settings and set `YOU` (and the cast) at the top of the script. Clips highlight words proportionally to word length; speechSynthesis uses
-  `onboundary` (not supported by every voice). Settings → "Use my recordings as the model" (`state.useMine`).
+- `tools/make_voice.py` generates `audio/` + the manifest, free and offline. Default engine: **Kokoro-82M** neural
+  voices (run with `tools/.venv/bin/python tools/make_voice.py`; setup steps in the script header; `tools/.venv/`
+  and `tools/models/` are git-ignored). Cast: you = am_michael (speed 0.92), coach = af_heart, men = am_fenrir /
+  bm_george, women = af_bella / bf_emma / af_nicole. Pauses are exact silences between separately generated
+  phrases; Kokoro ignores stress marks. `--say` falls back to macOS voices. Rerun after editing any script line;
+  only changed clips regenerate. Clips highlight words over voiced time; speechSynthesis uses `onboundary`.
 - Coach voice (the trainer, Moira): clips `c-fx-*` (session cues and spoken feedback, texts in `COACH_FX`),
   `c-s{si}-l{li}` (the coach note for each "you" line), `c-lesson{i}-rule` / `-p{k}-note` (lesson cards),
   `c-lesson{i}-intro` / `-drill` (buttons on the More page). Lesson model clips: `l{i}-p{k}`, `l{i}-d` (drill). In practice: intro at round start, then per line their line → coach tip → model
@@ -90,7 +91,7 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   and marker legend only appear when the coach voice is off. Prefer short labels ("Skip", "Both", "Listen").
 
 ## Known limitations / ideas
-- Model voice today: macOS voices (Daniel for "you"). Next: a Premium macOS voice, then Nick's own studio takes.
+- Model voice: Kokoro neural voices (2026-09-29), replacing robotic macOS voices. Next: Nick's own studio takes.
   Higgsfield was cancelled (2026-09-28); no paid AI voice.
 - Progress is per device. A team version would need sign-in and a manager view.
 - The user learns best by shadowing: reading along word by word with audio.

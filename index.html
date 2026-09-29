@@ -1809,7 +1809,7 @@ const IDB={ db:null,
   del(k){ return this.req('readwrite',s=>s.delete(k)); }, keys(){ return this.req('readonly',s=>s.getAllKeys()); } };
 async function loadMine(){ try{ for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(v&&v.blob) MINE[k]={url:URL.createObjectURL(v.blob), start:v.start, stop:v.stop}; } }catch(e){} }
 function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||(useFiles()&&AUDIO[id])||null; }
-function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&AUDIO[id]?'Mac voice':'device voice'; }
+function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&AUDIO[id]?'built-in voice':'device voice'; }
 /* Voiced-time envelope of a clip, so the highlight pauses during silences. null if the clip can't be read. */
 const ENV={};
 function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
@@ -1819,11 +1819,11 @@ function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
   const so=[...rms].sort((a,b)=>a-b), lo=so[Math.floor(n*0.1)]||0, hi=so[Math.floor(n*0.98)]||0, thr=lo+(hi-lo)*0.12, cum=new Float32Array(n+1);
   for(let f=0;f<n;f++) cum[f+1]=cum[f]+(rms[f]>thr?1:0); return cum; }catch(e){ return null; } })()); }
 /* Play a clip and move the word highlight through the line in proportion to word length, over voiced time only. */
-const PLAYER=new Audio();
+const PLAYER=new Audio(); let playSeq=0;   // which playClip call currently owns PLAYER
 function playClip(c,spans,t){ return new Promise(async res=>{ if(t!==tok) return res(false); const env=spans.length?await clipEnv(c.url):null; if(t!==tok) return res(false);
-  const a=PLAYER; a.pause(); a.src=c.url; recAudio=a; a.defaultPlaybackRate=a.playbackRate=Math.min(1.35,Math.max(.7,state.rate/0.85));
+  const my=++playSeq, a=PLAYER; a.pause(); a.src=c.url; recAudio=a; a.defaultPlaybackRate=a.playbackRate=Math.min(1.35,Math.max(.7,state.rate/0.85));
   const w=spans.map(s=>s.textContent.length+1), tot=w.reduce((x,y)=>x+y,0)||1; let raf=0, done=false;
-  const end=ok=>{ if(done) return; done=true; cancelAnimationFrame(raf); spans.forEach(s=>s.classList.remove('on')); a.pause(); res(ok&&t===tok); };
+  const end=ok=>{ if(done) return; done=true; cancelAnimationFrame(raf); spans.forEach(s=>s.classList.remove('on')); if(playSeq===my) a.pause(); res(ok&&t===tok); };
   const tick=()=>{ if(t!==tok) return end(false); const t0=c.start||0, t1=c.stop||a.duration||0;
     if(c.stop&&a.currentTime>=c.stop) return end(true);
     const at=f=>env[Math.max(0,Math.min(env.length-1,Math.round(f/0.02)))];
@@ -1900,7 +1900,7 @@ function viewStudio(){
     return `<details class="studio-sc" data-si="${si}" ${studioOpen.has(si)?'open':''}><summary><span class="studio-l">${letter(si)}</span><span class="studio-t">${esc(sc.title)}</span><span class="studio-n${n===lines.length?' full':''}">${n}/${lines.length}</span></summary>
       ${lines.map(li=>{ const id=lineId(si,li), m=!!MINE[id], recNow=stRec&&stRec.id===id;
         return `<div class="take${recNow?' rec':''}"><div class="take-text">${fmt(sc.lines[li][1])}</div><div class="take-ctl">
-          <span class="chip ${m?'mine':AUDIO[id]?'ai':''}">${m?'Your voice':AUDIO[id]?'Mac voice':'Browser voice'}</span>
+          <span class="chip ${m?'mine':AUDIO[id]?'ai':''}">${m?'Your voice':AUDIO[id]?'built-in voice':'Browser voice'}</span>
           <button class="small-btn${recNow?' rec-on':''}" type="button" data-act="st-rec" data-id="${id}">${recNow?'■ Stop':m?'● Re-record':'● Record'}</button>
           ${m?`<button class="small-btn" type="button" data-act="st-play" data-id="${id}">▶ Play</button><button class="small-btn quiet" type="button" data-act="st-del" data-id="${id}" aria-label="Delete recording">Delete</button>`:''}</div></div>`; }).join('')}</details>`; }).join('')}`;
 }

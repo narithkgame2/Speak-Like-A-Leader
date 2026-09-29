@@ -1,3 +1,5 @@
 .DS_Store
 __pycache__/
 *.aiff
+tools/.venv/
+tools/models/

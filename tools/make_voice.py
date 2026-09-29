@@ -1,25 +1,41 @@
 #!/usr/bin/env python3
-"""Generate the model voice for every scenario line with macOS text-to-speech (free, offline).
+"""Generate every voice clip the app plays (model lines, other speakers, the coach). Free and offline.
 
-Writes audio/s{scenario}-l{line}.m4a and audio/manifest.js, which index.html loads as window.AUDIO_FILES.
-Pauses (‧‧‧) become real silences and *stressed* words get emphasis, which the browser voice can't do.
-Only lines whose text or voice changed are regenerated.
+Writes audio/{id}.m4a and audio/manifest.js, which index.html loads as window.AUDIO_FILES.
+Pauses (‧‧‧) become real silences. Only clips whose text, voice or engine changed are regenerated.
 
-Usage:   python3 tools/make_voice.py            (from the project folder)
-Better voices: System Settings → Accessibility → Spoken Content → System voice → Manage Voices, download a
-Premium English voice (e.g. "Evan (Premium)", "Nathan (Premium)", "Jamie (Premium)"), set YOU below, run again.
+Engine "kokoro" (default when installed): Kokoro-82M neural voices, much more natural than macOS voices.
+  Setup once:  ~/.local/bin/uv venv tools/.venv --python 3.12
+               ~/.local/bin/uv pip install --python tools/.venv/bin/python kokoro-onnx soundfile numpy
+               download kokoro-v1.0.onnx + voices-v1.0.bin (github.com/thewh1teagle/kokoro-onnx releases,
+               tag model-files-v1.0) into tools/models/  (both folders are git-ignored)
+  Run:         tools/.venv/bin/python tools/make_voice.py
+Engine "say" (fallback): macOS voices.  Run: python3 tools/make_voice.py --say
 """
 import hashlib, json, os, re, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "audio")
-
-YOU = ("Daniel", 165)                                  # your lines: calm, unhurried
-MALE = [("Rishi", 180), ("Aman", 180)]                 # Mr. ...; a second man gets the second voice
-FEMALE = [("Samantha", 180), ("Karen", 180), ("Moira", 180)]
-NEUTRAL = {"Host": ("Samantha", 180), "Audience": ("Karen", 180), "Investor": ("Rishi", 175), "Dara": ("Tessa", 180)}
-COACH = ("Moira", 175)                                # the trainer: tips, instructions, feedback
+MODELS = os.path.join(ROOT, "tools", "models")
 SHORT, LONG = 650, 1300                                # ms of silence for ‧‧‧ and ‧‧‧‧‧
+
+# Cast: (voice, speed). Kokoro speed is a multiplier; macOS say speed is words per minute.
+CASTS = {
+    "kokoro": dict(
+        YOU=("am_michael", 0.92),                      # your lines: calm, unhurried
+        COACH=("af_heart", 1.0),                       # the trainer: warm, clear
+        MALE=[("am_fenrir", 1.0), ("bm_george", 1.0)],
+        FEMALE=[("af_bella", 1.0), ("bf_emma", 1.0), ("af_nicole", 1.0)],
+        NEUTRAL={"Host": ("af_nicole", 1.0), "Audience": ("bf_emma", 1.0), "Investor": ("am_fenrir", 1.0), "Dara": ("af_bella", 1.0)}),
+    "say": dict(
+        YOU=("Daniel", 165), COACH=("Moira", 175),
+        MALE=[("Rishi", 180), ("Aman", 180)],
+        FEMALE=[("Samantha", 180), ("Karen", 180), ("Moira", 180)],
+        NEUTRAL={"Host": ("Samantha", 180), "Audience": ("Karen", 180), "Investor": ("Rishi", 175), "Dara": ("Tessa", 180)}),
+}
+ENGINE = "say" if "--say" in sys.argv or not os.path.exists(os.path.join(MODELS, "kokoro-v1.0.onnx")) else "kokoro"
+CAST = CASTS[ENGINE]
+YOU, COACH, MALE, FEMALE, NEUTRAL = CAST["YOU"], CAST["COACH"], CAST["MALE"], CAST["FEMALE"], CAST["NEUTRAL"]
 
 
 def source():
@@ -100,11 +116,55 @@ def to_say(text):
     return re.sub(r"\s+", " ", t).strip()
 
 
+def segments(text):
+    """Script markup → [(text, None) | (None, silence_ms)], stage directions and marks removed."""
+    out = []
+    for part in re.split(r"(‧‧‧‧‧|‧‧‧)", re.sub(r"\[[^\]]*\]", "", text)):
+        if part == "‧‧‧": out.append((None, SHORT))
+        elif part == "‧‧‧‧‧": out.append((None, LONG))
+        else:
+            t = re.sub(r"\s+", " ", part.replace("↘", "").replace("*", "")).strip()
+            if t: out.append((t, None))
+    return out
+
+
+class Kokoro:
+    def __init__(self):
+        try:
+            import numpy, soundfile
+            from kokoro_onnx import Kokoro as K
+        except ImportError:
+            sys.exit("Kokoro isn't installed for this Python. Run: tools/.venv/bin/python tools/make_voice.py")
+        self.np, self.sf = numpy, soundfile
+        self.k = K(os.path.join(MODELS, "kokoro-v1.0.onnx"), os.path.join(MODELS, "voices-v1.0.bin"))
+
+    def render(self, voice, speed, text, wav):
+        np, parts, sr = self.np, [], 24000
+        for t, ms in segments(text):
+            if t is None: parts.append(np.zeros(int(sr * ms / 1000), dtype=np.float32)); continue
+            a, sr = self.k.create(t, voice=voice, speed=speed, lang="en-gb" if voice.startswith("b") else "en-us")
+            parts.append(a.astype(np.float32))
+        a = np.concatenate(parts) if parts else np.zeros(sr // 10, dtype=np.float32)
+        # Same loudness for every voice (RMS of the speech ~0.07) with headroom: peaks never above 0.9.
+        voiced = a[np.abs(a) > 0.01]
+        if voiced.size:
+            rms, peak = float(np.sqrt(np.mean(voiced ** 2))), float(np.max(np.abs(a)))
+            a = a * min(0.07 / rms, 0.9 / peak)
+        self.sf.write(wav, a, sr)
+
+
+def say_render(voice, rate, text, aiff):
+    subprocess.run(["say", "-v", voice, "-r", str(rate), "-o", aiff, to_say(text)], check=True)
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    installed = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
-    manifest, made, kept = {}, 0, 0
-    old = {}
+    engine = Kokoro() if ENGINE == "kokoro" else None
+    if not engine:
+        installed = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
+        for v, _ in [CAST["YOU"], CAST["COACH"], *CAST["MALE"], *CAST["FEMALE"], *CAST["NEUTRAL"].values()]:
+            if not re.search(rf"^{re.escape(v)}\s", installed, re.M): sys.exit(f"Voice not installed: {v}")
+    manifest, made, kept, old = {}, 0, 0, {}
     mf = os.path.join(OUT, "manifest.js")
     if os.path.exists(mf):
         m = re.search(r"=\s*(\{.*\});?\s*$", open(mf, encoding="utf-8").read(), re.S)
@@ -113,29 +173,28 @@ def main():
     for si, sc in enumerate(scenarios()):
         cast = speakers(sc)
         for li, (who, text, *_) in enumerate(sc["lines"]):
-            if who != "stage": jobs.append((f"s{si}-l{li}", *cast[who], to_say(text)))
+            if who != "stage": jobs.append((f"s{si}-l{li}", *cast[who], text))
     for n, l in enumerate(lessons()):   # lesson model lines: the stronger example and the drill
         k = next((k for k, pr in enumerate(l["pairs"]) if not pr["noPlay"] and "lang" not in pr), None)
-        if k is not None: jobs.append((f"l{n}-p{k}", *YOU, to_say(l["pairs"][k]["better"])))
-        jobs.append((f"l{n}-d", *YOU, to_say(drill_markup(l["script"]))))
-    for lid, text in coach_lines().items(): jobs.append((lid, *COACH, to_say(text)))
-    for lid, voice, rate, spoken in jobs:
-            if not re.search(rf"^{re.escape(voice)}\s", installed, re.M): sys.exit(f"Voice not installed: {voice}")
-            h = hashlib.sha1(f"{voice}|{rate}|{spoken}".encode()).hexdigest()[:12]
-            fn = f"{lid}.m4a"
-            path = os.path.join(OUT, fn)
-            if old.get(lid, {}).get("h") == h and os.path.exists(path):
-                manifest[lid] = old[lid]; kept += 1; continue
-            with tempfile.NamedTemporaryFile(suffix=".aiff") as tmp:
-                subprocess.run(["say", "-v", voice, "-r", str(rate), "-o", tmp.name, spoken], check=True)
-                subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", "64000", tmp.name, path], check=True)
-            manifest[lid] = {"url": f"audio/{fn}", "voice": voice, "h": h}; made += 1
-            print(f"  {lid:8} {voice:9} {spoken[:60]}")
+        if k is not None: jobs.append((f"l{n}-p{k}", *YOU, l["pairs"][k]["better"]))
+        jobs.append((f"l{n}-d", *YOU, drill_markup(l["script"])))
+    for lid, text in coach_lines().items(): jobs.append((lid, *COACH, text))
+    for lid, voice, speed, text in jobs:
+        h = hashlib.sha1(f"{ENGINE}|norm1|{voice}|{speed}|{SHORT}|{LONG}|{text}".encode()).hexdigest()[:12]
+        fn = f"{lid}.m4a"; path = os.path.join(OUT, fn)
+        if old.get(lid, {}).get("h") == h and os.path.exists(path):
+            manifest[lid] = old[lid]; kept += 1; continue
+        with tempfile.TemporaryDirectory() as tmp:
+            src = os.path.join(tmp, "clip.wav" if engine else "clip.aiff")
+            engine.render(voice, speed, text, src) if engine else say_render(voice, speed, text, src)
+            subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", "64000", src, path], check=True)
+        manifest[lid] = {"url": f"audio/{fn}", "voice": voice, "h": h}; made += 1
+        print(f"  {lid:18} {voice:10} {re.sub(chr(10), ' ', text)[:50]}", flush=True)
     with open(mf, "w", encoding="utf-8") as f:
         f.write("// Generated by tools/make_voice.py. Do not edit by hand.\nwindow.AUDIO_FILES = ")
         json.dump(manifest, f, ensure_ascii=False, indent=0)
         f.write(";\n")
-    print(f"Done: {made} generated, {kept} unchanged, {len(manifest)} lines in audio/manifest.js")
+    print(f"Done ({ENGINE}): {made} generated, {kept} unchanged, {len(manifest)} clips in audio/manifest.js")
 
 
 if __name__ == "__main__":
