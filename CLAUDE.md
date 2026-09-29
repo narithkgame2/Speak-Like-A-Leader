@@ -1,0 +1,69 @@
+# Speak Like an Advisor: High-Stakes Presence
+
+A mobile-first training app for speaking and presence in high-stakes meetings
+(investors, negotiations, senior partners, hard conversations). Not limited to real estate.
+Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
+
+## What it is
+- Single self-contained file: `index.html` (HTML + CSS + JS inline, no build step).
+- Open it directly in a browser to test. No server needed.
+- Progress is saved in `localStorage` under the key `sla-highstakes-v1` (per device).
+
+## Structure
+- `LESSONS` array: 8 foundation lessons. Each has `title, sub, rule, why, pairs[], drill{tag, script, note}, own`,
+  and optionally `practice{secs, note, list[]}` (timed questions) and `builder:true` (intro builder, lesson 6).
+- `SCENARIOS` array: 16 full meeting scripts, grouped by `cat`. Each line is `[who, text, coachNote]`.
+  `who` is `"you"`, `"them"`, `"them:Name"` (a second speaker) or `"stage"` (a stage direction).
+- Script markup inside text: `‧‧‧` = short pause, `‧‧‧‧‧` = long pause, `↘` = pitch falls at the end,
+  `*word*` = sentence stress (may span words: `*three years*`; never across a pause). Mark the one word per
+  phrase that carries the meaning: new information, a contrast, or a number. Every "you" line has stress marks.
+- Routes: home, lessons, lesson/i, scenarios, scenario/i, settings. Navigation: bottom tab bar on phones, which becomes
+  a left rail at >=900px wide. Home is a mountain climb that goes bottom-up: unit 1 (the lessons) is Base Camp at
+  the bottom, each scenario `cat` is a higher camp (`CAMPS`, `ALTS` in metres), the summit "Trusted Advisor" is
+  at the top. `drawScene()` paints the mountain as inline SVG to fit the page (sky, distant ranges, an altitude
+  zone per unit, trees/rocks/snow, clouds, sun or moon in dark mode) and calls `drawTrails()`; both rerun on
+  resize, font load and theme change. Each unit's camp sign sits below its nodes; a brass flag marks the current
+  node, and home opens scrolled to it (`scrollToNow`). "Your climb" card shows rank (`RANKS`, one per camp),
+  altitude and a mini mountain profile; sticky right rail at >=1200px. Tapping a node opens a popover with Start.
+  Practice sessions run full screen (`body.focus`).
+- Streak: `state.days` holds the dates practiced (a lesson marked done, a rating, or a scenario line reviewed).
+- Voice: each scenario line can have a recorded clip, id `s{scenario}-l{line}`. The model plays, in order:
+  1) the user's own take from the Voice studio (route `studio`, under Settings; stored in IndexedDB `sla-voice`,
+  this device only, trimmed to the speech), 2) a file in `audio/` listed in `audio/manifest.js`
+  (`window.AUDIO_FILES` → `AUDIO`), 3) browser `speechSynthesis`.
+- `tools/make_voice.py` generates `audio/` + the manifest with macOS `say` (free, offline): ‧‧‧ become real
+  silences, *stressed* words get `[[emph +]]`, each character gets a voice by title (Mr./Ms.). Rerun after editing
+  any script line; only changed lines are regenerated. To upgrade quality, download a Premium voice in macOS
+  Spoken Content settings and set `YOU` (and the cast) at the top of the script. Clips highlight words proportionally to word length; speechSynthesis uses
+  `onboundary` (not supported by every voice). Settings → "Use my recordings as the model" (`state.useMine`).
+- Scenario practice is guided shadowing (modelled on BoldVoice / ELSA), one of your lines at a time:
+  Listen (their line, then the model line) → Record (mic) → Compare (play model / me / both, rough pace and
+  pause feedback from the recording) → Try again or Good, next. Round 1 = read along, Round 2 = line hidden,
+  from memory. Finishing round 2 marks the scenario practiced. Session state lives in `sess` (not saved).
+- Recording uses `getUserMedia` + `MediaRecorder` and needs a secure context (https or localhost).
+  Recordings stay in memory only. `analyze()` measures speaking time, pauses (>=360ms), and `end` = volume of the
+  last ~300ms of voice vs the whole line (below 0.55 = "last word faded", Lesson 2).
+- Scenario lines render as chat bubbles: `them` left, `you` right, a second speaker gets `.alt`.
+
+## Teaching principles (keep these when adding content)
+1. Never apologize for being there. 2. Fewer words. 3. Answer first.
+4. Ask instead of defending. 5. Let silence work.
+- Every example shows "what most people say" vs "what to say instead", plus a one-line reason.
+- Users must rewrite lines in their own words. Scripts are for training delivery, not for memorizing.
+- Stories and personal claims in scripts must be true. Mark invented ones clearly for the user to replace.
+
+## Design
+- Duolingo structure (learning path, full-screen practice, result banner), premium finish. Never copy their logo,
+  mascot or colors.
+- Warm paper background (#F6F4EF), white cards with 1px borders and soft shadows, dark ink primary buttons,
+  brass (`--gold`) for achievements, progress and pause markers. Each unit has a deep jewel tone (`.u-green` = emerald,
+  `.u-blue` = sapphire, ...) used as a gradient. Dark theme via `prefers-color-scheme`.
+- Fonts: Spectral (headings, script lines), Inter (UI). Small labels: tiny uppercase with wide letter spacing.
+  Buttons use normal case. Small gold text uses `--gold-text` for contrast.
+- Practice results use a tinted footer banner: green = good, gold = almost, blue = neutral.
+
+## Known limitations / ideas
+- Model voice today: macOS voices (Daniel for "you"). Next: a Premium macOS voice, then Nick's own studio takes.
+  Higgsfield was cancelled (2026-09-28); no paid AI voice.
+- Progress is per device. A team version would need sign-in and a manager view.
+- The user learns best by shadowing: reading along word by word with audio.
