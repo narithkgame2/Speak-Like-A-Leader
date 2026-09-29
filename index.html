@@ -405,6 +405,10 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .ls-opt.right{ border-color:var(--pri); background:var(--pri-soft); } .ls-opt.wrong{ border-color:var(--gold); background:var(--gold-soft); } .ls-opt.dim{ opacity:.5; }
 .ls-opt:disabled{ cursor:default; }
 .done-badge .ic{ stroke-width:1.8; }
+.j-cont{ display:none; width:100%; margin-top:6px; }
+.sc-setting{ font-family:var(--serif); font-weight:500; font-size:1.3rem; line-height:1.5; }
+.sc-goal{ margin-top:18px; font-size:1rem; line-height:1.5; } .sc-goal span{ display:block; font-size:.66rem; font-weight:600; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-text); margin-bottom:4px; }
+@media (min-width:1200px){ .j-cont{ display:block; } .cont-bar{ display:none !important; } }
 .cont-bar{ position:fixed; left:0; right:0; bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px)); z-index:6; padding:12px 18px; display:flex; justify-content:center; pointer-events:none; }
 .cont-bar .solid-btn{ pointer-events:auto; width:100%; max-width:440px; padding:15px 20px; font-size:1rem; box-shadow:0 1px 0 var(--ink-d), 0 14px 30px -12px rgba(0,0,0,.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 main.home{ padding-bottom:calc(var(--tabh) + 110px + env(safe-area-inset-bottom,0px)); }
@@ -1634,7 +1638,7 @@ function viewJourney(us){
   const ld=LESSONS.filter((_,i)=>state.done[i]).length, sd=SCENARIOS.filter((_,i)=>state.scDone[i]).length;
   return `<aside class="journey home-rail"><p class="eyebrow">Your climb</p><div class="j-rank">${RANKS[c.r]}</div>
     <p class="j-next">${fmtM(c.alt)}${next?` · next: ${RANKS[c.r+1]}`:''}</p>
-    ${profileSVG(c.alt)}</aside>`;
+    ${profileSVG(c.alt)}${next?`<button class="solid-btn j-cont" type="button" data-act="nextup">Continue · ${esc(nextItem().title)}</button>`:''}</aside>`;
 }
 function viewHome(){
   const us=units(), now=us.flatMap(u=>u.items).find(x=>!x.done);
@@ -1645,7 +1649,7 @@ function viewHome(){
       return `<div class="node-wrap${isNow?' is-now':''}" style="--x:${x}px">${isNow?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}
         <button class="node ${cls}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?LICO[it.i]:ICO.chat}</button></div>
         ${open?`<div class="pop${cls==='todo'?' todo':''}" style="--x:${x}px"><div class="pop-t">${esc(it.title)}</div><div class="pop-s">${esc(it.sub)}</div>
-          <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-go="scenario"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Practice again'):'Start'}</button></div>`:''}`; }).reverse().join('');
+          <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Practice again'):'Start'}</button></div>`:''}`; }).reverse().join('');
     return `<section class="unit-sec u-${u.color}" data-k="${k}"><div class="path"><svg class="trail" aria-hidden="true"></svg>${nodes}</div>${sign}</section>`; }).reverse().join('');
   return `<div class="home-grid">${viewJourney(us)}<div class="home-main">
     <div class="scene" id="scene"><svg class="scene-bg" aria-hidden="true"></svg>
@@ -1776,7 +1780,7 @@ function viewLesson(i){
 
 function viewScenarios(){
   return `<h1 class="page-title">Scenarios</h1>
-  ${CATS.map(c=>`<h2 class="sec-h">${c}</h2><div class="list u-${catColor(c)}">${SCENARIOS.map((s,i)=>s.cat!==c?'':`<button class="row" type="button" data-go="scenario" data-i="${i}">
+  ${CATS.map(c=>`<h2 class="sec-h">${c}</h2><div class="list u-${catColor(c)}">${SCENARIOS.map((s,i)=>s.cat!==c?'':`<button class="row" type="button" data-act="sc-start" data-i="${i}">
     <span class="row-n ${state.scDone[i]?'done':''}">${state.scDone[i]?'✓':letter(i)}</span>
     <span class="row-body"><span class="row-title">${s.title}</span></span>
     <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>`).join('')}`;
@@ -1848,6 +1852,7 @@ const plainText=h=>String(h).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
 function coachText(k){ let m;
   if((m=k.match(/^c-fx-(\w+)$/))) return COACH_FX[m[1]]||'';
   if((m=k.match(/^c-s(\d+)-l(\d+)$/))) return plainText(SCENARIOS[+m[1]].lines[+m[2]][2]||'');
+  if((m=k.match(/^c-sc(\d+)-intro$/))){ const sc=SCENARIOS[+m[1]]; return plainText(`${sc.title}. ${sc.setting} Your goal: ${sc.goal}`); }
   if((m=k.match(/^c-lesson(\d+)-rule$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.rule}`); }
   if((m=k.match(/^c-lesson(\d+)-p(\d+)-note$/))) return plainText(LESSONS[+m[1]].pairs[+m[2]].note);
   if((m=k.match(/^c-lesson(\d+)-intro$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.sub} The rule. ${l.rule} ${l.why}`); }
@@ -1936,7 +1941,7 @@ function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'}];
   if(l.practice) cards.push({type:'timed'});
   cards.push({type:'done'}); return cards; }
 function nextItem(){ return units().flatMap(u=>u.items).find(x=>!x.done)||null; }
-function nextUp(){ const it=nextItem(); endSession(); endLesson(); if(!it) return go('home'); if(it.kind==='lesson') startLesson(it.i); else go('scenario',it.i); }
+function nextUp(){ const it=nextItem(); endSession(); endLesson(); if(!it) return go('home'); if(it.kind==='lesson') startLesson(it.i); else startScenario(it.i); }
 function startLesson(i){ const from=state.route.name==='lessons'?'lessons':'home'; endSession(); endLesson();
   lsess={i,n:0,cards:lessonCards(i),from}; state.route={name:'lesson',i}; save(); enterCard(); }
 function endLesson(){ if(!lsess) return; stopAll(); cancelRec(); lsess.cards.forEach(c=>{ if(c.url) URL.revokeObjectURL(c.url); }); lsess=null; }
@@ -2088,7 +2093,14 @@ async function runBtn(btn,fn){ const same=activeBtn===btn; stopAll(); if(same) r
   const t=++tok; activeBtn=btn; btn.dataset.html=btn.innerHTML; btn.classList.add('playing'); if(!btn.classList.contains('spk')) btn.textContent='■ Stop';
   await fn(t); if(t===tok) stopAll(); }
 
-function startSession(i,round){ endSession(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false}; enterLine(); window.scrollTo(0,0); }
+/* Start a scenario straight into practice. The first card is the setting (the coach reads it), then the lines.
+   Round 2 (from memory) is picked automatically once round 1 is done. */
+function startScenario(i){ startSession(i,state.scDone[i]||(state.scR1||{})[i]?2:1,true); }
+function startSession(i,round,intro){ const from=sess?sess.from:['home','scenarios'].includes(state.route.name)?state.route.name:'home';
+  endSession(); endLesson(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false,from};
+  state.route={name:'scenario',i}; state.lastSc=i; save();
+  if(!intro){ enterLine(); window.scrollTo(0,0); return; }
+  sess.step='intro'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(`c-sc${i}-intro`,t); } }
 function endSession(){ stopAll(); cancelRec(); if(sess&&sess.url) URL.revokeObjectURL(sess.url); sess=null; }
 function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); Object.assign(sess,{url:null,res:null,err:null,peek:false}); listen(); }
 async function listen(){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv), note=sc.lines[li][2];
@@ -2155,16 +2167,19 @@ const MIC_ERR={insecure:'The microphone only works on a secure link. On iPhone, 
 function viewSession(){
   const sc=SCENARIOS[sess.i], total=sess.lines.length, step=sess.step, last=sess.round===2;
   const pct=step==='done'?100:Math.round(sess.k/total*100);
-  const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="exit" aria-label="End practice">${ICO.x}</button>
+  const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="sc-exit" aria-label="End practice">${ICO.x}</button>
     <div class="pbar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${step==='done'?total:sess.k}"><i style="width:${pct}%"></i></div>
     <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button>
     <button class="speed" type="button" data-act="speed" aria-label="Playback speed">${+state.rate.toFixed(2)}×</button></div>`;
   const foot=(cls,inner)=>`<div class="fx-foot ${cls}"><div class="fx-foot-in">${inner}</div></div>`;
+  if(step==='intro') return `<div class="u-${catColor(sc.cat)}">${top}<div class="ls-ico">${ICO.chat}</div><p class="eyebrow">${esc(sc.cat)} · Round ${sess.round}</p>
+      <h1 class="fx-title">${sc.title}</h1><p class="sc-setting">${sc.setting}</p><p class="sc-goal"><span>Your goal</span>${sc.goal}</p></div>
+    ${foot('',`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="sc-go">Start</button></div>`)}`;
   if(step==='done') return `<div class="u-${catColor(sc.cat)}">${top}<div class="done-wrap">
       <div class="done-badge">${ICO.star}</div><h1 class="done-title">${last?'Scenario complete':'Round 1 complete'}</h1>
       <p class="lead" style="margin:0 auto">${last?'Now put the key lines in your own words.':'Next: from memory.'}</p>
       <div class="tiles"><div class="tile t1"><span>Lines</span><b>${total}</b></div><div class="tile t2"><span>Round</span><b>${sess.round}/2</b></div><div class="tile t3"><span>Streak</span><b>${streak()}</b></div></div></div></div>
-    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="exit">Make it yours</button><button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button></div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
+    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="exit">More</button><button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button></div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
   const li=sess.lines[sess.k], note=sc.lines[li][2], hide=last&&step!=='review'&&!sess.peek;
   const ctx=contextOf(sc,li).map(c=>{ const [who,text]=sc.lines[c], nm=nameOf(sc,who), alt=altSpeaker(sc,who);
     return who==='stage'?`<p class="stagenote">${esc(text)}</p>`:`<div class="char"><div class="av${alt?' alt':''}" aria-hidden="true">${esc(nm.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/,'')[0]||'?')}</div><div class="bub"><div class="sl-who">${esc(nm)}</div><div class="sl-text">${lineHTML(sc,c)}</div></div></div>`; }).join('');
@@ -2198,10 +2213,13 @@ function act(a,btn){
   if(a.startsWith('st-')) return studioAct(a,btn);
   if(a==='coach') return runBtn(btn,t=>coachSay(btn.dataset.k,t));
   if(a==='coachv'){ state.coachVoice=!coachOn(); save(); btn.textContent=coachOn()?'Coach on':'Coach off'; btn.setAttribute('aria-pressed',coachOn()); return; }
+  if(a==='sc-start') return startScenario(+btn.dataset.i);
   if(!sess&&a!=='start1'&&a!=='start2') return;
   const i=sess?sess.i:state.route.i;
-  if(a==='start1'||a==='round1') return startSession(i,1);
-  if(a==='start2'||a==='round2') return startSession(i,2);
+  if(a==='start1'||a==='start2') return startSession(i,a==='start1'?1:2,true);
+  if(a==='round1'||a==='round2') return startSession(i,a==='round1'?1:2);
+  if(a==='sc-go') return enterLine();
+  if(a==='sc-exit'){ const f=sess.from; endSession(); return go(f); }
   if(a==='exit'){ endSession(); render(); window.scrollTo(0,0); return; }
   if(a==='skip'){ stopAll(); sess.step='ready'; return render(); }
   if(a==='listen') return listen();
@@ -2214,7 +2232,7 @@ function act(a,btn){
   if(a==='again'){ stopAll(); cancelRec(); sess.step='ready'; sess.err=null; return render(); }
   if(a==='next'){ stopAll(); cancelRec(); if(sess.step==='review') markDay();
     if(sess.k<sess.lines.length-1){ sess.k++; enterLine(); window.scrollTo(0,0); }
-    else { if(sess.round===2) state.scDone[i]=true; markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(sess.round===2?'c-fx-done2':'c-fx-done1',t); } } return; }
+    else { if(sess.round===2) state.scDone[i]=true; else { state.scR1=state.scR1||{}; state.scR1[i]=true; } markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(sess.round===2?'c-fx-done2':'c-fx-done1',t); } } return; }
 }
 
 function viewScenario(i){

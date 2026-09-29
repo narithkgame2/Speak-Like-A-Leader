@@ -955,6 +955,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "c7f50d1e0ef3"
 },
+"c-sc0-intro": {
+"url": "audio/c-sc0-intro.m4a",
+"voice": "Moira",
+"h": "a44cc08d7f87"
+},
 "c-s0-l1": {
 "url": "audio/c-s0-l1.m4a",
 "voice": "Moira",
@@ -990,6 +995,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "8e3e25369367"
 },
+"c-sc1-intro": {
+"url": "audio/c-sc1-intro.m4a",
+"voice": "Moira",
+"h": "63c35d13a89a"
+},
 "c-s1-l1": {
 "url": "audio/c-s1-l1.m4a",
 "voice": "Moira",
@@ -1014,6 +1024,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s1-l9.m4a",
 "voice": "Moira",
 "h": "42f444acd513"
+},
+"c-sc2-intro": {
+"url": "audio/c-sc2-intro.m4a",
+"voice": "Moira",
+"h": "9ea8bb78d2be"
 },
 "c-s2-l1": {
 "url": "audio/c-s2-l1.m4a",
@@ -1044,6 +1059,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s2-l8.m4a",
 "voice": "Moira",
 "h": "72c1dd48d7bb"
+},
+"c-sc3-intro": {
+"url": "audio/c-sc3-intro.m4a",
+"voice": "Moira",
+"h": "7a9d1c330016"
 },
 "c-s3-l1": {
 "url": "audio/c-s3-l1.m4a",
@@ -1080,6 +1100,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "8b4d5c00ad77"
 },
+"c-sc4-intro": {
+"url": "audio/c-sc4-intro.m4a",
+"voice": "Moira",
+"h": "886e49bbea9f"
+},
 "c-s4-l1": {
 "url": "audio/c-s4-l1.m4a",
 "voice": "Moira",
@@ -1109,6 +1134,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s4-l7.m4a",
 "voice": "Moira",
 "h": "12d63d1f84e9"
+},
+"c-sc5-intro": {
+"url": "audio/c-sc5-intro.m4a",
+"voice": "Moira",
+"h": "4a57ee66bb38"
 },
 "c-s5-l0": {
 "url": "audio/c-s5-l0.m4a",
@@ -1140,6 +1170,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "62d326be9ead"
 },
+"c-sc6-intro": {
+"url": "audio/c-sc6-intro.m4a",
+"voice": "Moira",
+"h": "39d5a7ac8ee9"
+},
 "c-s6-l1": {
 "url": "audio/c-s6-l1.m4a",
 "voice": "Moira",
@@ -1165,6 +1200,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "a8e4caea177f"
 },
+"c-sc7-intro": {
+"url": "audio/c-sc7-intro.m4a",
+"voice": "Moira",
+"h": "e25c8c99ed47"
+},
 "c-s7-l2": {
 "url": "audio/c-s7-l2.m4a",
 "voice": "Moira",
@@ -1189,6 +1229,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s7-l8.m4a",
 "voice": "Moira",
 "h": "5e8e33767158"
+},
+"c-sc8-intro": {
+"url": "audio/c-sc8-intro.m4a",
+"voice": "Moira",
+"h": "f4192cf68126"
 },
 "c-s8-l1": {
 "url": "audio/c-s8-l1.m4a",
@@ -1219,6 +1264,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s8-l12.m4a",
 "voice": "Moira",
 "h": "b3e1ed86f87d"
+},
+"c-sc9-intro": {
+"url": "audio/c-sc9-intro.m4a",
+"voice": "Moira",
+"h": "39e48242e845"
 },
 "c-s9-l1": {
 "url": "audio/c-s9-l1.m4a",
@@ -1255,6 +1305,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "6ea7138f53b4"
 },
+"c-sc10-intro": {
+"url": "audio/c-sc10-intro.m4a",
+"voice": "Moira",
+"h": "0288b3878931"
+},
 "c-s10-l1": {
 "url": "audio/c-s10-l1.m4a",
 "voice": "Moira",
@@ -1285,6 +1340,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "3a1fd05f69b0"
 },
+"c-sc11-intro": {
+"url": "audio/c-sc11-intro.m4a",
+"voice": "Moira",
+"h": "af5e225b4b27"
+},
 "c-s11-l0": {
 "url": "audio/c-s11-l0.m4a",
 "voice": "Moira",
@@ -1310,6 +1370,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "c8cf7e616e60"
 },
+"c-sc12-intro": {
+"url": "audio/c-sc12-intro.m4a",
+"voice": "Moira",
+"h": "b1859e7aa88b"
+},
 "c-s12-l1": {
 "url": "audio/c-s12-l1.m4a",
 "voice": "Moira",
@@ -1334,6 +1399,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s12-l8.m4a",
 "voice": "Moira",
 "h": "daa2d1a7296d"
+},
+"c-sc13-intro": {
+"url": "audio/c-sc13-intro.m4a",
+"voice": "Moira",
+"h": "4ffbc7578a4c"
 },
 "c-s13-l0": {
 "url": "audio/c-s13-l0.m4a",
@@ -1365,6 +1435,11 @@ window.AUDIO_FILES = {
 "voice": "Moira",
 "h": "3505d5fd6dfd"
 },
+"c-sc14-intro": {
+"url": "audio/c-sc14-intro.m4a",
+"voice": "Moira",
+"h": "dfca80fcdea1"
+},
 "c-s14-l0": {
 "url": "audio/c-s14-l0.m4a",
 "voice": "Moira",
@@ -1394,6 +1469,11 @@ window.AUDIO_FILES = {
 "url": "audio/c-s14-l8.m4a",
 "voice": "Moira",
 "h": "251a60828c9e"
+},
+"c-sc15-intro": {
+"url": "audio/c-sc15-intro.m4a",
+"voice": "Moira",
+"h": "4a1b410d2373"
 },
 "c-s15-l2": {
 "url": "audio/c-s15-l2.m4a",

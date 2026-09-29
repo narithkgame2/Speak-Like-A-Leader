@@ -52,6 +52,10 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   (round 2: "Your turn."), spoken verdict after each recording (`judge().key`), and a line at round end. Toggle:
   "Coach on/off" in the practice bar and Settings (`state.coachVoice`). Missing clips fall back to the browser voice.
   All clips play through one shared `PLAYER` element so iPhones allow the spoken feedback after the first tap.
+- Scenarios start directly (`startScenario`: from Continue, the path or the list) on a setting card (who, where,
+  goal; the coach reads clip `c-sc{i}-intro`) → Start → lines. Round 2 is picked automatically once round 1 is done
+  (`state.scR1`). ✕ returns to where you came from; the done card offers "Next: …" and More (the scenario page
+  with the full script and "Make it yours"). On screens >=1200px the Continue button sits in the "Your climb" card.
 - Scenario practice is guided shadowing (modelled on BoldVoice / ELSA), one of your lines at a time:
   Listen (their line, then the model line) → Record (mic) → Compare (play model / me / both, rough pace and
   pause feedback from the recording) → Try again or Good, next. Round 1 = read along, Round 2 = line hidden,

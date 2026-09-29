@@ -43,6 +43,7 @@ def coach_lines():
     i = s.index("const COACH_FX = ") + len("const COACH_FX = ")
     for k, v in json.loads(s[i:s.index("\n};", i) + 2]).items(): out[f"c-fx-{k}"] = v
     for si, sc in enumerate(scenarios()):
+        out[f"c-sc{si}-intro"] = plain(f"{sc['title']}. {sc['setting']} Your goal: {sc['goal']}")
         for li, line in enumerate(sc["lines"]):
             if line[0] == "you" and len(line) > 2 and line[2]: out[f"c-s{si}-l{li}"] = plain(line[2])
     for n, l in enumerate(lessons()):
