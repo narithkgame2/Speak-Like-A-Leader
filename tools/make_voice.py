@@ -59,7 +59,7 @@ def coach_lines():
     i = s.index("const COACH_FX = ") + len("const COACH_FX = ")
     for k, v in json.loads(s[i:s.index("\n};", i) + 2]).items(): out[f"c-fx-{k}"] = v
     for si, sc in enumerate(scenarios()):
-        out[f"c-sc{si}-intro"] = plain(f"{sc['title']}. {sc['setting']} Your goal: {sc['goal']}")
+        out[f"c-sc{si}-intro"] = plain(f"{sc['setting']} Your goal: {sc['goal']}")
         for li, line in enumerate(sc["lines"]):
             if line[0] == "you" and len(line) > 2 and line[2]: out[f"c-s{si}-l{li}"] = plain(line[2])
     for n, l in enumerate(lessons()):
@@ -67,6 +67,9 @@ def coach_lines():
         out[f"c-lesson{n}-drill"] = plain(f"{l['tag']} {l['drill_note']}")
         out[f"c-lesson{n}-rule"] = plain(f"{l['title']}. {l['rule']}")
         for k, pr in enumerate(l["pairs"]): out[f"c-lesson{n}-p{k}-note"] = plain(pr["note"])
+    i = s.index("const LESSON_QUIZ = ") + len("const LESSON_QUIZ = ")
+    for n, qs in json.loads(s[i:s.index("\n};", i) + 2]).items():
+        for k, q in enumerate(qs): out[f"c-lesson{n}-q{k}"] = q["prompt"]; out[f"c-lesson{n}-q{k}-why"] = q["why"]
     return out
 
 
@@ -90,7 +93,7 @@ def lessons():
 
 def drill_markup(script):
     """Same as drillMarkup() in index.html."""
-    m = {"pause": "‧‧‧", "pause-long": "‧‧‧‧‧", "breath": "‧‧‧‧‧", "note": ""}
+    m = {"pause": "‧‧‧", "pause-long": "‧‧‧‧‧", "breath": "", "note": ""}   # breaths: the breathing card
     parts = [m[ty] if ty in m else f"{t} ↘" if ty == "down" else f"*{t}*" if ty == "stress" else t for t, ty in script]
     return " ".join(p for p in parts if p)
 

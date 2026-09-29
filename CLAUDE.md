@@ -1,4 +1,4 @@
-# Speak Like an Advisor: High-Stakes Presence
+# Speak Like a Leader: High-Stakes Presence
 
 A mobile-first, high-level communication trainer for any professional: speaking and presence in the moments
 that matter (investors, executives, clients, negotiations, senior rooms, hard conversations). Industry-neutral.
@@ -14,6 +14,19 @@ real estate (his direction, 2026-09-29).
   microphone works on iPhone. Local testing: `python3 -m http.server 8000` in this folder.
 
 ## Structure
+- Name: **Speak Like a Leader** (renamed 2026-09-29; summit rank "Trusted Leader"). iPhone app icon + web manifest:
+  `icons/` (source `icons/icon.svg`, PNGs rendered with headless Chrome), `manifest.webmanifest`; opens full screen
+  from the Home Screen as "Speak Leader".
+- Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
+  `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
+  after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.
+- Breathing card (`type:'breathe'`) replaces "breath" marks in a drill: 3 guided breaths, in 4 / out 6.
+- First try vs today: every recorded line (scenario `s{si}-l{li}`, lesson `l{i}-p{k}` / `l{i}-d`) keeps its first
+  and latest take in IndexedDB store `history` (db `sla-voice` v2). The review shows "First" (date, grey
+  waveform, play) above "Today" when the first take is from an earlier session.
+- Less waiting: the scenario setting (read without the title) auto-starts the lines; the round explanations
+  (`c-fx-r1`, `c-fx-r2`) play once ever (`state.cues`). A scenario with round 1 done shows a brass ring
+  (`.node.half`). Top bar stats are labelled ("3 days · 9 done"). Lessons have the speed button too.
 - Lessons run as card sessions (`lsess`, `lessonCards`, `viewLessonSession`), one idea per screen:
   idea (rule; coach reads it; "Why it works" on tap) → one quiz per example ("Which is stronger?", tap = answer,
   the coach reads the reason) → "Now you say it" (the first playable example) → drill → [builder] → [timed] → done

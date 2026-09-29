@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Speak Like an Advisor — High-Stakes Presence</title>
+<title>Speak Like a Leader</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Speak Leader">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1216" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -417,6 +426,28 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .cont-bar .solid-btn{ pointer-events:auto; width:100%; max-width:440px; padding:15px 20px; font-size:1rem; box-shadow:0 1px 0 var(--ink-d), 0 14px 30px -12px rgba(0,0,0,.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 main.home{ padding-bottom:calc(var(--tabh) + 110px + env(safe-area-inset-bottom,0px)); }
 @media (min-width:900px){ .cont-bar{ left:250px; bottom:18px; } main.home{ padding-bottom:110px; } }
+.stat small{ font-size:.66rem; font-weight:500; color:var(--dim); margin-left:1px; }
+.node.half{ box-shadow:inset 0 0 0 3px var(--gold-hi), 0 8px 18px -12px rgba(0,0,0,.25); }
+.node.now.half{ box-shadow:inset 0 0 0 3px var(--gold-hi), 0 2px 0 var(--u-d), 0 12px 24px -10px var(--u); }
+.wave.dim rect{ fill:var(--mute); } .wave.dim rect.sil{ fill:var(--line); }
+.cmp-row.first .cmp-lab small{ display:block; font-size:.66rem; font-weight:500; color:var(--dim); }
+.qtext{ font-family:var(--serif); font-weight:500; font-size:1.3rem; line-height:2.1; margin-top:6px; }
+.qchip{ font:inherit; color:var(--text); background:var(--card); border:1px solid var(--line); border-radius:10px; padding:2px 9px; margin:3px 0; cursor:pointer; box-shadow:0 1px 0 var(--line-d); }
+.qchip.sel{ background:var(--ink); color:var(--on-ink); border-color:var(--ink); }
+.qchip.right{ background:var(--pri-soft); border-color:var(--pri); } .qchip.miss{ border:1.5px dashed var(--pri); }
+.qchip.wrong{ background:var(--gold-soft); border-color:var(--gold); text-decoration:line-through; } .qchip.dim{ opacity:.55; }
+.qchip:disabled, .qgap:disabled{ cursor:default; }
+.qgap{ font:600 .95rem var(--sans); letter-spacing:.1em; color:var(--mute); background:none; border:1px dashed transparent; border-radius:8px; padding:0 6px; margin:0 2px; cursor:pointer; vertical-align:middle; }
+.qgap:hover:not(:disabled){ color:var(--gold); border-color:var(--line); }
+.qgap.right{ color:var(--gold); border-color:var(--gold); background:var(--gold-soft); } .qgap.wrong{ color:var(--red); border-color:var(--red); }
+.br-wrap{ display:flex; justify-content:center; margin:26px 0 8px; }
+.br-circle{ width:210px; height:210px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  background:radial-gradient(circle, color-mix(in srgb, var(--pri) 22%, var(--card)) 0%, var(--pri-soft) 70%); border:1.5px solid color-mix(in srgb, var(--pri) 40%, transparent);
+  transform:scale(.62); transition:transform 1s ease-in-out; }
+.br-circle.in{ transform:scale(1); transition-duration:4s; } .br-circle.out{ transform:scale(.62); transition-duration:6s; }
+.br-circle span{ font-size:.8rem; font-weight:600; color:var(--pri); } .br-circle b{ font-family:var(--serif); font-size:2.4rem; font-weight:600; color:var(--pri); line-height:1; }
+.br-round{ text-align:center; color:var(--dim); font-size:.9rem; }
+@media (prefers-reduced-motion: reduce){ .br-circle{ transition:none; } }
 @media (max-width:420px){ .page-title{ font-size:1.7rem; } .how3{ grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce){ .tip, .eq i, .spk.playing, .pop, .fx-foot, .done-badge{ animation:none; } .say.hide .say-text{ filter:none; color:transparent; } }
 </style>
@@ -425,7 +456,7 @@ main.home{ padding-bottom:calc(var(--tabh) + 110px + env(safe-area-inset-bottom,
 <header class="topbar"><div class="topbar-in"><button class="back" id="backBtn" type="button" aria-label="Back" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="top-title" id="topTitle">Speak Like an Advisor</span><div class="top-stats" id="topStats"></div></div></header>
 <main id="main"></main>
 <script src="audio/manifest.js"></script>
-<nav class="tabbar" aria-label="Main"><div class="nav-logo">Speak Like<br>an Advisor</div><div class="tabbar-in" id="tabbar"></div></nav>
+<nav class="tabbar" aria-label="Main"><div class="nav-logo">Speak Like<br>a Leader</div><div class="tabbar-in" id="tabbar"></div></nav>
 <script>
 const LESSONS = [
   { title:"Calm your nerves",
@@ -1618,7 +1649,7 @@ function units(){
 }
 /* The home path is a climb: base camp at the bottom, the summit at the top.
    Each unit is a camp at a higher altitude, and a rank is earned at each one. */
-const RANKS=['Newcomer','Composed','Credible','Persuasive','Unshakable','Commanding','Trusted Advisor'];
+const RANKS=['Newcomer','Composed','Credible','Persuasive','Unshakable','Commanding','Trusted Leader'];
 const CAMPS=['Base Camp','Camp I','Camp II','Camp III','Camp IV','High Camp'];
 const ALTS=[800,1600,2400,3200,3900,4500,5000];
 const fmtM=m=>`${Math.round(m/10)*10}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')+' m';
@@ -1649,9 +1680,9 @@ function viewHome(){
   const secs=us.map((u,k)=>{ const complete=u.items.every(x=>x.done);
     const sign=`<div class="camp"><span class="camp-dot" aria-hidden="true"></span><div class="camp-t"><div class="camp-k">${CAMPS[k]} · ${fmtM(ALTS[k])}${complete?' · <span class="camp-ok">✓ Reached</span>':''}</div><div class="camp-n">${esc(u.name)}</div></div>
       <button class="unit-btn" type="button" data-go="${u.list}" aria-label="List ${esc(u.name)}">${ICO.list}</button></div>`;
-    const nodes=u.items.map((it,j)=>{ const key=it.kind[0]+it.i, x=XS[j%XS.length], isNow=it===now, open=pathOpen===key, cls=it.done?'done':isNow?'now':'todo';
+    const nodes=u.items.map((it,j)=>{ const key=it.kind[0]+it.i, x=XS[j%XS.length], isNow=it===now, open=pathOpen===key, cls=it.done?'done':isNow?'now':'todo', half=!it.done&&it.kind==='scenario'&&(state.scR1||{})[it.i];
       return `<div class="node-wrap${isNow?' is-now':''}" style="--x:${x}px">${isNow?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}
-        <button class="node ${cls}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?LICO[it.i]:ICO.chat}</button></div>
+        <button class="node ${cls}${half?' half':''}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?LICO[it.i]:ICO.chat}</button></div>
         ${open?`<div class="pop${cls==='todo'?' todo':''}" style="--x:${x}px"><div class="pop-t">${esc(it.title)}</div><div class="pop-s">${esc(it.sub)}</div>
           <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Practice again'):'Start'}</button></div>`:''}`; }).reverse().join('');
     return `<section class="unit-sec u-${u.color}" data-k="${k}"><div class="path"><svg class="trail" aria-hidden="true"></svg>${nodes}</div>${sign}</section>`; }).reverse().join('');
@@ -1804,8 +1835,8 @@ const AUDIO=window.AUDIO_FILES||{};   // from audio/manifest.js (tools/make_voic
 const MINE={};    // "s0-l1": {url:blobURL, start, stop}, loaded from IndexedDB
 const lineId=(si,li)=>`s${si}-l${li}`;
 const IDB={ db:null,
-  open(){ return this.db||(this.db=new Promise((res,rej)=>{ const r=indexedDB.open('sla-voice',1); r.onupgradeneeded=()=>r.result.createObjectStore('takes'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); })); },
-  async req(mode,fn){ const db=await this.open(); return new Promise(res=>{ const q=fn(db.transaction('takes',mode).objectStore('takes')); q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); }); },
+  open(){ return this.db||(this.db=new Promise((res,rej)=>{ const r=indexedDB.open('sla-voice',2); r.onupgradeneeded=()=>{ const db=r.result; for(const n of ['takes','history']) if(!db.objectStoreNames.contains(n)) db.createObjectStore(n); }; r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); })); },
+  async req(mode,fn,store='takes'){ const db=await this.open(); return new Promise(res=>{ const q=fn(db.transaction(store,mode).objectStore(store)); q.onsuccess=()=>res(q.result); q.onerror=()=>res(null); }); },
   get(k){ return this.req('readonly',s=>s.get(k)); }, set(k,v){ return this.req('readwrite',s=>s.put(v,k)); },
   del(k){ return this.req('readwrite',s=>s.delete(k)); }, keys(){ return this.req('readonly',s=>s.getAllKeys()); } };
 async function loadMine(){ try{ for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(v&&v.blob) MINE[k]={url:URL.createObjectURL(v.blob), start:v.start, stop:v.stop}; } }catch(e){} }
@@ -1850,13 +1881,15 @@ const COACH_FX = {
  "done2": "Scenario complete. Now rewrite the key lines in your own words.",
  "quiz": "Which is stronger?",
  "say": "Listen, then say it.",
- "ldone": "Lesson complete. Well done."
+ "ldone": "Lesson complete. Well done.",
+ "breathe": "Breathe with the circle. In for four. Out for six."
 };
 const plainText=h=>String(h).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
 function coachText(k){ let m;
   if((m=k.match(/^c-fx-(\w+)$/))) return COACH_FX[m[1]]||'';
   if((m=k.match(/^c-s(\d+)-l(\d+)$/))) return plainText(SCENARIOS[+m[1]].lines[+m[2]][2]||'');
-  if((m=k.match(/^c-sc(\d+)-intro$/))){ const sc=SCENARIOS[+m[1]]; return plainText(`${sc.title}. ${sc.setting} Your goal: ${sc.goal}`); }
+  if((m=k.match(/^c-sc(\d+)-intro$/))){ const sc=SCENARIOS[+m[1]]; return plainText(`${sc.setting} Your goal: ${sc.goal}`); }
+  if((m=k.match(/^c-lesson(\d+)-q(\d+)(-why)?$/))){ const q=(LESSON_QUIZ[m[1]]||[])[+m[2]]; return q?(m[3]?q.why:q.prompt):''; }
   if((m=k.match(/^c-lesson(\d+)-rule$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.rule}`); }
   if((m=k.match(/^c-lesson(\d+)-p(\d+)-note$/))) return plainText(LESSONS[+m[1]].pairs[+m[2]].note);
   if((m=k.match(/^c-lesson(\d+)-intro$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.sub} The rule. ${l.rule} ${l.why}`); }
@@ -1938,6 +1971,58 @@ function viewWelcome(){ const n=state.intro;
     <p class="hint">The scripts use this whenever you introduce yourself. Change it anytime in Settings.</p></div>
     <div class="fx-foot"><div class="fx-foot-in"><div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="welcome-done">Start</button></div></div></div>`; }
 
+/* ---------------- LESSON QUIZZES ----------------
+   Beyond "which is stronger": tap the weak words, tap the stressed word, tap where the pause goes,
+   and "what do you do?" choices. Indices count words split on spaces; a pause answer n = after word n.
+   JSON so tools/make_voice.py can read it (coach clips c-lesson{i}-q{k} and c-lesson{i}-q{k}-why). */
+const LESSON_QUIZ = {
+ "0": [{"type":"choice","prompt":"A hard question lands. What do you do first?","options":["Answer quickly to show confidence","Say \"Great question\" to buy time","Breathe out, pause, then answer"],"answer":2,"why":"A slow exhale steadies your voice, and the pause looks thoughtful, not lost."}],
+ "1": [{"type":"pause","prompt":"Where does the pause go?","text":"The return is twelve percent.","answer":2,"why":"Slow down just before the number. It tells them: this matters."},
+       {"type":"stress","prompt":"Which word must stay strongest?","text":"Today, one decision.","answer":2,"why":"Keep the volume up to the last word. It's usually the important one."}],
+ "2": [{"type":"pause","prompt":"Where do you stay silent?","text":"The price is fifty thousand.","answer":4,"why":"After a number, stop and wait. Whoever talks first usually gives something away."},
+       {"type":"choice","prompt":"They ask a hard question. Your best first two seconds are…","options":["Silence, while you think","\"Um, well, so…\"","\"That's a really great question!\""],"answer":0,"why":"Two seconds of silence looks thoughtful. Fillers look lost."}],
+ "3": [{"type":"weak","prompt":"Tap the weak words","text":"I just wanted to maybe suggest that we could sort of try it.","answer":[1,4,9,10],"why":"Remove them and the same idea sounds twice as strong."},
+       {"type":"choice","prompt":"How should your voice end a proposal?","options":["Rising, to sound open","Falling, like setting something down","Fading, to sound polite"],"answer":1,"why":"A rising end turns a statement into a question."}],
+ "4": [{"type":"choice","prompt":"While you speak, where are your hands?","options":["In your lap, out of sight","Holding a pen, to stay busy","Visible and still on the table"],"answer":2,"why":"Visible, still hands say: I belong here."}],
+ "5": [{"type":"choice","prompt":"Across a table, what comes right after your name?","options":["One line: who you help and what they get","Your job title and company","A quick joke to break the ice"],"answer":0,"why":"A title gets forgotten. A clear line gets repeated."}],
+ "6": [{"type":"weak","prompt":"Tap the weak words","text":"So basically I think maybe the plan could possibly work.","answer":[0,1,2,3,4,8],"why":"Say it straight: the plan will work."},
+       {"type":"choice","prompt":"\"Your numbers look optimistic.\" Your best reply?","options":["\"No, they're realistic. We checked carefully.\"","\"Fair question. Which number concerns you most?\"","\"Trust me, they're conservative.\""],"answer":1,"why":"A calm question sounds more secure than any defense."}],
+ "7": [{"type":"choice","prompt":"The meeting is ending. Your last sentence is…","options":["\"So… yeah, that's all from me.\"","\"Sorry for taking so long.\"","A one-line summary and the next step"],"answer":2,"why":"People remember the end. Make it the point and the next step."}]
+};
+function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '):[];
+  const st=n=>{ if(!done) return q.type==='weak'&&c.sel&&c.sel.has(n)?'sel':'';
+    const ans=q.type==='weak'?q.answer.includes(n):q.answer===n, picked=q.type==='weak'?c.sel.has(n):c.pick===n;
+    return ans&&picked?'right':ans?(q.type==='weak'?'miss':'right'):picked?'wrong':'dim'; };
+  if(q.type==='choice') return `<div class="ls-opts">${q.options.map((o,n)=>`<button class="ls-opt ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''}>${esc(o)}</button>`).join('')}</div>`;
+  if(q.type==='pause') return `<p class="qtext">${words.map((w,n)=>`<span class="qw">${esc(w)}</span> <button class="qgap ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''} aria-label="Pause after ${esc(w)}">‧‧‧</button>`).join(' ')}</p>`;
+  return `<p class="qtext">${words.map((w,n)=>`<button class="qchip ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''}>${esc(w)}</button>`).join(' ')}</p>`; }
+function quizPick(c,n){ const q=c.q; if(c.checked) return;
+  if(q.type==='weak'){ c.sel=c.sel||new Set(); c.sel.has(n)?c.sel.delete(n):c.sel.add(n); return render(); }
+  c.pick=n; quizCheck(c); }
+function quizCheck(c){ const q=c.q; c.checked=true;
+  c.ok=q.type==='weak'?c.sel.size===q.answer.length&&q.answer.every(n=>c.sel.has(n)):c.pick===q.answer;
+  render(); if(coachOn()){ const t=++tok; coachSay(`c-lesson${lsess.i}-q${c.k}-why`,t); } }
+
+/* ---------------- FIRST TRY vs TODAY ----------------
+   Every recorded line keeps its first take and its latest one (IndexedDB store "history", this device).
+   The review shows the first try next to today's when it's from an earlier session. */
+async function trackTake(id,blob,r,since){ if(!id||!r||r.empty) return null; let h=null;
+  try{ h=await IDB.req('readonly',s=>s.get(id),'history'); }catch(e){}
+  const entry={blob,type:blob.type,at:Date.now(),bars:r.bars,speech:r.speech};
+  try{ await IDB.req('readwrite',s=>s.put({first:(h&&h.first)||entry,latest:entry},id),'history'); }catch(e){}
+  const f=h&&h.first&&h.first.at<since?h.first:null;
+  return f?{url:URL.createObjectURL(f.blob),at:f.at,bars:f.bars}:null; }
+function firstRow(f,act){ if(!f) return ''; const d=new Date(f.at).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  return `<div class="cmp-row first"><span class="cmp-lab">First<small>${d}</small></span><span class="cmp-wave">${f.bars?waveSVG(f.bars,true):''}</span><button class="play-btn" type="button" data-act="${act}">▶ Play</button></div>`; }
+
+/* ---------------- BREATHING CARD ----------------
+   Three guided breaths (in 4, out 6) before the first drill line of "Calm your nerves". */
+function breatheStart(){ let s=0; const tick=()=>{ const el=$('brc'); if(!el){ clearInterval(timerId); timerId=null; return; }
+    if(s>=30){ clearInterval(timerId); timerId=null; el.className='br-circle'; $('brLabel').textContent='Ready'; $('brCount').textContent=''; $('brRound').textContent='Now say it, calm and slow.'; return; }
+    const inP=(s%10)<4; el.className='br-circle '+(inP?'in':'out'); $('brLabel').textContent=inP?'Breathe in':'Breathe out';
+    $('brCount').textContent=inP?4-(s%10):10-(s%10); $('brRound').textContent=`Breath ${Math.floor(s/10)+1} of 3`; s++; };
+  tick(); timerId=setInterval(tick,1000); }
+
 /* ---------------- LESSON SESSIONS ----------------
    A lesson runs as short cards, one idea per screen (Duolingo style):
    idea → one quiz per example ("Which is stronger?") → say it → drill → [builder] → [timed] → done.
@@ -1953,27 +2038,31 @@ const LICO=[
  '<path d="M8 4H5v16h3M16 4h3v16h-3"/>'].map(p=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`);
 let lsess=null;
 /* A lesson drill as script markup, so it plays and highlights like a scenario line. */
-function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧‧‧':type==='pause-long'||type==='breath'?'‧‧‧‧‧':type==='note'?'':type==='down'?`${t} ↘`:type==='stress'?`*${t}*`:t).filter(Boolean).join(' '); }
-function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'}];
-  l.pairs.forEach((p,k)=>cards.push({type:'quiz',k}));
+function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧‧‧':type==='pause-long'?'‧‧‧‧‧':type==='note'||type==='breath'?'':type==='down'?`${t} ↘`:type==='stress'?`*${t}*`:t).filter(Boolean).join(' '); }
+function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'},{type:'quiz',k:0}];
+  (LESSON_QUIZ[i]||[]).forEach((q,k)=>cards.push({type:'q',q,k}));
   const k=l.pairs.findIndex(p=>!p.noPlay&&!p.lang);
-  if(k>=0) cards.push({type:'say',text:l.pairs[k].better,clip:isPersonal(l.pairs[k].better)?null:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
-  const dm=drillMarkup(l.drill.script); cards.push({type:'say',text:dm,clip:isPersonal(dm)?null:`l${i}-d`,label:'Drill',title:l.drill.tag});
+  if(k>=0) cards.push({type:'say',text:l.pairs[k].better,id:`l${i}-p${k}`,clip:isPersonal(l.pairs[k].better)?null:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
+  const breath=l.drill.script.some(x=>x[1]==='breath'); if(breath) cards.push({type:'breathe'});
+  const dm=drillMarkup(l.drill.script); cards.push({type:'say',text:dm,id:`l${i}-d`,clip:isPersonal(dm)?null:`l${i}-d`,label:'Drill',title:breath?'Now say it, calm and slow':l.drill.tag});
   if(l.builder) cards.push({type:'builder'});
   if(l.practice) cards.push({type:'timed'});
   cards.push({type:'done'}); return cards; }
 function nextItem(){ return units().flatMap(u=>u.items).find(x=>!x.done)||null; }
 function nextUp(){ const it=nextItem(); endSession(); endLesson(); if(!it) return go('home'); if(it.kind==='lesson') startLesson(it.i); else startScenario(it.i); }
 function startLesson(i){ const from=state.route.name==='lessons'?'lessons':'home'; endSession(); endLesson();
-  lsess={i,n:0,cards:lessonCards(i),from}; state.route={name:'lesson',i}; save(); enterCard(); }
+  lsess={i,n:0,cards:lessonCards(i),from,t0:Date.now()}; state.route={name:'lesson',i}; save(); enterCard(); }
 function endLesson(){ if(!lsess) return; stopAll(); cancelRec(); lsess.cards.forEach(c=>{ if(c.url) URL.revokeObjectURL(c.url); }); lsess=null; }
 function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=lsess.i;
-  if(c.url) URL.revokeObjectURL(c.url); Object.assign(c,{step:null,res:null,err:null,url:null});
+  if(c.url) URL.revokeObjectURL(c.url); if(c.first) URL.revokeObjectURL(c.first.url); Object.assign(c,{step:null,res:null,err:null,url:null,first:null,checked:false,pick:null,sel:new Set()});
   if(c.type==='done'){ state.done[i]=true; markDay(); save(); }
   render(); window.scrollTo(0,0);
   const t=++tok;
   if(c.type==='say') return lsListen();
+  if(c.type==='breathe') breatheStart();
   if(!coachOn()) return;
+  if(c.type==='q') coachSay(`c-lesson${i}-q${c.k}`,t);
+  else if(c.type==='breathe') coachSay('c-fx-breathe',t);
   if(c.type==='idea') coachSay(`c-lesson${i}-rule`,t);
   else if(c.type==='quiz') coachSay('c-fx-quiz',t);
   else if(c.type==='done') coachSay('c-fx-ldone',t); }
@@ -2000,7 +2089,7 @@ async function lsRecord(){ const c=lsess.cards[lsess.n], key=lsess.n; stopAll();
   mr.onstop=async()=>{ releaseMic(); if(!lsess||lsess.n!==key) return;
     const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'});
     if(c.url) URL.revokeObjectURL(c.url); c.url=URL.createObjectURL(blob); c.step='review'; c.res='wait'; render();
-    const r=await analyze(blob); if(lsess&&lsess.n===key&&c.step==='review'){ c.res=r; render();
+    const r=await analyze(blob); if(lsess&&lsess.n===key&&c.step==='review'){ c.res=r; c.first=await trackTake(c.id,blob,r,lsess.t0); render();
       const k=judgeRes(r,c.modelDur,innerPauses(c.text),key).key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); c.step='rec'; render(); }
@@ -2021,6 +2110,9 @@ function lessonAct(a,btn){
   if(a==='ls-again'){ stopAll(); cancelRec(); c.step='ready'; c.err=null; return render(); }
   if(a==='ls-pmodel') return runBtn(btn,t=>lsModel(t));
   if(a==='ls-pme') return runBtn(btn,t=>playUrl(c.url,t));
+  if(a==='ls-pfirst') return runBtn(btn,t=>playUrl(c.first&&c.first.url,t));
+  if(a==='ls-qpick') return quizPick(c,+btn.dataset.n);
+  if(a==='ls-qcheck') return quizCheck(c);
   if(a==='ls-pboth') return runBtn(btn,async t=>{ if(await lsModel(t)&&await wait(400,t)) await playUrl(c.url,t); });
   if(a==='ls-more'){ const i=lsess.i; endLesson(); state.route={name:'lesson',i}; save(); render(); window.scrollTo(0,0); return; }
   if(a==='ls-topic'){ let k; do{ k=Math.floor(Math.random()*P.list.length); }while(k===c.last&&P.list.length>1); c.last=k; c.topic=P.list[k];
@@ -2033,7 +2125,8 @@ function viewLessonSession(){
   const i=lsess.i, l=LESSONS[i], c=lsess.cards[lsess.n], total=lsess.cards.length-1, pct=Math.round(lsess.n/total*100);
   const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="ls-exit" aria-label="End lesson">${ICO.x}</button>
     <div class="pbar" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${lsess.n}"><i style="width:${pct}%"></i></div>
-    <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button></div>`;
+    <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button>
+    <button class="speed" type="button" data-act="speed" aria-label="Playback speed">${+state.rate.toFixed(2)}×</button></div>`;
   const foot=(cls,inner)=>`<div class="fx-foot ${cls}"><div class="fx-foot-in">${inner}</div></div>`;
   const cont=(label='Continue')=>`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-next">${label}</button></div>`;
   let body='', ft='', cls='';
@@ -2047,6 +2140,15 @@ function viewLessonSession(){
         return `<button class="ls-opt ${st}" type="button" data-act="ls-pick" data-o="${x.o}" ${c.pick?'disabled':''}>${quizText(x.t)}</button>`; }).join('')}</div>`;
     if(c.pick){ const ok=c.pick==='b'; cls=ok?'good':'almost';
       ft=`<div class="res" role="status"><span class="res-ic">${ok?ICO.check:ICO.warn}</span><div><div class="res-t">${ok?'Right':'Not quite'}</div><p class="fb-tip">${plainText(p.note)}</p></div></div>${cont()}`; } }
+  else if(c.type==='q'){ const q=c.q;
+    body=`<p class="eyebrow">Quick check</p><h1 class="fx-title">${esc(q.prompt)}</h1>${viewQuiz(c)}`;
+    if(c.checked){ cls=c.ok?'good':'almost';
+      ft=`<div class="res" role="status"><span class="res-ic">${c.ok?ICO.check:ICO.warn}</span><div><div class="res-t">${c.ok?'Right':'Not quite'}</div><p class="fb-tip">${esc(q.why)}</p></div></div>${cont()}`; }
+    else if(q.type==='weak') ft=`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-qcheck" ${c.sel&&c.sel.size?'':'disabled'}>Check</button></div>`; }
+  else if(c.type==='breathe'){
+    body=`<p class="eyebrow">Before you speak</p><h1 class="fx-title">Three slow breaths</h1>
+      <div class="br-wrap"><div class="br-circle" id="brc"><span id="brLabel">Breathe in</span><b id="brCount">4</b></div></div><p class="br-round" id="brRound">Breath 1 of 3</p>`;
+    ft=cont(); }
   else if(c.type==='say'){ const st=c.step;
     const card=`<div class="say"><button class="spk" type="button" data-act="${st==='review'?'ls-pmodel':'ls-listen'}" aria-label="Listen">${ICO.spk}</button><div class="say-body"><div class="say-text">${parseLine(c.text).map((s,si)=>segHTML(s,'L',si)).join(' ')}</div></div></div>`;
     body=`<p class="eyebrow">${c.label}</p><h1 class="fx-title">${c.title}</h1>${card}`;
@@ -2056,7 +2158,7 @@ function viewLessonSession(){
     else if(st==='rec'){ body+=`<button class="speak-btn on" type="button" data-act="ls-stop">${eq}Tap to stop · <span id="recTime">0.0s</span></button>`; ft=skip; }
     else if(st==='review'){ const j=judgeRes(c.res,c.modelDur,innerPauses(c.text),lsess.n); cls=j.v;
       body+=`<div class="card cmp"><div class="cmp-row"><span class="cmp-lab">Model</span><span class="cmp-wave">${c.modelDur?c.modelDur.toFixed(1)+'s':''}</span><button class="play-btn" type="button" data-act="ls-pmodel">▶ Play</button></div>
-        <div class="cmp-row"><span class="cmp-lab">You</span><span class="cmp-wave">${c.res&&c.res.bars?waveSVG(c.res.bars):''}</span><button class="play-btn" type="button" data-act="ls-pme">▶ Play</button></div>
+        ${firstRow(c.first,'ls-pfirst')}<div class="cmp-row"><span class="cmp-lab">${c.first?'Today':'You'}</span><span class="cmp-wave">${c.res&&c.res.bars?waveSVG(c.res.bars):''}</span><button class="play-btn" type="button" data-act="ls-pme">▶ Play</button></div>
         <button class="small-btn both" type="button" data-act="ls-pboth">▶ Both</button></div>`;
       ft=`<div class="res" role="status"><span class="res-ic">${j.v==='good'?ICO.check:j.v==='almost'?ICO.warn:ICO.spk}</span><div><div class="res-t">${j.t}</div>${j.tip?`<p class="fb-tip">${j.tip}</p>`:''}</div></div>
         <div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-again">Try again</button><button class="solid-btn${j.v==='almost'?' gold':j.v==='neutral'?' blue':''}" type="button" data-act="ls-next">Continue</button></div>`; }
@@ -2119,16 +2221,18 @@ async function runBtn(btn,fn){ const same=activeBtn===btn; stopAll(); if(same) r
    Round 2 (from memory) is picked automatically once round 1 is done. */
 function startScenario(i){ startSession(i,state.scDone[i]||(state.scR1||{})[i]?2:1,true); }
 function startSession(i,round,intro){ const from=sess?sess.from:['home','scenarios'].includes(state.route.name)?state.route.name:'home';
-  endSession(); endLesson(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false,from};
+  endSession(); endLesson(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false,from,t0:Date.now()};
   state.route={name:'scenario',i}; state.lastSc=i; save();
   if(!intro){ enterLine(); window.scrollTo(0,0); return; }
-  sess.step='intro'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(`c-sc${i}-intro`,t); } }
+  sess.step='intro'; render(); window.scrollTo(0,0);
+  if(coachOn()){ const t=++tok; coachSay(`c-sc${i}-intro`,t).then(ok=>{ if(ok&&sess&&sess.i===i&&sess.step==='intro') enterLine(); }); } }   // after the setting is read, the lines start by themselves
 function endSession(){ stopAll(); cancelRec(); if(sess&&sess.url) URL.revokeObjectURL(sess.url); sess=null; }
-function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); Object.assign(sess,{url:null,res:null,err:null,peek:false}); listen(); }
+function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); if(sess.first) URL.revokeObjectURL(sess.first.url); Object.assign(sess,{url:null,res:null,err:null,peek:false,first:null}); listen(); }
 async function listen(){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv), note=sc.lines[li][2];
   stopAll(); sess.step='listen'; render();
   const t=++tok, coach=coachOn();
-  if(coach&&!sess.introDone){ sess.introDone=true; if(!await coachSay(sess.round===1?'c-fx-r1':'c-fx-r2',t)||!await wait(300,t)) return; }
+  if(coach&&!sess.introDone){ sess.introDone=true; const cue=sess.round===1?'r1':'r2'; state.cues=state.cues||{};   // the round explanation plays once, ever
+    if(!state.cues[cue]){ state.cues[cue]=true; save(); if(!await coachSay('c-fx-'+cue,t)||!await wait(300,t)) return; } }
   for(const c of contextOf(sc,li)){ if(!await speakLine(sc,c,t,yv,tv)) return; if(!await wait(350/state.rate,t)) return; }
   if(sess.round===1){ if(coach&&note&&(!await coachSay(`c-s${sess.i}-l${li}`,t)||!await wait(250,t))) return; if(!await speakModel(t)) return; }
   else if(coach&&!await coachSay('c-fx-turn',t)) return;
@@ -2145,7 +2249,7 @@ async function startRec(){ stopAll();
   mr.onstop=async()=>{ releaseMic(); if(!sess||sess.k!==key) return;
     const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'});
     if(sess.url) URL.revokeObjectURL(sess.url); sess.url=URL.createObjectURL(blob); sess.step='review'; sess.res='wait'; render();
-    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; render(); const k=judge().key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
+    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; sess.first=await trackTake(lineId(sess.i,sess.lines[key]),blob,r,sess.t0); render(); const k=judge().key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); sess.step='rec'; sess.err=null; render(); }
 function stopRec(){ if(!rec) return; clearInterval(rec.timer); const r=rec; rec=null; if(r.mr.state!=='inactive') r.mr.stop(); }
@@ -2166,7 +2270,7 @@ async function analyze(blob){ try{
   const avg=arr=>arr.reduce((t,f)=>t+rms[f],0)/arr.length, end=voiced.length>40?avg(voiced.slice(-15))/avg(voiced):null;
   return {speech:(b-a+1)*0.02, pauses, bars, end, a:a*0.02, b:(b+1)*0.02};
 }catch(e){ return null; } }
-function waveSVG(bars){ return `<svg class="wave" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">${bars.map(([h,sil],k)=>{ const H=Math.max(1.5,h*30); return `<rect${sil?' class="sil"':''} x="${k*2}" y="${(32-H)/2}" width="1.3" height="${H}" rx=".6"/>`; }).join('')}</svg>`; }
+function waveSVG(bars,dim){ return `<svg class="wave${dim?' dim':''}" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">${bars.map(([h,sil],k)=>{ const H=Math.max(1.5,h*30); return `<rect${sil?' class="sil"':''} x="${k*2}" y="${(32-H)/2}" width="1.3" height="${H}" rx=".6"/>`; }).join('')}</svg>`; }
 /* Verdict for the result banner: good (green), almost (gold) or neutral (blue). */
 function judge(){ const li=sess.lines[sess.k]; return judgeRes(sess.res,sess.modelDur[li],innerPauses(SCENARIOS[sess.i].lines[li][1]),sess.k); }
 function judgeRes(r,md,exp,n){
@@ -2216,7 +2320,7 @@ function viewSession(){
   else if(step==='review'){ const j=judge();
     body=`<div class="card cmp">
       <div class="cmp-row"><span class="cmp-lab">Model</span><span class="cmp-wave">${sess.modelDur[li]?`${sess.modelDur[li].toFixed(1)}s`:'Not heard yet'}</span><button class="play-btn" type="button" data-act="pmodel">▶ Play</button></div>
-      <div class="cmp-row"><span class="cmp-lab">You</span><span class="cmp-wave">${sess.res&&sess.res.bars?waveSVG(sess.res.bars):''}</span><button class="play-btn" type="button" data-act="pme">▶ Play</button></div>
+      ${firstRow(sess.first,'pfirst')}<div class="cmp-row"><span class="cmp-lab">${sess.first?'Today':'You'}</span><span class="cmp-wave">${sess.res&&sess.res.bars?waveSVG(sess.res.bars):''}</span><button class="play-btn" type="button" data-act="pme">▶ Play</button></div>
       <button class="small-btn both" type="button" data-act="pboth">▶ Both</button></div>`;
     ft=`<div class="res" role="status"><span class="res-ic">${j.v==='good'?ICO.check:j.v==='almost'?ICO.warn:ICO.spk}</span><div><div class="res-t">${j.t}</div>
         ${j.tip?`<p class="fb-tip">${j.tip}</p>`:''}</div></div>
@@ -2252,6 +2356,7 @@ function act(a,btn){
   if(a==='stop') return stopRec();
   if(a==='pmodel') return runBtn(btn,t=>speakModel(t));
   if(a==='pme') return runBtn(btn,t=>playMe(t));
+  if(a==='pfirst') return runBtn(btn,t=>playUrl(sess.first&&sess.first.url,t));
   if(a==='pboth') return runBtn(btn,async t=>{ if(await speakModel(t)&&await wait(400,t)) await playMe(t); });
   if(a==='again'){ stopAll(); cancelRec(); sess.step='ready'; sess.err=null; return render(); }
   if(a==='next'){ stopAll(); cancelRec(); if(sess.step==='review') markDay();
@@ -2303,10 +2408,10 @@ function render(){
   const parent = n==='lesson'?'lessons':n==='scenario'?'scenarios':n==='studio'?'settings':null;
   const welcome=!state.onboarded;
   document.body.classList.toggle('focus', welcome||(n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess));
-  const tt=$('topTitle'); tt.textContent = n==='lesson'?`Lesson ${r.i+1}`:n==='scenario'?`Scenario ${letter(r.i)}`:n==='studio'?'Voice studio':'Speak Like an Advisor'; tt.classList.toggle('logo',!parent);
+  const tt=$('topTitle'); tt.textContent = n==='lesson'?`Lesson ${r.i+1}`:n==='scenario'?`Scenario ${letter(r.i)}`:n==='studio'?'Voice studio':'Speak Like a Leader'; tt.classList.toggle('logo',!parent);
   $('backBtn').hidden=!parent; $('backBtn').dataset.go=parent||'';
   const done=Object.values(state.done).filter(Boolean).length+Object.values(state.scDone).filter(Boolean).length;
-  $('topStats').innerHTML=`<span class="stat fire${practicedToday()?'':' off'}" title="Day streak">${ICO.fire}${streak()}</span><span class="stat chk" title="Lessons and scenarios done">${ICO.done}${done}</span>`;
+  $('topStats').innerHTML=`<span class="stat fire${practicedToday()?'':' off'}" title="Days in a row">${ICO.fire}${streak()}<small>${streak()===1?'day':'days'}</small></span><span class="stat chk" title="Lessons and scenarios done">${ICO.done}${done}<small>done</small></span>`;
   $('tabbar').innerHTML=TABS.map(([k,label,icon])=>{ const on=(k===n)||(k===parent);
     return `<button type="button" class="tb ${on?'on':''}" data-go="${k}" ${on?'aria-current="page"':''}><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><span>${label}</span></button>`; }).join('');
   const main=$('main'); main.className=n==='home'?'home':'';
