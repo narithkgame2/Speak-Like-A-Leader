@@ -815,6 +815,81 @@ window.AUDIO_FILES = {
 "voice": "Daniel",
 "h": "aef303d06b50"
 },
+"l0-p0": {
+"url": "audio/l0-p0.m4a",
+"voice": "Daniel",
+"h": "fb40efe20965"
+},
+"l0-d": {
+"url": "audio/l0-d.m4a",
+"voice": "Daniel",
+"h": "6ee6942257a6"
+},
+"l1-p0": {
+"url": "audio/l1-p0.m4a",
+"voice": "Daniel",
+"h": "d479cc17b2a2"
+},
+"l1-d": {
+"url": "audio/l1-d.m4a",
+"voice": "Daniel",
+"h": "349488a6dee0"
+},
+"l2-p0": {
+"url": "audio/l2-p0.m4a",
+"voice": "Daniel",
+"h": "4018cb8e6f61"
+},
+"l2-d": {
+"url": "audio/l2-d.m4a",
+"voice": "Daniel",
+"h": "8d86d0bb55b7"
+},
+"l3-p0": {
+"url": "audio/l3-p0.m4a",
+"voice": "Daniel",
+"h": "49aed11c347a"
+},
+"l3-d": {
+"url": "audio/l3-d.m4a",
+"voice": "Daniel",
+"h": "87f76cce929b"
+},
+"l4-d": {
+"url": "audio/l4-d.m4a",
+"voice": "Daniel",
+"h": "86630e907bb1"
+},
+"l5-p0": {
+"url": "audio/l5-p0.m4a",
+"voice": "Daniel",
+"h": "34a0d53faf1b"
+},
+"l5-d": {
+"url": "audio/l5-d.m4a",
+"voice": "Daniel",
+"h": "850cf76b026f"
+},
+"l6-p0": {
+"url": "audio/l6-p0.m4a",
+"voice": "Daniel",
+"h": "b7c8e5e73137"
+},
+"l6-d": {
+"url": "audio/l6-d.m4a",
+"voice": "Daniel",
+"h": "8bcc473490a7"
+},
+"l7-p0": {
+"url": "audio/l7-p0.m4a",
+"voice": "Daniel",
+"h": "50736639769c"
+},
+"l7-d": {
+"url": "audio/l7-d.m4a",
+"voice": "Daniel",
+"h": "798fcfe5b63d"
+},
 "c-fx-r1": {
 "url": "audio/c-fx-r1.m4a",
 "voice": "Moira",
@@ -864,6 +939,21 @@ window.AUDIO_FILES = {
 "url": "audio/c-fx-done2.m4a",
 "voice": "Moira",
 "h": "65429308692e"
+},
+"c-fx-quiz": {
+"url": "audio/c-fx-quiz.m4a",
+"voice": "Moira",
+"h": "789e8fbf99e8"
+},
+"c-fx-say": {
+"url": "audio/c-fx-say.m4a",
+"voice": "Moira",
+"h": "1c0453dc7ee4"
+},
+"c-fx-ldone": {
+"url": "audio/c-fx-ldone.m4a",
+"voice": "Moira",
+"h": "c7f50d1e0ef3"
 },
 "c-s0-l1": {
 "url": "audio/c-s0-l1.m4a",
@@ -1333,81 +1423,216 @@ window.AUDIO_FILES = {
 "c-lesson0-intro": {
 "url": "audio/c-lesson0-intro.m4a",
 "voice": "Moira",
-"h": "d2bcd72b4192"
+"h": "f9fd5396cd89"
 },
 "c-lesson0-drill": {
 "url": "audio/c-lesson0-drill.m4a",
 "voice": "Moira",
 "h": "5a5815935fec"
 },
+"c-lesson0-rule": {
+"url": "audio/c-lesson0-rule.m4a",
+"voice": "Moira",
+"h": "946df0578b67"
+},
+"c-lesson0-p0-note": {
+"url": "audio/c-lesson0-p0-note.m4a",
+"voice": "Moira",
+"h": "a8220e60138b"
+},
+"c-lesson0-p1-note": {
+"url": "audio/c-lesson0-p1-note.m4a",
+"voice": "Moira",
+"h": "d29bca5ab81e"
+},
 "c-lesson1-intro": {
 "url": "audio/c-lesson1-intro.m4a",
 "voice": "Moira",
-"h": "45e4b7837bc3"
+"h": "6473edca3387"
 },
 "c-lesson1-drill": {
 "url": "audio/c-lesson1-drill.m4a",
 "voice": "Moira",
 "h": "154624254735"
 },
+"c-lesson1-rule": {
+"url": "audio/c-lesson1-rule.m4a",
+"voice": "Moira",
+"h": "98210b0de389"
+},
+"c-lesson1-p0-note": {
+"url": "audio/c-lesson1-p0-note.m4a",
+"voice": "Moira",
+"h": "cfdaa2969516"
+},
+"c-lesson1-p1-note": {
+"url": "audio/c-lesson1-p1-note.m4a",
+"voice": "Moira",
+"h": "6073f556a79c"
+},
 "c-lesson2-intro": {
 "url": "audio/c-lesson2-intro.m4a",
 "voice": "Moira",
-"h": "939081b37355"
+"h": "7478212a6803"
 },
 "c-lesson2-drill": {
 "url": "audio/c-lesson2-drill.m4a",
 "voice": "Moira",
 "h": "8761b7b3bcfc"
 },
+"c-lesson2-rule": {
+"url": "audio/c-lesson2-rule.m4a",
+"voice": "Moira",
+"h": "a135a0a606ff"
+},
+"c-lesson2-p0-note": {
+"url": "audio/c-lesson2-p0-note.m4a",
+"voice": "Moira",
+"h": "e5ae5a285bcf"
+},
+"c-lesson2-p1-note": {
+"url": "audio/c-lesson2-p1-note.m4a",
+"voice": "Moira",
+"h": "c850c314aa9e"
+},
 "c-lesson3-intro": {
 "url": "audio/c-lesson3-intro.m4a",
 "voice": "Moira",
-"h": "fe22c1813f37"
+"h": "6ba0c1c820e1"
 },
 "c-lesson3-drill": {
 "url": "audio/c-lesson3-drill.m4a",
 "voice": "Moira",
 "h": "e1ffaa7d46f8"
 },
+"c-lesson3-rule": {
+"url": "audio/c-lesson3-rule.m4a",
+"voice": "Moira",
+"h": "1dd718d9d75c"
+},
+"c-lesson3-p0-note": {
+"url": "audio/c-lesson3-p0-note.m4a",
+"voice": "Moira",
+"h": "3cb14573b615"
+},
+"c-lesson3-p1-note": {
+"url": "audio/c-lesson3-p1-note.m4a",
+"voice": "Moira",
+"h": "64d2480518d9"
+},
+"c-lesson3-p2-note": {
+"url": "audio/c-lesson3-p2-note.m4a",
+"voice": "Moira",
+"h": "d5af0f121532"
+},
 "c-lesson4-intro": {
 "url": "audio/c-lesson4-intro.m4a",
 "voice": "Moira",
-"h": "45b568bf08e2"
+"h": "0cb07a740285"
 },
 "c-lesson4-drill": {
 "url": "audio/c-lesson4-drill.m4a",
 "voice": "Moira",
 "h": "ee37a0631b37"
 },
+"c-lesson4-rule": {
+"url": "audio/c-lesson4-rule.m4a",
+"voice": "Moira",
+"h": "d63fc9d4d84a"
+},
+"c-lesson4-p0-note": {
+"url": "audio/c-lesson4-p0-note.m4a",
+"voice": "Moira",
+"h": "694df940ff76"
+},
+"c-lesson4-p1-note": {
+"url": "audio/c-lesson4-p1-note.m4a",
+"voice": "Moira",
+"h": "c9390677d0e0"
+},
 "c-lesson5-intro": {
 "url": "audio/c-lesson5-intro.m4a",
 "voice": "Moira",
-"h": "43676f0cc2cc"
+"h": "9644632effbf"
 },
 "c-lesson5-drill": {
 "url": "audio/c-lesson5-drill.m4a",
 "voice": "Moira",
 "h": "4b9492b17ffa"
 },
+"c-lesson5-rule": {
+"url": "audio/c-lesson5-rule.m4a",
+"voice": "Moira",
+"h": "28c6d1310e9b"
+},
+"c-lesson5-p0-note": {
+"url": "audio/c-lesson5-p0-note.m4a",
+"voice": "Moira",
+"h": "b65dbd3e8517"
+},
+"c-lesson5-p1-note": {
+"url": "audio/c-lesson5-p1-note.m4a",
+"voice": "Moira",
+"h": "fd04ae3de796"
+},
+"c-lesson5-p2-note": {
+"url": "audio/c-lesson5-p2-note.m4a",
+"voice": "Moira",
+"h": "558bb369bff4"
+},
 "c-lesson6-intro": {
 "url": "audio/c-lesson6-intro.m4a",
 "voice": "Moira",
-"h": "afdf1d5082ee"
+"h": "ce59cb166f14"
 },
 "c-lesson6-drill": {
 "url": "audio/c-lesson6-drill.m4a",
 "voice": "Moira",
 "h": "6891de64c3f7"
 },
+"c-lesson6-rule": {
+"url": "audio/c-lesson6-rule.m4a",
+"voice": "Moira",
+"h": "a4985c932c9b"
+},
+"c-lesson6-p0-note": {
+"url": "audio/c-lesson6-p0-note.m4a",
+"voice": "Moira",
+"h": "4fcb4dee16ac"
+},
+"c-lesson6-p1-note": {
+"url": "audio/c-lesson6-p1-note.m4a",
+"voice": "Moira",
+"h": "0900fb2d3a2a"
+},
+"c-lesson6-p2-note": {
+"url": "audio/c-lesson6-p2-note.m4a",
+"voice": "Moira",
+"h": "05036d536643"
+},
 "c-lesson7-intro": {
 "url": "audio/c-lesson7-intro.m4a",
 "voice": "Moira",
-"h": "9c040e26e6f7"
+"h": "d0b2fed310fb"
 },
 "c-lesson7-drill": {
 "url": "audio/c-lesson7-drill.m4a",
 "voice": "Moira",
 "h": "2cb82cba9150"
+},
+"c-lesson7-rule": {
+"url": "audio/c-lesson7-rule.m4a",
+"voice": "Moira",
+"h": "c8503d831953"
+},
+"c-lesson7-p0-note": {
+"url": "audio/c-lesson7-p0-note.m4a",
+"voice": "Moira",
+"h": "05f09404c925"
+},
+"c-lesson7-p1-note": {
+"url": "audio/c-lesson7-p1-note.m4a",
+"voice": "Moira",
+"h": "2d8fba0c8df3"
 }
 };

@@ -13,6 +13,13 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   microphone works on iPhone. Local testing: `python3 -m http.server 8000` in this folder.
 
 ## Structure
+- Lessons run as card sessions (`lsess`, `lessonCards`, `viewLessonSession`), one idea per screen:
+  idea (rule; coach reads it; "Why it works" on tap) → one quiz per example ("Which is stronger?", tap = answer,
+  the coach reads the reason) → "Now you say it" (the first playable example) → drill → [builder] → [timed] → done
+  with "Next: …". The long lesson page (`viewLesson`) is kept as the "More" reference page.
+- Lesson titles are short actions (Calm your nerves, Slow down, Use silence, ...), each with an icon (`LICO`).
+- "Next up" everywhere: a fixed Continue button on home, "Next: …" at the end of lessons and scenarios
+  (`nextItem()` = first unfinished step on the path, `nextUp()`).
 - `LESSONS` array: 8 foundation lessons. Each has `title, sub, rule, why, pairs[], drill{tag, script, note}, own`,
   and optionally `practice{secs, note, list[]}` (timed questions) and `builder:true` (intro builder, lesson 6).
 - `SCENARIOS` array: 16 full meeting scripts, grouped by `cat`. Each line is `[who, text, coachNote]`.
@@ -40,8 +47,8 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   Spoken Content settings and set `YOU` (and the cast) at the top of the script. Clips highlight words proportionally to word length; speechSynthesis uses
   `onboundary` (not supported by every voice). Settings → "Use my recordings as the model" (`state.useMine`).
 - Coach voice (the trainer, Moira): clips `c-fx-*` (session cues and spoken feedback, texts in `COACH_FX`),
-  `c-s{si}-l{li}` (the coach note for each "you" line), `c-lesson{i}-intro` / `-drill` (lesson "Hear the coach" and
-  "Coach instructions" buttons). In practice: intro at round start, then per line their line → coach tip → model
+  `c-s{si}-l{li}` (the coach note for each "you" line), `c-lesson{i}-rule` / `-p{k}-note` (lesson cards),
+  `c-lesson{i}-intro` / `-drill` (buttons on the More page). Lesson model clips: `l{i}-p{k}`, `l{i}-d` (drill). In practice: intro at round start, then per line their line → coach tip → model
   (round 2: "Your turn."), spoken verdict after each recording (`judge().key`), and a line at round end. Toggle:
   "Coach on/off" in the practice bar and Settings (`state.coachVoice`). Missing clips fall back to the browser voice.
   All clips play through one shared `PLAYER` element so iPhones allow the spoken feedback after the first tap.

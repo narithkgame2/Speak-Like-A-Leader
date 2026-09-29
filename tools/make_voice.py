@@ -45,14 +45,37 @@ def coach_lines():
     for si, sc in enumerate(scenarios()):
         for li, line in enumerate(sc["lines"]):
             if line[0] == "you" and len(line) > 2 and line[2]: out[f"c-s{si}-l{li}"] = plain(line[2])
-    body = s[s.index("const LESSONS = ["):s.index("\n];", s.index("const LESSONS = ["))]
-    for n, block in enumerate(body.split("\n  { title:")[1:]):
-        f = [(k, json.loads('"' + v + '"')) for k, v in re.findall(r'(\w+):"((?:[^"\\]|\\.)*)"', "title:" + block)]
+    for n, l in enumerate(lessons()):
+        out[f"c-lesson{n}-intro"] = plain(f"{l['title']}. {l['sub']} The rule. {l['rule']} {l['why']}")
+        out[f"c-lesson{n}-drill"] = plain(f"{l['tag']} {l['drill_note']}")
+        out[f"c-lesson{n}-rule"] = plain(f"{l['title']}. {l['rule']}")
+        for k, pr in enumerate(l["pairs"]): out[f"c-lesson{n}-p{k}-note"] = plain(pr["note"])
+    return out
+
+
+def lessons():
+    """Read the LESSONS array (a JS literal) well enough for the fields the voice needs."""
+    s = source(); body = s[s.index("const LESSONS = ["):s.index("\n];", s.index("const LESSONS = ["))]
+    fields = lambda t: [(k, json.loads('"' + v + '"')) for k, v in re.findall(r'(\w+):"((?:[^"\\]|\\.)*)"', t)]
+    out = []
+    for block in body.split("\n  { title:")[1:]:
+        f = fields("title:" + block)
         get = lambda key, after=0: next(v for j, (k, v) in enumerate(f) if k == key and j >= after)
         tag_at = next(j for j, (k, _) in enumerate(f) if k == "tag")
-        out[f"c-lesson{n}-intro"] = plain(f"{get('title')}. {get('sub')} The rule. {get('rule')} {get('why')}")
-        out[f"c-lesson{n}-drill"] = plain(f"{get('tag')} {get('note', tag_at)}")
+        pairs = []
+        for pb in re.findall(r"\{moment:(.*?)\}", block):
+            pf = dict(fields("moment:" + pb)); pf["noPlay"] = "noPlay:true" in pb; pairs.append(pf)
+        script = json.loads(re.search(r"script:(\[\[.*?\]\])", block).group(1))
+        out.append({"title": get("title"), "sub": get("sub"), "rule": get("rule"), "why": get("why"), "tag": get("tag"),
+                    "drill_note": get("note", tag_at), "pairs": pairs, "script": script})
     return out
+
+
+def drill_markup(script):
+    """Same as drillMarkup() in index.html."""
+    m = {"pause": "‧‧‧", "pause-long": "‧‧‧‧‧", "breath": "‧‧‧‧‧", "note": ""}
+    parts = [m[ty] if ty in m else f"{t} ↘" if ty == "down" else f"*{t}*" if ty == "stress" else t for t, ty in script]
+    return " ".join(p for p in parts if p)
 
 
 def speakers(sc):
@@ -90,6 +113,10 @@ def main():
         cast = speakers(sc)
         for li, (who, text, *_) in enumerate(sc["lines"]):
             if who != "stage": jobs.append((f"s{si}-l{li}", *cast[who], to_say(text)))
+    for n, l in enumerate(lessons()):   # lesson model lines: the stronger example and the drill
+        k = next((k for k, pr in enumerate(l["pairs"]) if not pr["noPlay"] and "lang" not in pr), None)
+        if k is not None: jobs.append((f"l{n}-p{k}", *YOU, to_say(l["pairs"][k]["better"])))
+        jobs.append((f"l{n}-d", *YOU, to_say(drill_markup(l["script"]))))
     for lid, text in coach_lines().items(): jobs.append((lid, *COACH, to_say(text)))
     for lid, voice, rate, spoken in jobs:
             if not re.search(rf"^{re.escape(voice)}\s", installed, re.M): sys.exit(f"Voice not installed: {voice}")
