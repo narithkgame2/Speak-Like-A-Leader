@@ -8,6 +8,9 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
 - Single self-contained file: `index.html` (HTML + CSS + JS inline, no build step).
 - Open it directly in a browser to test. No server needed.
 - Progress is saved in `localStorage` under the key `sla-highstakes-v1` (per device).
+- Live: https://narithkgame2.github.io/Speak-Like-A-Leader/ (GitHub Pages, public repo
+  narithkgame2/Speak-Like-A-Leader, deploys from `main` about a minute after each push). https, so the
+  microphone works on iPhone. Local testing: `python3 -m http.server 8000` in this folder.
 
 ## Structure
 - `LESSONS` array: 8 foundation lessons. Each has `title, sub, rule, why, pairs[], drill{tag, script, note}, own`,
