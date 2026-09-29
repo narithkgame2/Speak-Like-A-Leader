@@ -473,6 +473,45 @@ main.home{ padding-bottom:0; }
 .builder textarea.need{ border-color:var(--red); }
 @media (max-width:420px){ .page-title{ font-size:1.7rem; } .how3{ grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce){ .tip, .eq i, .spk.playing, .pop, .fx-foot, .done-badge{ animation:none; } .say.hide .say-text{ filter:none; color:transparent; } }
+
+/* the climb, level by level: numbers, stars, mist ahead, the unlock walk, camp reached */
+.nnum{ font-family:var(--serif); font-weight:600; font-size:calc(var(--ns) * .38); line-height:1; }
+.mn.mini .nnum{ display:none; }
+.node.todo .nnum{ color:var(--mute); }
+.mstars{ position:absolute; left:0; top:calc(var(--ns) / 2 - 7px); translate:-50% 0; display:flex; gap:1px; pointer-events:none; filter:drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.mstars svg{ width:13px; height:13px; }
+.mstars .on{ color:var(--gold-hi); } .mstars .off{ color:rgba(255,255,255,.8); }
+.mstars svg:nth-child(2){ translate:0 3px; }
+.mn.mini .mstars{ display:none; }
+.mn.fog{ opacity:.5; } .mn.fog .node{ box-shadow:none; }
+.mcamp.locked{ opacity:.75; } .mcamp.locked .camp-dot{ background:var(--mute); box-shadow:none; }
+.mflag{ width:0; height:0; z-index:2; pointer-events:none !important; }
+.mflag .me{ left:2px; bottom:22px; margin:0; }
+.mn.is-now .node{ animation:nowPulse 2.4s ease-in-out infinite; }
+@keyframes nowPulse{ 50%{ box-shadow:0 0 0 8px color-mix(in srgb, var(--u) 22%, transparent), 0 12px 24px -10px var(--u); } }
+.node.justdone{ animation:doneBounce .6s cubic-bezier(.3,1.6,.5,1); }
+@keyframes doneBounce{ 40%{ transform:scale(1.25); } }
+.mstars.pop svg, .dstars.pop svg{ animation:starIn .45s cubic-bezier(.3,1.7,.5,1) both; }
+.mstars.pop svg:nth-child(1), .dstars svg:nth-child(1){ animation-delay:.25s; } .mstars.pop svg:nth-child(2), .dstars svg:nth-child(2){ animation-delay:.45s; } .mstars.pop svg:nth-child(3), .dstars svg:nth-child(3){ animation-delay:.65s; }
+@keyframes starIn{ from{ transform:scale(0) rotate(-40deg); opacity:0; } }
+.node.unlock{ animation:unlockRing 1s ease-out; }
+@keyframes unlockRing{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 70%, transparent); } 100%{ box-shadow:0 0 0 22px transparent; } }
+.dstars{ display:flex; justify-content:center; gap:6px; margin:4px 0 14px; }
+.dstars svg{ width:34px; height:34px; } .dstars svg:nth-child(2){ translate:0 -6px; }
+.dstars .on{ color:var(--gold); filter:drop-shadow(0 4px 8px color-mix(in srgb, var(--gold) 45%, transparent)); } .dstars .off{ color:var(--bg-2); }
+.gate{ position:fixed; inset:0; z-index:40; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(12,14,18,.45); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:fadeIn .35s ease-out; }
+.gate-card{ width:100%; max-width:340px; text-align:center; background:var(--card); border:1px solid var(--line); border-radius:22px; padding:30px 24px 22px; box-shadow:0 40px 80px -30px rgba(0,0,0,.6); animation:gateUp .6s cubic-bezier(.2,1.2,.4,1); }
+.gate-card .rule{ width:34px; height:2px; background:var(--gold); margin:0 auto 16px; border:none; padding:0; }
+.gate-k{ font-size:.62rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gold-text); }
+.gate-t{ font-family:var(--serif); font-weight:600; font-size:1.9rem; margin:6px 0 2px; }
+.gate-m{ font-size:.9rem; color:var(--dim); }
+.gate-peak{ display:block; width:120px; height:auto; margin:18px auto 14px; }
+.gate-r{ font-size:.62rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); }
+.gate-rank{ font-family:var(--serif); font-weight:600; font-size:1.35rem; color:var(--gold-text); margin:4px 0 20px; }
+.gate .solid-btn{ width:100%; }
+@keyframes fadeIn{ from{ opacity:0; } }
+@keyframes gateUp{ from{ transform:translateY(24px) scale(.96); opacity:0; } }
+@media (prefers-reduced-motion: reduce){ .mn.is-now .node, .node.justdone, .node.unlock, .mstars.pop svg, .dstars svg, .gate, .gate-card{ animation:none; } }
 </style>
 </head>
 <body>
@@ -2039,6 +2078,8 @@ function mtnArt(M,dark){ const R=rng(11), Z=dark?ZONES.dark:ZONES.light, st=M.st
     o+=`<g opacity="${dark?.06:.6}" fill="#fff"><ellipse cx="${x}" cy="${y}" rx="${46*s}" ry="${13*s}"/><ellipse cx="${x-22*s}" cy="${y-6*s}" rx="${24*s}" ry="${12*s}"/><ellipse cx="${x+16*s}" cy="${y-10*s}" rx="${22*s}" ry="${14*s}"/></g>`; }
   o+=`<path d="M-600 ${MH+600}L-600 ${BASE_Y+40}Q150 ${BASE_Y-40} 480 ${BASE_Y+30}T${MW+600} ${BASE_Y+10}L${MW+600} ${MH+600}Z" fill="${shade(Z[0],dark?1.1:.9)}"/>`;
   o+=`<path d="M${PEAK[0]} ${PEAK[1]}v-58" stroke="${dark?'#E7E2D6':'#3A4048'}" stroke-width="3"/><path d="M${PEAK[0]} ${PEAK[1]-58}h40l-9 11 9 11h-40Z" fill="${M.now?(dark?'#56606B':'#9AA0A8'):'#C9A04F'}"/>`;
+  if(M.now&&M.now.ui<M.us.length-1){ const nx=M.steps.find(x=>x.ui===M.now.ui+1), yb=nx.y+60, mc=dark?'#0B111C':'#F4F2EC';
+    o+=`<defs><linearGradient id="mmist" x1="0" y1="-600" x2="0" y2="${yb}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${mc}" stop-opacity="${dark?.75:.8}"/><stop offset=".72" stop-color="${mc}" stop-opacity=".55"/><stop offset="1" stop-color="${mc}" stop-opacity="0"/></linearGradient></defs><rect x="-600" y="-600" width="${MW+1200}" height="${yb+600}" fill="url(#mmist)"/>`; }
   const tx=M.steps[0].x-70, ty=BASE_Y+14; o+=`<path d="M${tx} ${ty}l26 -36l26 36Z" fill="${dark?'#C9A15A':'#B8893B'}"/><path d="M${tx+26} ${ty-36}l-7 36h14Z" fill="${dark?'#8C6B34':'#7A5A23'}"/>`;
   return o; }
 
@@ -2063,10 +2104,14 @@ function camClamp(c,W,H){ const hw=W/2/c.s, hh=H/2/c.s;
 function mtnApply(){ const st=$('mstage'); if(!st||!MTN) return; const W=st.clientWidth, H=st.clientHeight, c=cam;
   const px=(x,y)=>[W/2+(x-c.x)*c.s, H/2+(y-c.y)*c.s];
   $('mworld').setAttribute('transform',`translate(${(W/2-c.x*c.s).toFixed(2)} ${(H/2-c.y*c.s).toFixed(2)}) scale(${c.s.toFixed(4)})`);
-  const D=MTN.D, cut=MTN.now?MTN.now.d:D.length-1, path=pts=>pts.map((p,i)=>{ const q=px(p[0],p[1]); return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1); }).join('');
+  const D=MTN.D, cut=Math.round(MTN.cutD??(MTN.now?MTN.now.d:D.length-1)), path=pts=>pts.map((p,i)=>{ const q=px(p[0],p[1]); return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1); }).join('');
   $('mtrail').innerHTML=`<path class="bed" d="${path(D)}"/><path class="rest" d="${path(D.slice(cut))}"/><path class="got" d="${path(D.slice(0,cut+1))}"/>`;
-  MTN.els.forEach(({el,x,y,gap,kind,span,mine,side})=>{ let [a,b]=px(x,y);
-    if(kind==='camp'){ const w=el.offsetWidth||160; a=side>0?Math.min(a,W-w-8):Math.max(a,w+8); }
+  const dots=MTN.steps.map(s=>{ const [a,b]=px(s.x,s.y); return [a,b,Math.max(10,Math.min(30,s.gap*c.s*0.36))+4]; });
+  MTN.els.forEach(({el,x,y,gap,kind,span,mine,side})=>{ if(kind==='flag'){ const p=MTN.flagPt||(MTN.now?[MTN.now.x,MTN.now.y]:null); el.hidden=!p; if(!p) return; [x,y]=p; }
+    let [a,b]=px(x,y);
+    if(kind==='camp'){ const w=el.offsetWidth||160, hh=(el.offsetHeight||40)/2; a=side>0?Math.min(a,W-w-8):Math.max(a,w+8);
+      const x0=side>0?a:a-w, hits=yy=>dots.some(([dx,dy,r])=>dx+r>x0&&dx-r<x0+w&&dy+r>yy-hh&&dy-r<yy+hh);
+      for(const off of [0,18,-18,36,-36,54,-54,72,-72]) if(!hits(b+off)){ b+=off; break; } }
     el.style.transform=`translate(${a.toFixed(1)}px,${b.toFixed(1)}px)`;
     if(kind==='step'){ const g=gap*c.s; el.classList.toggle('mini',g<34); el.style.setProperty('--ns',Math.max(30,Math.min(52,g*0.66)).toFixed(0)+'px'); }
     el.hidden=a<-60||a>W+60||b<-60||b>H+60||(kind==='camp'&&(b<54||!mine&&span*c.s<110)); });
@@ -2085,8 +2130,10 @@ function drawScene(){ const st=$('mstage'); if(!st) return;
   MTN=mtnModel(); const W=st.clientWidth, H=st.clientHeight, dark=isDark();
   $('mart').setAttribute('viewBox',`0 0 ${W} ${H}`); $('mtrail').setAttribute('viewBox',`0 0 ${W} ${H}`); $('mworld').innerHTML=mtnArt(MTN,dark);
   const layer=$('mlayer'), now=MTN.now; let h='';
-  MTN.steps.forEach(s=>{ const key=s.kind[0]+s.i, cls=s.done?'done':s===now?'now':'todo', half=!s.done&&s.kind==='scenario'&&(state.scR1||{})[s.i];
-    h+=`<div class="mn u-${s.color}${s===now?' is-now':''}" data-k="${key}">${s===now?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}<button class="node ${cls}${half?' half':''}" type="button" data-act="node" data-k="${key}" aria-label="${esc(s.title)}${s.done?', done':s===now?', you are here':''}">${s.done?ICO.check:s.kind==='lesson'?LICO[s.i]:ICO.chat}</button></div>`; });
+  const myU=now?now.ui:99;
+  MTN.steps.forEach((s,j)=>{ const key=s.kind[0]+s.i, cls=s.done?'done':s===now?'now':'todo', half=!s.done&&s.kind==='scenario'&&(state.scR1||{})[s.i];
+    h+=`<div class="mn u-${s.color}${s===now?' is-now':''}${s.ui>myU?' fog':''}" data-k="${key}"><button class="node ${cls}${half?' half':''}" type="button" data-act="node" data-k="${key}" aria-label="${j+1}. ${esc(s.title)}${s.done?`, done, ${starsOf(key)} stars`:s===now?', you are here':''}"><span class="nnum">${j+1}</span></button>${s.done?starsHTML(key):''}</div>`; });
+  h+=`<div class="mflag"><span class="me" aria-hidden="true">${ICO.flag}</span></div>`;
   MTN.us.forEach((u,k)=>{ const s=MTN.steps.find(x=>x.ui===k), done=u.items.every(x=>x.done), right=s.x<500;
     h+=`<button class="mcamp u-${u.color}${right?' r':' l'}" type="button" data-act="mcamp" data-u="${k}"><span class="camp-dot"></span><span><b>${CAMPS[k]} · ${fmtM(ALTS[k])}${done?' · ✓':''}</b>${esc(u.name)}</span></button>`; });
   h+=`<div class="msummit${now?'':' reached'}"><b>Summit · ${fmtM(ALTS[ALTS.length-1])}</b>${RANKS[RANKS.length-1]}</div>`;
@@ -2095,8 +2142,12 @@ function drawScene(){ const st=$('mstage'); if(!st) return;
   const myCamp=now?now.ui:-1;
   layer.querySelectorAll('.mcamp').forEach(el=>{ const k=+el.dataset.u, ss=MTN.steps.filter(x=>x.ui===k), s=ss[0], nx=MTN.steps[MTN.steps.indexOf(ss[ss.length-1])+1];
     const side=s.x<500?1:-1; els.push({el,x:500+side*(trailHW(s.y)*0.74+26),y:s.y,kind:'camp',side,span:s.y-(nx?nx.y:PEAK[1]),mine:k===myCamp}); });
-  els.push({el:layer.querySelector('.msummit'),x:PEAK[0]+46,y:PEAK[1]-36,kind:'summit'}); MTN.els=els;
+  els.push({el:layer.querySelector('.msummit'),x:PEAK[0]+46,y:PEAK[1]-36,kind:'summit'});
+  els.push({el:layer.querySelector('.mflag'),kind:'flag'}); MTN.els=els;
+  layer.querySelectorAll('.mcamp').forEach(el=>el.classList.toggle('locked',+el.dataset.u>myU));
   if(camMode==='camp') camMode='you'; zoomLabel();
+  const just=pendingUnlock&&MTN.steps.find(x=>x.kind[0]+x.i===pendingUnlock); pendingUnlock=null;
+  if(just&&just.done){ flown=true; clearTimeout(flyT); flyT=0; camMode='you'; zoomLabel(); camTo(camFor(just,W,H),false); mtnDrag(st); return playUnlock(just); }
   // Once per visit: the whole mountain first, then fly in to where you are.
   if(flyT) camTo(camOverview(W,H),false);
   else if(!flown&&camMode==='you'&&now&&MTN.steps.indexOf(now)>0){ flown=true; camTo(camOverview(W,H),false);
@@ -2120,6 +2171,47 @@ function mtnDrag(st){ if(st.dataset.drag) return; st.dataset.drag='1'; let d=nul
   const end=()=>{ if(d&&!d.moved){ const sh=$('msheet'); if(sh) sh.hidden=true; } d=null; };
   st.addEventListener('pointerup',end); st.addEventListener('pointercancel',end);
   st.addEventListener('wheel',e=>{ e.preventDefault(); cancelAnimationFrame(camTween); cam=camClamp({x:cam.x+e.deltaX/cam.s,y:cam.y+e.deltaY/cam.s,s:cam.s},st.clientWidth,st.clientHeight); mtnApply(); },{passive:false}); }
+
+
+/* ---------------- STARS AND THE UNLOCK MOMENT ----------------
+   Each finished step earns 1–3 stars (best kept, `state.stars`): lessons from quizzes answered right and lines
+   delivered well, scenarios from round 2 lines delivered well. >=85% = 3, >=50% = 2, else 1. Steps finished
+   before stars existed show 3. The first time a step is finished, home plays the unlock: stars pop, the brass
+   trail and your flag walk up to the next step, and reaching a camp shows "Camp reached · new rank". */
+let pendingUnlock=null;
+const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg>';
+const starsOf=key=>(state.stars||{})[key]||3;
+const starRow=(n,cls)=>`<span class="${cls}">${[1,2,3].map(k=>STAR.replace('<svg',`<svg class="${k<=n?'on':'off'}"`)).join('')}</span>`;
+function starsHTML(key,pop){ return starRow(starsOf(key),'mstars'+(pop?' pop':'')); }
+function scoreStars(got,all){ const r=all?got/all:1; return r>=0.85?3:r>=0.5?2:1; }
+function award(key,n,first){ state.stars=state.stars||{}; const was=state.stars[key]||0; if(n>was) state.stars[key]=n; if(first) pendingUnlock=key; return n; }
+function gateHTML(k){ const top=k>=UNIT_DEF.length;
+  return `<div class="gate" id="gate" role="dialog" aria-label="${top?'Summit reached':CAMPS[k]+' reached'}"><div class="gate-card"><hr class="rule"><div class="gate-k">${top?'Summit reached':CAMPS[k]+' reached'}</div>
+  <div class="gate-t">${top?'The summit':esc(UNIT_DEF[k].name)}</div><div class="gate-m">${fmtM(top?ALTS[ALTS.length-1]:ALTS[k])}</div>
+  <svg class="gate-peak" viewBox="0 0 120 50" aria-hidden="true"><path d="M0 50L30 22L42 30L62 6L84 28L96 20L120 50Z" fill="var(--bg-2)"/><path d="M62 6L55 15L60 14L64 18L69 13L62 6Z" fill="var(--card)"/><circle cx="${[18,30,42,50,56,60,62,62,62][k]}" cy="${[42,34,28,20,15,12,9,7,6][k]}" r="4" fill="var(--gold)"/></svg>
+  <div class="gate-r">${top?'Your rank':'New rank'}</div><div class="gate-rank">${RANKS[Math.min(k,RANKS.length-1)]}</div>
+  <button class="solid-btn" type="button" id="gateGo">${top?'Look back down':'Keep climbing'}</button></div></div>`; }
+function playUnlock(prev){ const j=MTN.steps.indexOf(prev), next=MTN.steps[j+1], key=prev.kind[0]+prev.i, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el=document.querySelector(`.mn[data-k="${key}"]`); if(!el) return;
+  const nel=next&&document.querySelector(`.mn[data-k="${next.kind[0]+next.i}"]`), nb=nel&&nel.querySelector('.node');
+  if(nel){ nel.classList.remove('is-now'); nb.classList.remove('now'); nb.classList.add('todo'); }
+  el.querySelector('.node').classList.add('justdone'); el.querySelector('.mstars')?.remove(); el.insertAdjacentHTML('beforeend',starsHTML(key,true));
+  MTN.cutD=prev.d; MTN.flagPt=[prev.x,prev.y]; mtnApply();
+  const campDone=!next||next.ui!==prev.ui;
+  const gate=()=>{ document.body.insertAdjacentHTML('beforeend',gateHTML(next?next.ui:UNIT_DEF.length)); const g=$('gate');
+    $('gateGo').onclick=()=>{ g.remove(); if(!next){ camMode='all'; zoomLabel(); const st=$('mstage'); if(st) camTo(camOverview(st.clientWidth,st.clientHeight),true,1400); } };
+    $('gateGo').focus(); };
+  if(!next){ MTN.flagPt=null; MTN.cutD=null; setTimeout(()=>{ if($('mstage')) gate(); },1100); return; }
+  setTimeout(()=>{ const st=$('mstage'); if(!st||!MTN||!document.body.contains(el)) return;
+    const d0=prev.d, d1=next.d, t0=performance.now(), dur=reduce?1:1300;
+    camTo(camFor(next,st.clientWidth,st.clientHeight),!reduce,dur);
+    const tick=now=>{ if(!document.body.contains(el)) return; const t=Math.min(1,(now-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, d=d0+(d1-d0)*e;
+      MTN.cutD=d; MTN.flagPt=MTN.D[Math.round(d)]; mtnApply();
+      if(t<1) return requestAnimationFrame(tick);
+      MTN.cutD=null; MTN.flagPt=null; mtnApply();
+      if(nel){ nel.classList.add('is-now'); nb.classList.remove('todo'); nb.classList.add('now','unlock'); }
+      if(campDone) setTimeout(gate,500); };
+    requestAnimationFrame(tick); }, reduce?0:1000); }
 
 function viewLessons(){ const col=l=>(UNIT_DEF.find(u=>u.name===(l.unit||'Foundation'))||UNIT_DEF[0]).color;
   return `<h1 class="page-title">Lessons</h1><div class="list">${LESSONS.map((l,i)=>`<button class="row u-${col(l)}" type="button" data-act="ls-start" data-i="${i}">
@@ -2200,6 +2292,19 @@ function segHTML(seg,li,si){ if(seg.type==='pause') return '<span class="pause">
    1. your own take from the Voice studio (IndexedDB, this device), 2. a file listed in AUDIO (e.g. AI voice files
    in the audio/ folder), 3. the browser's speech voice. */
 const AUDIO=window.AUDIO_FILES||{};   // from audio/manifest.js (tools/make_voice.py): "s0-l1": {url, start?, stop?}
+Object.values(AUDIO).forEach(c=>{ if(c.h&&!c.url.includes('?')) c.url+=`?v=${c.h}`; });   // a new take = a new URL, so saved copies never go stale
+
+/* ---------------- OFFLINE ----------------
+   sw.js keeps a copy of the app on the device; after the first visit every voice clip is saved in the
+   background, so the app opens and plays with no signal. Settings shows the progress. */
+let OFFLINE={done:0,total:0,on:false};
+function offlineInit(){ if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol)) return;
+  navigator.serviceWorker.addEventListener('message',e=>{ if(e.data&&e.data.type==='clips'){ OFFLINE={...OFFLINE,...e.data}; const el=$('offRow'); if(el) el.innerHTML=offlineText(); } });
+  navigator.serviceWorker.register('sw.js').then(()=>navigator.serviceWorker.ready).then(reg=>{ OFFLINE.on=true;
+    const urls=[...new Set(Object.values(AUDIO).map(c=>c.url))]; OFFLINE.total=urls.length; reg.active&&reg.active.postMessage({type:'save-clips',urls}); }).catch(()=>{}); }
+function offlineText(){ const o=OFFLINE; if(!o.on) return 'Offline copy not available in this browser.';
+  if(o.total&&o.done>=o.total) return `<b>Ready offline</b> · all ${o.total} voice clips saved on this device`;
+  return `Saving for offline… ${o.total?Math.round(o.done/o.total*100):0}%`; }
 const MINE={};    // "s0-l1": {url:blobURL, start, stop}, loaded from IndexedDB
 const lineId=(si,li)=>`s${si}-l${li}`;
 const IDB={ db:null,
@@ -2541,7 +2646,8 @@ function endLesson(){ if(!lsess) return; stopAll(); cancelRec(); lsess.cards.for
 function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=lsess.i;
   if(c.url) URL.revokeObjectURL(c.url); if(c.first) URL.revokeObjectURL(c.first.url); Object.assign(c,{step:null,res:null,err:null,url:null,first:null,checked:false,pick:null,sel:new Set()});
   if(c.type==='done'){ const k=lsess.kind; markDay();
-    if(k==='lesson') state.done[i]=true; else if(k==='r3'){ state.scR3=state.scR3||{}; state.scR3[i]=true; }
+    if(k==='lesson'){ const sc=lsess.cards.filter(x=>x.type==='quiz'||x.type==='q'||x.type==='say'), got=sc.filter(x=>x.type==='say'?x.good:x.ok).length;
+      c.stars=award('l'+i,scoreStars(got,sc.length),!state.done[i]); state.done[i]=true; } else if(k==='r3'){ state.scR3=state.scR3||{}; state.scR3[i]=true; }
     else if(k==='prep'){ const m=preps().find(x=>x.id===lsess.id); if(m) m.reps=(m.reps||0)+1; } save(); }
   render(); window.scrollTo(0,0);
   const t=++tok;
@@ -2577,7 +2683,7 @@ async function lsRecord(){ const c=lsess.cards[lsess.n], key=lsess.n; stopAll();
     const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'}); c.blob=blob;
     if(c.url) URL.revokeObjectURL(c.url); c.url=URL.createObjectURL(blob); c.step='review'; c.res='wait'; render();
     const r=await analyze(blob); if(lsess&&lsess.n===key&&c.step==='review'){ c.res=r; c.first=await trackTake(c.id,blob,r,lsess.t0); render();
-      const k=judgeRes(r,c.modelDur,innerPauses(c.text),key).key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
+      const k=judgeRes(r,c.modelDur,innerPauses(c.text),key).key; if(k==='good') c.good=true; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); c.step='rec'; render(); }
 const quizText=t=>esc(personal(t).replace(/[‧↘*]/g,'').replace(/\s+/g,' ').trim()).replace(/\[([^\]]*)\]/g,'<i>$1</i>');
@@ -2589,7 +2695,7 @@ function lessonAct(a,btn){
   if(a==='ls-exit'){ const f=lsess.from; endLesson(); return go(f); }
   if(a==='ls-next'){ if(lsess.n<lsess.cards.length-1){ lsess.n++; enterCard(); } return; }
   if(a==='ls-why'){ c.why=true; return render(); }
-  if(a==='ls-pick'){ if(c.pick) return; c.pick=btn.dataset.o; stopAll(); render(); quizVerdict(c.pick==='b',`c-lesson${lsess.i}-p${c.k}-note`); return; }
+  if(a==='ls-pick'){ if(c.pick) return; c.pick=btn.dataset.o; c.ok=c.pick==='b'; stopAll(); render(); quizVerdict(c.pick==='b',`c-lesson${lsess.i}-p${c.k}-note`); return; }
   if(a==='ls-qread') return quizRead();
   if(a==='ls-listen') return lsListen();
   if(a==='ls-skipaudio'){ stopAll(); c.step='ready'; return render(); }
@@ -2693,8 +2799,8 @@ function viewLessonSession(){
     else { body=`<div class="done-wrap"><div class="done-badge">${LICO[0]}</div><h1 class="done-title">Calm and ready</h1><p class="lead" style="margin:0 auto">Go in slow. Let the first pause work.</p></div>`;
       ft=`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-exit">Done</button></div>`; } }
   else if(c.type==='done'){ const nx=nextItem();
-    body=`<div class="done-wrap"><div class="done-badge">${LICO[i]}</div><h1 class="done-title">Lesson complete</h1><p class="lead" style="margin:0 auto">${l.title}</p></div>`;
-    ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-more">More</button><button class="solid-btn" type="button" data-act="nextup">${nx?`Next: ${esc(nx.title)}`:'Done'}</button></div>`; }
+    body=`<div class="done-wrap"><div class="done-badge">${LICO[i]}</div><h1 class="done-title">Lesson complete</h1>${starRow(c.stars||starsOf('l'+i),'dstars')}<p class="lead" style="margin:0 auto">${l.title}</p></div>`;
+    ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-more">More</button>${pendingUnlock?`<button class="solid-btn" type="button" data-act="tomap">Continue</button>`:`<button class="solid-btn" type="button" data-act="nextup">${nx?`Next: ${esc(nx.title)}`:'Done'}</button>`}</div>`; }
   const col=lsess.kind==='lesson'?catColor(l.unit||'Foundation'):lsess.kind==='r3'?catColor(SCENARIOS[i].cat):'green';
   return `<div class="u-${col}">${top}${body}</div>${ft?foot(cls,ft):''}`;
 }
@@ -2766,7 +2872,7 @@ async function startRec(){ stopAll();
   mr.onstop=async()=>{ releaseMic(); if(!sess||sess.k!==key) return;
     const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'});
     if(sess.url) URL.revokeObjectURL(sess.url); sess.url=URL.createObjectURL(blob); sess.step='review'; sess.res='wait'; render();
-    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; sess.first=await trackTake(lineId(sess.i,sess.lines[key]),blob,r,sess.t0); render(); const k=judge().key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
+    const r=await analyze(blob); if(sess&&sess.k===key&&sess.step==='review'){ sess.res=r; sess.first=await trackTake(lineId(sess.i,sess.lines[key]),blob,r,sess.t0); render(); const k=judge().key; if(k==='good'&&sess.round===2) (sess.good=sess.good||new Set()).add(sess.k); if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
   rec={mr,timer:setInterval(()=>{ const s=(Date.now()-t0)/1000, el=$('recTime'); if(el) el.textContent=s.toFixed(1)+'s'; if(s>=40) stopRec(); },100)};
   mr.start(); sess.step='rec'; sess.err=null; render(); }
 function stopRec(){ if(!rec) return; clearInterval(rec.timer); const r=rec; rec=null; if(r.mr.state!=='inactive') r.mr.stop(); }
@@ -2819,10 +2925,10 @@ function viewSession(){
       <h1 class="fx-title">${sc.title}</h1><p class="sc-setting">${sc.setting}</p><p class="sc-goal"><span>Your goal</span>${sc.goal}</p></div>
     ${foot('',`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="sc-go">Start</button></div>`)}`;
   if(step==='done') return `<div class="u-${catColor(sc.cat)}">${top}<div class="done-wrap">
-      <div class="done-badge">${ICO.star}</div><h1 class="done-title">${last?'Scenario complete':'Round 1 complete'}</h1>
+      <div class="done-badge">${ICO.star}</div><h1 class="done-title">${last?'Scenario complete':'Round 1 complete'}</h1>${last?starRow(sess.stars||starsOf('s'+sess.i),'dstars'):''}
       <p class="lead" style="margin:0 auto">${last?'Now put the key lines in your own words.':'Next: from memory.'}</p>${last?'<button class="link-btn" type="button" data-act="exit">Script and notes</button>':''}
       <div class="tiles"><div class="tile t1"><span>Lines</span><b>${total}</b></div><div class="tile t2"><span>Round</span><b>${sess.round}/2</b></div><div class="tile t3"><span>Streak</span><b>${streak()}</b></div></div></div></div>
-    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="sc-r3">Round 3 ›</button><button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button></div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
+    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="sc-r3">Round 3 ›</button>${pendingUnlock?`<button class="solid-btn" type="button" data-act="tomap">Continue</button>`:`<button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button>`}</div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
   const li=sess.lines[sess.k], note=sc.lines[li][2], hide=last&&step!=='review'&&!sess.peek;
   const ctx=contextOf(sc,li).map(c=>{ const [who,text]=sc.lines[c], nm=nameOf(sc,who), alt=altSpeaker(sc,who);
     return who==='stage'?`<p class="stagenote">${esc(text)}</p>`:`<div class="char"><div class="av${alt?' alt':''}" aria-hidden="true">${esc(nm.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/,'')[0]||'?')}</div><div class="bub"><div class="sl-who">${esc(nm)}</div><div class="sl-text">${lineHTML(sc,c)}</div></div></div>`; }).join('');
@@ -2850,6 +2956,7 @@ function viewSession(){
     ${last?'':legend}${body}</div>${foot('',ft)}`;
 }
 function act(a,btn){
+  if(a==='tomap'){ endSession(); endLesson(); return go('home'); }
   if(a.startsWith('pp-')) return prepAct(a,btn);
   if(a==='welcome-done'){ if(!state.intro.name){ $('bName').classList.add('need'); $('bName').focus(); return; } state.onboarded=true; save(); return go('home'); }
   if(a==='profile'){ state.onboarded=false; save(); render(); window.scrollTo(0,0); return; }
@@ -2883,7 +2990,7 @@ function act(a,btn){
   if(a==='again'){ stopAll(); cancelRec(); sess.step='ready'; sess.err=null; return render(); }
   if(a==='next'){ stopAll(); cancelRec(); if(sess.step==='review') markDay();
     if(sess.k<sess.lines.length-1){ sess.k++; enterLine(); window.scrollTo(0,0); }
-    else { if(sess.round===2) state.scDone[i]=true; else { state.scR1=state.scR1||{}; state.scR1[i]=true; } markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(sess.round===2?'c-fx-done2':'c-fx-done1',t); } } return; }
+    else { if(sess.round===2){ sess.stars=award('s'+i,scoreStars((sess.good||new Set()).size,sess.lines.length),!state.scDone[i]); state.scDone[i]=true; } else { state.scR1=state.scR1||{}; state.scR1[i]=true; } markDay(); save(); sess.step='done'; render(); window.scrollTo(0,0); if(coachOn()){ const t=++tok; coachSay(sess.round===2?'c-fx-done2':'c-fx-done1',t); } } return; }
 }
 
 function viewScenario(i){
@@ -2919,7 +3026,8 @@ function viewSettings(){
     <div>${playBtn('id="testVoice"','▶ Test')}</div>
     ${useFiles()?'':'<p class="hint" style="margin:0">Better voices: phone Settings → Accessibility → Spoken Content → Voices → English. Download a Premium or Enhanced voice.</p>'}
   </div>
-  <p class="hint" style="margin-top:28px">Progress is saved on this device.</p>
+  <p class="hint" id="offRow" style="margin-top:28px">${offlineText()}</p>
+  <p class="hint">Progress is saved on this device.</p>
   <button class="ghost-btn danger" type="button" id="resetBtn">Reset progress</button>`;
 }
 
@@ -2986,7 +3094,7 @@ if(document.fonts) document.fonts.ready.then(()=>{ if(state.route.name==='home')
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{ if(state.route.name==='home') drawScene(); });
 $('backBtn').addEventListener('click',()=>{ if(sess) act('exit'); else go($('backBtn').dataset.go); });
 $('main').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act,b); });
-load(); render(); if(state.route.name==='home') scrollToNow();
+load(); render(); if(state.route.name==='home') scrollToNow(); offlineInit();
 loadMine().then(()=>{ if(['studio','settings'].includes(state.route.name)) render(); });
 
 </script>

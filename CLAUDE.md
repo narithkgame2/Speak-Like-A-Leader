@@ -78,6 +78,18 @@ real estate (his direction, 2026-09-29).
   (`RANKS`, one per camp), altitude and a mini mountain profile; sticky right rail at >=1200px. The Lessons tab is
   one numbered list of all lessons (row tinted by unit) plus the five principles.
   Practice sessions run full screen (`body.focus`).
+- Levels and stars (Candy Crush-style, 2026-09-29): steps show numbers 1–34; finished steps show 1–3 brass stars
+  (`state.stars`, key `l{i}` / `s{i}`, best kept; steps finished before stars existed show 3). Lesson stars = quizzes
+  right + say cards with a "good" verdict; scenario stars = round-2 lines with "good" (`sess.good`); >=85% 3, >=50% 2,
+  else 1 (`scoreStars`, `award`). The done card shows the stars. The first time a step is finished, `pendingUnlock`
+  is set and the done card's main button becomes Continue (`tomap`) → home plays `playUnlock`: stars pop, the brass
+  trail and the flag (`.mflag`, driven by `MTN.cutD` / `MTN.flagPt`) walk to the next step, which lights up; finishing
+  a camp shows the "Camp reached · New rank" card (`gateHTML`; the summit gets its own). Camps above yours sit under
+  mist (`.fog`, `.mcamp.locked`). Camp chips slide up/down to avoid covering steps.
+- Offline (`sw.js`, `offlineInit`): the page, icons and clip list are network-first with a saved fallback; after the
+  first visit all voice clips are saved in the background (cache `sla-clips-v1`, old versions removed) and answered
+  with 206 range responses for Safari. Clip URLs carry `?v=<hash>` from the manifest, so regenerated clips replace
+  saved ones. Settings shows "Ready offline" / "Saving for offline… n%". Only on http(s).
 - Streak: `state.days` holds the dates practiced (a lesson marked done, a rating, or a scenario line reviewed).
 - Voice: each scenario line can have a recorded clip, id `s{scenario}-l{line}`. The model plays, in order:
   1) the user's own take from the Voice studio (route `studio`, under Settings; stored in IndexedDB `sla-voice`,
