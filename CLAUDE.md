@@ -56,13 +56,21 @@ real estate (his direction, 2026-09-29).
   `*word*` = sentence stress (may span words: `*three years*`; never across a pause). Mark the one word per
   phrase that carries the meaning: new information, a contrast, or a number. Every "you" line has stress marks.
 - Routes: home, lessons, lesson/i, scenarios, scenario/i, settings. Navigation: bottom tab bar on phones, which becomes
-  a left rail at >=900px wide. Home is a mountain climb that goes bottom-up: unit 1 (the lessons) is Base Camp at
-  the bottom, each scenario `cat` is a higher camp (`CAMPS`, `ALTS` in metres), the summit "Trusted Advisor" is
-  at the top. `drawScene()` paints the mountain as inline SVG to fit the page (sky, distant ranges, an altitude
-  zone per unit, trees/rocks/snow, clouds, sun or moon in dark mode) and calls `drawTrails()`; both rerun on
-  resize, font load and theme change. Each unit's camp sign sits below its nodes; a brass flag marks the current
-  node, and home opens scrolled to it (`scrollToNow`). "Your climb" card shows rank (`RANKS`, one per camp),
-  altitude and a mini mountain profile; sticky right rail at >=1200px. Tapping a node opens a popover with Start.
+  a left rail at >=900px wide. Home is ONE screen, no page scroll: a mountain seen from afar with the trail switching
+  back and forth up its face ("camera follows you"). Unit 1 (the lessons) is Base Camp at the bottom, each scenario
+  `cat` is a higher camp (`CAMPS`, `ALTS` in metres), the summit "Trusted Leader" is at the top. World is 1000×1600
+  (`MW`,`MH`,`PEAK`,`BASE_Y`); `mtnModel()` builds the trail and places the 34 steps along it, denser the higher
+  they are; `mtnArt()` paints the SVG (sky, sun or moon and stars, ranges, massif with an altitude zone per camp,
+  snow cap, trees/rocks/snow, clouds, tent, summit flag). `drawScene()` sizes `#mstage` to fill the viewport above
+  the Continue bar and tab bar and builds HTML overlay buttons (steps `.mn`, camp chips `.mcamp`, `.msummit`);
+  `mtnApply()` projects them with the camera `cam={x,y,s}` each frame and redraws the trail (brass up to you,
+  dotted after). `camFor(step)` keeps neighbouring steps ~70px apart, so Base Camp shows the whole mountain and
+  the view zooms in as you climb; all done = whole mountain. Steps shrink to dots when crowded; camp chips show only
+  when readable or it's your camp. "Whole mountain" / "Back to me" toggles `camMode`; tapping a camp chip zooms to
+  it (`camCamp`); drag or wheel pans (`mtnDrag`); `camTo` tweens (reduced motion = jump). Tapping a step opens a
+  bottom sheet (`mtnSheet`) with Start. Reruns on resize, font load and theme change. "Your climb" card shows rank
+  (`RANKS`, one per camp), altitude and a mini mountain profile; sticky right rail at >=1200px. The Lessons tab is
+  one numbered list of all lessons (row tinted by unit) plus the five principles.
   Practice sessions run full screen (`body.focus`).
 - Streak: `state.days` holds the dates practiced (a lesson marked done, a rating, or a scenario line reviewed).
 - Voice: each scenario line can have a recorded clip, id `s{scenario}-l{line}`. The model plays, in order:

@@ -96,8 +96,6 @@ main{ max-width:680px; margin:0 auto; padding:24px 18px calc(var(--tabh) + 44px 
 .unit-btn{ position:relative; z-index:1; flex-shrink:0; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.3); border-radius:999px; padding:8px 13px; font-weight:600; font-size:0.8rem; cursor:pointer; }
 .unit-btn svg{ width:16px; height:16px; }
 .path{ display:flex; flex-direction:column; align-items:center; gap:22px; padding:6px 0 36px; }
-.node-wrap{ position:relative; transform:translateX(var(--x,0)); }
-.node-wrap.has-tip{ margin-top:30px; }
 .node{ position:relative; width:64px; height:64px; border-radius:50%; border:none; background:linear-gradient(145deg, var(--u), var(--u-d)); color:#fff; box-shadow:0 2px 0 var(--u-d), 0 12px 24px -10px var(--u); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform .12s; }
 .node svg{ width:24px; height:24px; }
 .node.todo{ background:var(--card); color:var(--mute); border:1px solid var(--line); box-shadow:0 1px 0 var(--line-d), 0 8px 18px -12px rgba(0,0,0,.25); }
@@ -320,7 +318,7 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
   main{ padding-bottom:60px; }
 }
 /* journey: progress trail, unit backdrops, rank ladder */
-.node-wrap, .pop{ z-index:1; }
+.pop{ z-index:1; }
 .unit-done{ color:#fff; opacity:1; }
 .journey{ background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:18px 20px 20px; margin-bottom:6px; }
 .j-rank{ font-family:var(--serif); font-weight:600; font-size:1.6rem; line-height:1.2; }
@@ -343,33 +341,48 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
   .home-rail{ order:2; position:sticky; top:84px; margin-top:12px; }
   .ladder{ display:block; }
 }
-/* the climb: mountain scene behind the path */
-.scene{ position:relative; overflow:hidden; margin:0 -18px; padding:0 18px 10px; isolation:isolate; }
-.scene-bg{ position:absolute; left:0; top:0; width:100%; z-index:-1; display:block; }
-.scene > *:not(.scene-bg){ position:relative; }
-.summit{ text-align:center; padding:34px 0 64px; }
-.summit-k{ font-size:0.66rem; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:var(--dim); }
-.summit-t{ font-family:var(--serif); font-weight:600; font-size:1.45rem; margin-top:4px; }
-.summit-s{ font-size:0.84rem; color:var(--gold-text); margin-top:2px; }
-.unit-sec{ position:relative; padding-top:6px; }
-.path{ position:relative; }
-.camp{ display:flex; align-items:center; gap:12px; max-width:440px; margin:6px auto 44px; padding:12px 14px 12px 16px; border-radius:16px;
-  background:color-mix(in srgb, var(--card) 86%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid color-mix(in srgb, var(--line) 80%, transparent); box-shadow:0 14px 32px -20px rgba(0,0,0,.45); }
+/* the climb: one screen, a mountain seen from afar; the camera follows you up */
+.mstage{ position:relative; overflow:hidden; margin:0 -18px; height:520px; touch-action:none; user-select:none; -webkit-user-select:none; cursor:grab; background:var(--bg-2); }
+.mstage:active{ cursor:grabbing; }
+.mart, .mtrail{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.mtrail{ pointer-events:none; }
+.mtrail .bed{ fill:none; stroke:var(--trail-bed); stroke-width:10; stroke-linecap:round; stroke-linejoin:round; }
+.mtrail .rest{ fill:none; stroke:var(--trail); stroke-width:3; stroke-dasharray:0.5 9; stroke-linecap:round; }
+.mtrail .got{ fill:none; stroke:var(--gold); stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
+.mlayer{ position:absolute; inset:0; pointer-events:none; }
+.mlayer > *{ position:absolute; left:0; top:0; pointer-events:auto; will-change:transform; }
+.mn{ width:0; height:0; }
+.mn{ --ns:52px; }
+.mn .node{ position:absolute; left:calc(var(--ns) / -2); top:calc(var(--ns) / -2); width:var(--ns); height:var(--ns); }
+.mn .node svg{ width:calc(var(--ns) * .42); height:calc(var(--ns) * .42); }
+.mn .node.now{ outline-offset:4px; }
+.mn.mini .node{ left:-8px; top:-8px; width:16px; height:16px; outline:none; box-shadow:0 1px 3px rgba(0,0,0,.3); }
+.mn.mini .node svg{ display:none; }
+.mn.mini.is-now .node{ left:-13px; top:-13px; width:26px; height:26px; }
+.mn .me{ left:0; bottom:calc(var(--ns) / 2 - 6px); margin-left:4px; }
+.mn.mini .me{ bottom:8px; width:24px; height:28px; }
+.mcamp{ display:flex; align-items:center; gap:8px; margin:0; padding:6px 11px 6px 9px; border-radius:12px; white-space:nowrap; font:inherit; color:var(--text); text-align:left; cursor:pointer;
+  background:color-mix(in srgb, var(--card) 84%, transparent); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid color-mix(in srgb, var(--line) 80%, transparent); box-shadow:0 10px 24px -16px rgba(0,0,0,.5); }
+.mcamp.l{ translate:-100% -50%; } .mcamp.r{ translate:0 -50%; }
+.mcamp > span:last-child{ font-family:var(--serif); font-weight:600; font-size:.9rem; line-height:1.2; }
+.mcamp b{ display:block; font-family:var(--sans); font-size:.58rem; font-weight:600; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-text); }
+.mcamp .camp-dot{ flex:0 0 8px; height:8px; }
+.msummit{ translate:0 -50%; text-align:left; font-family:var(--serif); font-weight:600; font-size:1.2rem; white-space:nowrap; pointer-events:none;
+  padding:6px 12px; border-radius:12px; background:color-mix(in srgb, var(--card) 70%, transparent); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.msummit b{ display:block; font-family:var(--sans); font-size:.58rem; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:var(--dim); }
+.msummit.reached{ color:var(--gold-text); }
+.msheet{ position:absolute; left:12px; right:12px; bottom:12px; display:flex; justify-content:center; z-index:3; pointer-events:none; }
+.msheet[hidden]{ display:none; }
+.msheet .pop{ pointer-events:auto; margin:0; }
+.msheet .pop::before, .msheet .pop::after{ display:none; }
+.mzoom{ position:absolute; right:12px; top:12px; z-index:2; display:flex; align-items:center; gap:6px; padding:7px 12px 7px 9px; border-radius:999px; font-size:.78rem; font-weight:500; color:var(--text); cursor:pointer;
+  background:color-mix(in srgb, var(--card) 84%, transparent); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid color-mix(in srgb, var(--line) 80%, transparent); box-shadow:0 8px 20px -14px rgba(0,0,0,.5); }
+.mzoom svg{ width:16px; height:16px; } .mzoom .ic{ fill:none; stroke:currentColor; stroke-width:1.7; stroke-linejoin:round; }
+@media (min-width:900px){ .mstage{ margin:0; border-radius:24px; box-shadow:0 30px 60px -40px rgba(0,0,0,.5); } }
 .camp-dot{ flex:0 0 10px; height:10px; border-radius:50%; background:var(--u); box-shadow:0 0 0 4px color-mix(in srgb, var(--u) 20%, transparent); }
-.camp-t{ flex:1; min-width:0; }
-.camp-k{ font-size:0.64rem; font-weight:600; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-text); }
-.camp-ok{ color:var(--pri); }
-.camp-n{ font-family:var(--serif); font-weight:600; font-size:1.15rem; line-height:1.25; margin-top:2px; }
-.camp-s{ font-size:0.8rem; color:var(--dim); }
-.camp .unit-btn{ background:var(--card); color:var(--text); border:1px solid var(--line); box-shadow:none; }
-.trail .bed{ fill:none; stroke:var(--trail-bed); stroke-width:14; stroke-linecap:round; }
-.trail .rest{ fill:none; stroke:var(--trail); stroke-width:3.5; stroke-dasharray:0.5 10; stroke-linecap:round; }
-.trail .got{ fill:none; stroke:var(--gold); stroke-width:3.5; stroke-linecap:round; }
 .me{ position:absolute; left:50%; bottom:calc(100% - 4px); margin-left:6px; width:30px; height:34px; color:var(--gold); filter:drop-shadow(0 3px 4px rgba(0,0,0,.25)); animation:wave 2.8s ease-in-out infinite; transform-origin:4px 100%; pointer-events:none; z-index:2; }
 .me svg{ width:100%; height:100%; }
 @keyframes wave{ 50%{ transform:rotate(-4deg); } }
-.node-wrap.is-now{ margin-top:22px; }
-.path-start{ text-align:center; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.16em; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.35); margin:-26px 0 18px; }
 .j-prof{ display:block; width:100%; height:auto; margin:14px 0 14px; }
 @media (max-width:1199px){
   .journey{ display:grid; grid-template-columns:1fr 132px; column-gap:14px; align-items:center; padding:14px 16px; }
@@ -383,9 +396,7 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 .j-camp{ fill:var(--card); stroke:var(--mute); stroke-width:1.5; } .j-camp.on{ fill:var(--gold); stroke:var(--gold); }
 .j-flag{ fill:var(--mute); stroke:var(--mute); stroke-width:1.2; stroke-linejoin:round; }
 .j-me-ring{ fill:color-mix(in srgb, var(--gold) 22%, transparent); } .j-me{ fill:var(--gold); stroke:var(--card); stroke-width:2; }
-@media (min-width:900px){ .scene{ margin:0; padding:0 24px 10px; border-radius:24px; box-shadow:0 30px 60px -40px rgba(0,0,0,.5); } }
 @media (prefers-reduced-motion: reduce){ .me{ animation:none; } }
-.trail{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
 .coach-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 20px; }
 .coach-btn{ color:var(--gold-text); }
 .studio-head{ display:grid; gap:4px; margin-bottom:6px; }
@@ -424,8 +435,8 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 @media (min-width:1200px){ .j-cont{ display:block; } .cont-bar{ display:none !important; } }
 .cont-bar{ position:fixed; left:0; right:0; bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px)); z-index:6; padding:12px 18px; display:flex; justify-content:center; pointer-events:none; }
 .cont-bar .solid-btn{ pointer-events:auto; width:100%; max-width:440px; padding:15px 20px; font-size:1rem; box-shadow:0 1px 0 var(--ink-d), 0 14px 30px -12px rgba(0,0,0,.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-main.home{ padding-bottom:calc(var(--tabh) + 110px + env(safe-area-inset-bottom,0px)); }
-@media (min-width:900px){ .cont-bar{ left:250px; bottom:18px; } main.home{ padding-bottom:110px; } }
+main.home{ padding-bottom:0; }
+@media (min-width:900px){ .cont-bar{ left:250px; bottom:18px; } main.home{ padding-bottom:0; } }
 .stat small{ font-size:.66rem; font-weight:500; color:var(--dim); margin-left:1px; }
 .node.half{ box-shadow:inset 0 0 0 3px var(--gold-hi), 0 8px 18px -12px rgba(0,0,0,.25); }
 .node.now.half{ box-shadow:inset 0 0 0 3px var(--gold-hi), 0 2px 0 var(--u-d), 0 12px 24px -10px var(--u); }
@@ -1893,7 +1904,7 @@ const playBtn=(attrs,label='▶ Play')=>`<button class="play-btn" type="button" 
 /* ---------------- NAV ---------------- */
 function go(name,i){ endSession(); endLesson(); if(stRec) stRec.mr.stop(); state.route={name,i}; if(name==='scenario') state.lastSc=i; save(); render(); if(name==='home') scrollToNow(); else window.scrollTo(0,0); }
 /* The path climbs upward, so open home at your current step (or the summit when everything is done). */
-function scrollToNow(){ const n=document.querySelector('.node.now')||document.querySelector('.summit'); if(n) n.scrollIntoView({block:'center'}); }
+function scrollToNow(){ window.scrollTo(0,0); }
 function nextLesson(){ for(let i=0;i<LESSONS.length;i++) if(!state.done[i]) return i; return null; }
 function lastRating(i){ const r=state.ratings[i]; return r&&r.length?r[r.length-1].s:null; }
 
@@ -1905,7 +1916,6 @@ const UNIT_DEF=[{name:'Foundation',color:'green'},{name:'Clarity',color:'slate'}
   {name:'Under pressure',color:'orange'},{name:'Negotiation',color:'teal'},{name:'Video calls',color:'indigo'},{name:'People and hard conversations',color:'pink'}];
 const CATS=UNIT_DEF.map(u=>u.name).filter(n=>SCENARIOS.some(s=>s.cat===n));
 const catColor=cat=>(UNIT_DEF.find(u=>u.name===cat)||UNIT_DEF[0]).color;
-const XS=[0,-50,-76,-50,0,50,76,50];
 const ICO={
   star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg>',
   chat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>',
@@ -1928,7 +1938,6 @@ function practicedToday(){ return (state.days||[]).includes(ymd(new Date())); }
 function streak(){ const set=new Set(state.days||[]), d=new Date(); if(!set.has(ymd(d))) d.setDate(d.getDate()-1);
   let n=0; while(set.has(ymd(d))){ n++; d.setDate(d.getDate()-1); } return n; }
 
-let pathOpen=null;
 function units(){
   return UNIT_DEF.map(u=>{ const ls=LESSONS.map((l,i)=>({kind:'lesson',i,title:l.title,sub:l.rule,done:!!state.done[i],u:l.unit||'Foundation'})).filter(x=>x.u===u.name);
     const ss=SCENARIOS.map((s,i)=>({kind:'scenario',i,title:s.title,sub:s.goal,done:!!state.scDone[i],u:s.cat})).filter(x=>x.u===u.name);
@@ -1963,93 +1972,156 @@ function viewJourney(us){
     <p class="j-next">${fmtM(c.alt)}${next?` · next: ${RANKS[c.r+1]}`:''}</p>
     ${profileSVG(c.alt)}${next?`<button class="solid-btn j-cont" type="button" data-act="nextup">Continue · ${esc(nextItem().title)}</button>`:''}</aside>`;
 }
+/* ---------------- THE MOUNTAIN ----------------
+   Home is one screen: a mountain seen from afar, the trail switching back and forth up its face.
+   Steps are spaced evenly by height, so the wide lower slopes spread them apart and the narrow peak packs
+   them close. The camera keeps your steps a thumb apart around you, so at Base Camp you see the whole
+   mountain, and it zooms in as you climb. Drag to look around; "Whole mountain" zooms out.
+   World units: 1000 × 1600, peak at the top. */
+const MW=1000, MH=1600, PEAK=[500,118], BASE_Y=1470;
+const ZONES={ light:['#AFC6A0','#9BBC92','#7FA588','#B9B893','#A99D90','#9F9A94','#C4CCD4','#E8EDF1'], dark:['#243A2E','#213A2C','#1E3528','#34352A','#312D2A','#2D2C2C','#2B323B','#3A424C'] };
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function isDark(){ const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); return parseInt(bg.slice(1,3),16)<80; }
+function shade(hex,f){ const n=parseInt(hex.slice(1),16), c=[n>>16,n>>8&255,n&255].map(v=>Math.max(0,Math.min(255,Math.round(v*f)))); return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''); }
+const trailHW=y=>Math.max(0,(y-PEAK[1])/(BASE_Y-PEAK[1]))*470;          // how wide the switchbacks swing
+const massHW=y=>Math.max(0,(y-PEAK[1]+6)/(BASE_Y-PEAK[1]))*640;          // the mountain's half width
+let MTN=null, cam={x:500,y:800,s:.3}, camTween=0, camMode='you';
+
+function mtnModel(){ const legs=10, P=[];
+  for(let i=0;i<=legs;i++){ const y=BASE_Y-(BASE_Y-PEAK[1]-14)*(i/legs); P.push(i===legs?[PEAK[0],PEAK[1]+14]:[500+(i%2?1:-1)*trailHW(y)*0.74,y]); }
+  P[0]=[500-trailHW(BASE_Y)*0.3,BASE_Y];
+  const D=[]; for(let i=0;i<P.length-1;i++){ const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
+    for(let k=0;k<40;k++){ const t=k/40,t2=t*t,t3=t2*t, f=j=>0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3); D.push([f(0),f(1)]); } }
+  D.push(P[P.length-1]);
+  const us=units(), steps=[]; us.forEach((u,ui)=>u.items.forEach(it=>steps.push({...it,ui,color:u.color})));
+  // Spread steps along the trail, closer together the higher they are (4.5× denser at the top), so a
+  // camera that keeps them a thumb apart zooms in smoothly as you climb.
+  const C=[0], A=[0]; for(let k=1;k<D.length;k++){ const f=(BASE_Y-D[k][1])/(BASE_Y-PEAK[1]), l=Math.hypot(D[k][0]-D[k-1][0],D[k][1]-D[k-1][1]); C.push(C[k-1]+l*Math.pow(4.5,f)); A.push(A[k-1]+l); }
+  const k0=D.findIndex(p=>p[1]<=BASE_Y-20), k1=D.findIndex(p=>p[1]<=PEAK[1]+46), N=steps.length;
+  steps.forEach((st,j)=>{ const tc=C[k0]+(C[k1]-C[k0])*j/(N-1); let k=C.findIndex(c=>c>=tc); if(k<0) k=D.length-1; st.x=D[k][0]; st.y=D[k][1]; st.d=k; st.a=A[k]; });
+  const now=steps.find(s=>!s.done)||null;
+  steps.forEach((st,j)=>{ const a=steps[j-1], b=steps[j+1], dist=(p,q)=>Math.hypot(p.x-q.x,p.y-q.y); st.gap=Math.min(a?dist(a,st):1e9,b?dist(b,st):1e9);
+    st.arc=a&&b?(b.a-a.a)/2:a?st.a-a.a:b.a-st.a; });
+  return {D,steps,now,us};
+}
+function mtnArt(M,dark){ const R=rng(11), Z=dark?ZONES.dark:ZONES.light, st=M.steps;
+  const campY=M.us.map((u,k)=>{ const s=st.filter(x=>x.ui===k); return [s[0].y,s[s.length-1].y]; });
+  let o=`<defs><linearGradient id="msky" x1="0" y1="0" x2="0" y2="${MH}" gradientUnits="userSpaceOnUse">${dark
+      ?'<stop offset="0" stop-color="#060A13"/><stop offset=".6" stop-color="#0E1522"/><stop offset="1" stop-color="#1E1A1C"/>'
+      :'<stop offset="0" stop-color="#BFD3E3"/><stop offset=".55" stop-color="#E4E6E2"/><stop offset="1" stop-color="#F3E3CB"/>'}</linearGradient>
+    <linearGradient id="mrock" x1="0" y1="0" x2="0" y2="${MH}" gradientUnits="userSpaceOnUse"><stop offset="${(PEAK[1]/MH).toFixed(4)}" stop-color="${dark?'#56606B':'#F6F8FA'}"/><stop offset="${(330/MH).toFixed(4)}" stop-color="${dark?'#4A535E':'#EEF2F5'}"/>${
+      campY.map(([a,b],k)=>`<stop offset="${(Math.max(b,330)/MH).toFixed(4)}" stop-color="${Z[k]}"/><stop offset="${(a/MH).toFixed(4)}" stop-color="${Z[k]}"/>`).reverse().join('')}<stop offset="1" stop-color="${Z[0]}"/></linearGradient>
+    <radialGradient id="mglow"><stop offset="0" stop-color="${dark?'#E9E4D6':'#FFF4DC'}" stop-opacity=".9"/><stop offset="1" stop-color="${dark?'#E9E4D6':'#FFF4DC'}" stop-opacity="0"/></radialGradient></defs>
+    <rect x="-600" y="-600" width="${MW+1200}" height="${MH+1200}" fill="url(#msky)"/>`;
+  if(dark) for(let i=0;i<120;i++) o+=`<circle cx="${(R()*1400-200).toFixed(0)}" cy="${(R()*900-100).toFixed(0)}" r="${(R()*1.6+.4).toFixed(1)}" fill="#fff" opacity="${(R()*.6+.2).toFixed(2)}"/>`;
+  o+=`<circle cx="820" cy="250" r="150" fill="url(#mglow)" opacity="${dark?.35:1}"/><circle cx="820" cy="250" r="${dark?30:40}" fill="${dark?'#EDE8DA':'#FFF1CF'}"/>${dark?'<circle cx="836" cy="240" r="26" fill="#080C16"/>':''}`;
+  // distant ranges
+  [[980,'#AEBFD0','#26303C',.55],[1150,'#C3CFBE','#223026',.7]].forEach(([y0,cl,cd,op],n)=>{ let d=`M-600 ${MH+600}L-600 ${y0}`; for(let x=-600;x<=MW+600;x+=90) d+=`L${x} ${(y0-R()*(n?120:220)).toFixed(0)}`; d+=`L${MW+600} ${MH+600}Z`; o+=`<path d="${d}" fill="${dark?cd:cl}" opacity="${op}"/>`; });
+  // the massif with a ragged ridge, a shaded left face, a snow cap
+  const ridge=side=>{ const pts=[]; for(let y=PEAK[1];y<=MH+60;y+=28) pts.push([500+side*(massHW(y)+Math.sin(y/37+side)*14+Math.sin(y/13)*5),y]); return pts; };
+  const L=ridge(-1), Rt=ridge(1), poly=pts=>pts.map(p=>`L${p[0].toFixed(0)} ${p[1].toFixed(0)}`).join('');
+  o+=`<path d="M${PEAK[0]} ${PEAK[1]}${poly(L)}L${Rt[Rt.length-1][0].toFixed(0)} ${MH+60}${poly(Rt.slice().reverse())}Z" fill="url(#mrock)"/>`;
+  let face=`M${PEAK[0]} ${PEAK[1]}${poly(L)}`; for(let y=MH+60;y>=PEAK[1];y-=20) face+=`L${(500-massHW(y)*0.28+Math.sin(y/61)*22*(y/MH)).toFixed(0)} ${y}`;
+  o+=`<path d="${face}Z" fill="#1B2430" opacity="${dark?.2:.06}"/>`;
+  let cap=`M${PEAK[0]} ${PEAK[1]}`; for(let y=PEAK[1];y<=330;y+=12) cap+=`L${(500-massHW(y)+2).toFixed(0)} ${y}`; for(let x=-1;x<=1;x+=.2) cap+=`L${(500+x*massHW(330)).toFixed(0)} ${(330+Math.abs(Math.sin(x*7))*34).toFixed(0)}`; for(let y=330;y>=PEAK[1];y-=12) cap+=`L${(500+massHW(y)-2).toFixed(0)} ${y}`;
+  o+=`<path d="${cap}Z" fill="${dark?'#8F99A6':'#FFFFFF'}" opacity="${dark?.55:.92}"/>`;
+  // scenery by altitude, kept off the trail
+  const far=(x,y)=>M.D.every(p=>Math.hypot(p[0]-x,p[1]-y)>34);
+  for(let i=0;i<420;i++){ const y=PEAK[1]+120+R()*(MH-PEAK[1]-120), w=massHW(y), x=500+(R()*2-1)*w*0.95; if(!far(x,y)) continue;
+    const k=(campY.findIndex(([a,b])=>y<=a+40&&y>=b-40)+8)%8, c=shade(Z[Math.max(0,k)],dark?.7:.72), h=8+R()*14*(y/MH+.4);
+    if(y>1020) o+=`<path d="M${x.toFixed(0)} ${(y-h).toFixed(0)}l${(h*.42).toFixed(1)} ${h.toFixed(1)}h${(-h*.84).toFixed(1)}Z" fill="${c}"/>`;
+    else if(y>560){ if(R()<.5) o+=`<path d="M${(x-h*.5).toFixed(0)} ${y.toFixed(0)}l${(h*.2).toFixed(1)} ${(-h*.5).toFixed(1)}l${(h*.45).toFixed(1)} ${(-h*.15).toFixed(1)}l${(h*.35).toFixed(1)} ${(h*.65).toFixed(1)}Z" fill="${c}" opacity=".8"/>`; }
+    else if(R()<.4) o+=`<ellipse cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" rx="${(h*1.3).toFixed(1)}" ry="${(h*.35).toFixed(1)}" fill="${dark?'#9AA3AE':'#fff'}" opacity="${dark?.3:.75}"/>`; }
+  for(let i=0;i<7;i++){ const y=420+R()*820, x=R()*1100-50, s=1.2+R()*1.8;
+    o+=`<g opacity="${dark?.06:.6}" fill="#fff"><ellipse cx="${x}" cy="${y}" rx="${46*s}" ry="${13*s}"/><ellipse cx="${x-22*s}" cy="${y-6*s}" rx="${24*s}" ry="${12*s}"/><ellipse cx="${x+16*s}" cy="${y-10*s}" rx="${22*s}" ry="${14*s}"/></g>`; }
+  o+=`<path d="M-600 ${MH+600}L-600 ${BASE_Y+40}Q150 ${BASE_Y-40} 480 ${BASE_Y+30}T${MW+600} ${BASE_Y+10}L${MW+600} ${MH+600}Z" fill="${shade(Z[0],dark?1.1:.9)}"/>`;
+  o+=`<path d="M${PEAK[0]} ${PEAK[1]}v-58" stroke="${dark?'#E7E2D6':'#3A4048'}" stroke-width="3"/><path d="M${PEAK[0]} ${PEAK[1]-58}h40l-9 11 9 11h-40Z" fill="${M.now?(dark?'#56606B':'#9AA0A8'):'#C9A04F'}"/>`;
+  const tx=M.steps[0].x-70, ty=BASE_Y+14; o+=`<path d="M${tx} ${ty}l26 -36l26 36Z" fill="${dark?'#C9A15A':'#B8893B'}"/><path d="M${tx+26} ${ty-36}l-7 36h14Z" fill="${dark?'#8C6B34':'#7A5A23'}"/>`;
+  return o; }
+
 function viewHome(){
   const us=units(), now=us.flatMap(u=>u.items).find(x=>!x.done);
-  const secs=us.map((u,k)=>{ const complete=u.items.every(x=>x.done);
-    const sign=`<div class="camp"><span class="camp-dot" aria-hidden="true"></span><div class="camp-t"><div class="camp-k">${CAMPS[k]} · ${fmtM(ALTS[k])}${complete?' · <span class="camp-ok">✓ Reached</span>':''}</div><div class="camp-n">${esc(u.name)}</div></div>
-      <button class="unit-btn" type="button" data-go="${u.list}" aria-label="List ${esc(u.name)}">${ICO.list}</button></div>`;
-    const nodes=u.items.map((it,j)=>{ const key=it.kind[0]+it.i, x=XS[j%XS.length], isNow=it===now, open=pathOpen===key, cls=it.done?'done':isNow?'now':'todo', half=!it.done&&it.kind==='scenario'&&(state.scR1||{})[it.i];
-      return `<div class="node-wrap${isNow?' is-now':''}" style="--x:${x}px">${isNow?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}
-        <button class="node ${cls}${half?' half':''}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?LICO[it.i]:ICO.chat}</button></div>
-        ${open?`<div class="pop${cls==='todo'?' todo':''}" style="--x:${x}px"><div class="pop-t">${esc(it.title)}</div><div class="pop-s">${esc(it.sub)}</div>
-          <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Round 3 · your words'):'Start'}</button></div>`:''}`; }).reverse().join('');
-    return `<section class="unit-sec u-${u.color}" data-k="${k}"><div class="path"><svg class="trail" aria-hidden="true"></svg>${nodes}</div>${sign}</section>`; }).reverse().join('');
   return `<div class="home-grid">${viewJourney(us)}<div class="home-main">
-    <div class="scene" id="scene"><svg class="scene-bg" aria-hidden="true"></svg>
-      <div class="summit${now?'':' reached'}"><div class="summit-k">Summit · ${fmtM(ALTS[ALTS.length-1])}</div><div class="summit-t">${RANKS[RANKS.length-1]}</div>${now?'':'<div class="summit-s">You made it.</div>'}</div>
-      ${secs}<p class="path-start">Start here ↑</p></div>
-    ${now?`<div class="cont-bar"><button class="solid-btn" type="button" data-act="nextup">Continue · ${esc(now.title)}</button></div>`:''}
+    <div class="mstage" id="mstage"><svg class="mart" id="mart" aria-hidden="true"><g id="mworld"></g></svg><svg class="mtrail" id="mtrail" aria-hidden="true"></svg>
+      <div class="mlayer" id="mlayer"></div><div class="msheet" id="msheet" hidden></div>
+      <button class="mzoom" type="button" data-act="mzoom" id="mzoom"></button></div>
+    ${now?`<div class="cont-bar"><button class="solid-btn" type="button" data-act="nextup">Continue · ${esc(now.title)}</button></div>`:''}</div></div>`;
+}
+/* Camera: s = pixels per world unit. Frame a step so its neighbours sit ~62px apart, a little below centre. */
+function camFor(step,W,H){ const over=Math.min(W/MW,H/(MH-60));
+  if(!step) return camOverview(W,H);
+  const s=Math.min(3.2,Math.max(over,70/Math.max(step.arc,1)));
+  return {x:step.x*0.7+500*0.3,y:step.y-H*0.12/s,s}; }
+function camOverview(W,H){ const s=Math.min(W/MW,H/(MH-60)); return {x:500,y:(MH-60)/2+30,s}; }
+function camClamp(c,W,H){ const hw=W/2/c.s, hh=H/2/c.s;
+  c.x=hw*2>=MW?500:Math.min(MW-hw,Math.max(hw,c.x)); c.y=Math.min(MH-hh+10,Math.max(PEAK[1]-120+hh,c.y)); return c; }
+function mtnApply(){ const st=$('mstage'); if(!st||!MTN) return; const W=st.clientWidth, H=st.clientHeight, c=cam;
+  const px=(x,y)=>[W/2+(x-c.x)*c.s, H/2+(y-c.y)*c.s];
+  $('mworld').setAttribute('transform',`translate(${(W/2-c.x*c.s).toFixed(2)} ${(H/2-c.y*c.s).toFixed(2)}) scale(${c.s.toFixed(4)})`);
+  const D=MTN.D, cut=MTN.now?MTN.now.d:D.length-1, path=pts=>pts.map((p,i)=>{ const q=px(p[0],p[1]); return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1); }).join('');
+  $('mtrail').innerHTML=`<path class="bed" d="${path(D)}"/><path class="rest" d="${path(D.slice(cut))}"/><path class="got" d="${path(D.slice(0,cut+1))}"/>`;
+  MTN.els.forEach(({el,x,y,gap,kind,span,mine,side})=>{ let [a,b]=px(x,y);
+    if(kind==='camp'){ const w=el.offsetWidth||160; a=side>0?Math.min(a,W-w-8):Math.max(a,w+8); }
+    el.style.transform=`translate(${a.toFixed(1)}px,${b.toFixed(1)}px)`;
+    if(kind==='step'){ const g=gap*c.s; el.classList.toggle('mini',g<34); el.style.setProperty('--ns',Math.max(30,Math.min(52,g*0.66)).toFixed(0)+'px'); }
+    el.hidden=a<-60||a>W+60||b<-60||b>H+60||(kind==='camp'&&(b<54||!mine&&span*c.s<110)); });
+}
+function camTo(target,animate){ const st=$('mstage'); if(!st) return; const W=st.clientWidth, H=st.clientHeight; camClamp(target,W,H);
+  cancelAnimationFrame(camTween);
+  if(!animate||matchMedia('(prefers-reduced-motion: reduce)').matches){ cam=target; return mtnApply(); }
+  const a={...cam}, t0=performance.now(), dur=900, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const step=now=>{ const t=Math.min(1,(now-t0)/dur), e=ease(t), ls=Math.log(a.s)+(Math.log(target.s)-Math.log(a.s))*e;
+    cam={x:a.x+(target.x-a.x)*e, y:a.y+(target.y-a.y)*e, s:Math.exp(ls)}; mtnApply(); if(t<1) camTween=requestAnimationFrame(step); };
+  camTween=requestAnimationFrame(step); }
+function drawScene(){ const st=$('mstage'); if(!st) return;
+  const isDesk=matchMedia('(min-width:900px)').matches, bar=document.querySelector('.cont-bar'), tab=document.querySelector('.tabbar');
+  const reserve=(isDesk?20:(tab?tab.offsetHeight:64))+(bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0)+4;
+  st.style.height=Math.max(380,window.innerHeight-(st.getBoundingClientRect().top+window.scrollY)-reserve)+'px';
+  MTN=mtnModel(); const W=st.clientWidth, H=st.clientHeight, dark=isDark();
+  $('mart').setAttribute('viewBox',`0 0 ${W} ${H}`); $('mtrail').setAttribute('viewBox',`0 0 ${W} ${H}`); $('mworld').innerHTML=mtnArt(MTN,dark);
+  const layer=$('mlayer'), now=MTN.now; let h='';
+  MTN.steps.forEach(s=>{ const key=s.kind[0]+s.i, cls=s.done?'done':s===now?'now':'todo', half=!s.done&&s.kind==='scenario'&&(state.scR1||{})[s.i];
+    h+=`<div class="mn u-${s.color}${s===now?' is-now':''}" data-k="${key}">${s===now?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}<button class="node ${cls}${half?' half':''}" type="button" data-act="node" data-k="${key}" aria-label="${esc(s.title)}${s.done?', done':s===now?', you are here':''}">${s.done?ICO.check:s.kind==='lesson'?LICO[s.i]:ICO.chat}</button></div>`; });
+  MTN.us.forEach((u,k)=>{ const s=MTN.steps.find(x=>x.ui===k), done=u.items.every(x=>x.done), right=s.x<500;
+    h+=`<button class="mcamp u-${u.color}${right?' r':' l'}" type="button" data-act="mcamp" data-u="${k}"><span class="camp-dot"></span><span><b>${CAMPS[k]} · ${fmtM(ALTS[k])}${done?' · ✓':''}</b>${esc(u.name)}</span></button>`; });
+  h+=`<div class="msummit${now?'':' reached'}"><b>Summit · ${fmtM(ALTS[ALTS.length-1])}</b>${RANKS[RANKS.length-1]}</div>`;
+  layer.innerHTML=h;
+  const els=[]; layer.querySelectorAll('.mn').forEach((el,j)=>{ const s=MTN.steps[j]; els.push({el,x:s.x,y:s.y,gap:s.gap,kind:'step'}); });
+  const myCamp=now?now.ui:-1;
+  layer.querySelectorAll('.mcamp').forEach(el=>{ const k=+el.dataset.u, ss=MTN.steps.filter(x=>x.ui===k), s=ss[0], nx=MTN.steps[MTN.steps.indexOf(ss[ss.length-1])+1];
+    const side=s.x<500?1:-1; els.push({el,x:500+side*(trailHW(s.y)*0.74+26),y:s.y,kind:'camp',side,span:s.y-(nx?nx.y:PEAK[1]),mine:k===myCamp}); });
+  els.push({el:layer.querySelector('.msummit'),x:PEAK[0]+46,y:PEAK[1]-36,kind:'summit'}); MTN.els=els;
+  if(camMode==='camp') camMode='you'; zoomLabel(); camTo(camMode==='all'?camOverview(W,H):camFor(now,W,H),false);
+  mtnDrag(st); }
+function camCamp(k,W,H){ const ss=MTN.steps.filter(x=>x.ui===k), xs=ss.map(x=>x.x), ys=ss.map(x=>x.y), over=Math.min(W/MW,H/(MH-60));
+  const bw=Math.max(...xs)-Math.min(...xs)+180, bh=Math.max(...ys)-Math.min(...ys)+220, s=Math.min(3.2,Math.max(over,Math.min(W/bw,H/bh)));
+  return {x:(Math.max(...xs)+Math.min(...xs))/2,y:(Math.max(...ys)+Math.min(...ys))/2,s}; }
+function zoomLabel(){ const b=$('mzoom'); if(b) b.hidden=!(MTN&&MTN.now); if(b) b.innerHTML=camMode!=='you'?`${ICO.flag}<span>Back to me</span>`:`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg><span>Whole mountain</span>`; }
+function mtnSheet(key){ const sh=$('msheet'); if(!sh) return; const s=MTN.steps.find(x=>x.kind[0]+x.i===key);
+  if(!s||sh.dataset.k===key&&!sh.hidden){ sh.hidden=true; sh.dataset.k=''; return; }
+  const cls=s.done?'done':s===MTN.now?'now':'todo';
+  sh.innerHTML=`<div class="pop${cls==='todo'?' todo':''} u-${s.color}"><div class="pop-t">${esc(s.title)}</div><div class="pop-s">${esc(s.sub)}</div>
+    <button class="pop-btn" type="button" ${s.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${s.i}">${s.done?(s.kind==='lesson'?'Review':'Round 3 · your words'):'Start'}</button></div>`;
+  sh.hidden=false; sh.dataset.k=key; }
+function mtnDrag(st){ if(st.dataset.drag) return; st.dataset.drag='1'; let d=null;
+  st.addEventListener('pointerdown',e=>{ if(e.target.closest('button')) return; d={x:e.clientX,y:e.clientY,c:{...cam},moved:false}; st.setPointerCapture(e.pointerId); });
+  st.addEventListener('pointermove',e=>{ if(!d) return; const dx=e.clientX-d.x, dy=e.clientY-d.y; if(Math.hypot(dx,dy)>5) d.moved=true;
+    if(d.moved){ cancelAnimationFrame(camTween); cam=camClamp({x:d.c.x-dx/cam.s,y:d.c.y-dy/cam.s,s:cam.s},st.clientWidth,st.clientHeight); mtnApply(); } });
+  const end=()=>{ if(d&&!d.moved){ const sh=$('msheet'); if(sh) sh.hidden=true; } d=null; };
+  st.addEventListener('pointerup',end); st.addEventListener('pointercancel',end);
+  st.addEventListener('wheel',e=>{ e.preventDefault(); cancelAnimationFrame(camTween); cam=camClamp({x:cam.x+e.deltaX/cam.s,y:cam.y+e.deltaY/cam.s,s:cam.s},st.clientWidth,st.clientHeight); mtnApply(); },{passive:false}); }
+
+function viewLessons(){ const col=l=>(UNIT_DEF.find(u=>u.name===(l.unit||'Foundation'))||UNIT_DEF[0]).color;
+  return `<h1 class="page-title">Lessons</h1><div class="list">${LESSONS.map((l,i)=>`<button class="row u-${col(l)}" type="button" data-act="ls-start" data-i="${i}">
+      <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':i+1}</span>
+      <span class="row-body"><span class="row-title">${l.title}</span></span>
+      <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>
   <details class="fold principles"><summary>The five principles behind everything</summary><ol class="how">
     <li><b>Never apologize for being there.</b> Not for their time, your nerves, or having a view.</li>
     <li><b>Use fewer words.</b> Short sentences carry more weight.</li>
     <li><b>Answer first.</b> The conclusion, then the reason.</li>
     <li><b>Ask instead of defending.</b> A calm question sounds more secure than any argument.</li>
-    <li><b>Let silence work.</b> After a key point, a number, or a hard question.</li></ol></details></div></div>`;
-}
-/* Trail through each unit's nodes: a worn footpath, solid brass up to where you are, dotted after. */
-function drawTrails(){ document.querySelectorAll('.path').forEach(p=>{ const svg=p.querySelector('.trail'); if(!svg) return;
-  const pr=p.getBoundingClientRect(), pts=[...p.querySelectorAll('.node')].map(n=>{ const r=n.getBoundingClientRect(); return {x:r.left+r.width/2-pr.left, y:r.top+r.height/2-pr.top, s:n.dataset.s}; });
-  let got='', rest='', all='';
-  for(let k=1;k<pts.length;k++){ const a=pts[k-1], b=pts[k], m=(b.y-a.y)/2, seg=`M${a.x.toFixed(1)} ${a.y.toFixed(1)}C${a.x.toFixed(1)} ${(a.y+m).toFixed(1)} ${b.x.toFixed(1)} ${(b.y-m).toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
-    all+=seg; if(a.s!=='todo'&&b.s!=='todo') got+=seg; else rest+=seg; }
-  svg.innerHTML=`<path class="bed" d="${all}"/><path class="rest" d="${rest}"/><path class="got" d="${got}"/>`; }); }
-
-/* The mountain behind the path, drawn to fit the page: sky, distant ranges, the massif with an altitude
-   zone per unit (foothills → forest → alpine meadow → rock → snow line → snowfield), trees, rocks, snow, clouds. */
-const ZONES={ light:['#AFC6A0','#9BBC92','#7FA588','#B9B893','#A99D90','#9F9A94','#C4CCD4','#E8EDF1'], dark:['#243A2E','#213A2C','#1E3528','#34352A','#312D2A','#2D2C2C','#2B323B','#3A424C'] };
-function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-function isDark(){ const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); return parseInt(bg.slice(1,3),16)<80; }
-function shade(hex,f){ const n=parseInt(hex.slice(1),16), c=[n>>16,n>>8&255,n&255].map(v=>Math.max(0,Math.min(255,Math.round(v*f)))); return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''); }
-function drawScene(){
-  const sc=$('scene'); if(!sc) return; const svg=sc.querySelector('.scene-bg'), W=sc.clientWidth, H=sc.scrollHeight, dark=isDark(), R=rng(7), Z=dark?ZONES.dark:ZONES.light;
-  const top=sc.getBoundingClientRect().top, cx=W/2, sum=sc.querySelector('.summit'), apex=sum.offsetTop+sum.offsetHeight+34;
-  const secs=[...sc.querySelectorAll('.unit-sec')].map(s=>({k:+s.dataset.k, a:s.getBoundingClientRect().top-top, b:s.getBoundingClientRect().bottom-top}));
-  const maxHW=Math.min(W*0.42, 250), base=H-260;
-  const hw=(y,ph)=>{ const t=y-apex; let w=Math.min(maxHW, 16+t*0.75); if(y>base) w+= (y-base)*1.2; return Math.max(8, w+Math.sin(y/83+ph)*9+Math.sin(y/31+ph*2)*4); };
-  const zoneAt=y=>{ const s=secs.find(s=>y>=s.a&&y<=s.b); return s?s.k:(y<apex+200?UNIT_DEF.length-1:0); };
-  let o=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="${H}" gradientUnits="userSpaceOnUse">${dark
-      ?'<stop offset="0" stop-color="#060A13"/><stop offset=".55" stop-color="#0E1522"/><stop offset="1" stop-color="#1E1A1C"/>'
-      :'<stop offset="0" stop-color="#C9D9E6"/><stop offset=".5" stop-color="#E4E6E2"/><stop offset="1" stop-color="#F3E3CB"/>'}</linearGradient>
-    <linearGradient id="rock" x1="0" y1="0" x2="0" y2="${H}" gradientUnits="userSpaceOnUse"><stop offset="${(apex/H).toFixed(4)}" stop-color="${dark?'#4A535E':'#F4F6F8'}"/>${
-      secs.slice().sort((p,q)=>p.a-q.a).map(s=>`<stop offset="${((s.a+50)/H).toFixed(4)}" stop-color="${Z[s.k]}"/><stop offset="${((s.b-50)/H).toFixed(4)}" stop-color="${Z[s.k]}"/>`).join('')}</linearGradient>
-    <radialGradient id="glow"><stop offset="0" stop-color="${dark?'#E9E4D6':'#FFF4DC'}" stop-opacity=".9"/><stop offset="1" stop-color="${dark?'#E9E4D6':'#FFF4DC'}" stop-opacity="0"/></radialGradient></defs>
-    <rect width="${W}" height="${H}" fill="url(#sky)"/>`;
-  if(dark){ for(let i=0;i<90;i++){ const y=R()*H*0.7; o+=`<circle cx="${(R()*W).toFixed(1)}" cy="${y.toFixed(1)}" r="${(R()*1.2+.3).toFixed(2)}" fill="#fff" opacity="${(R()*.6+.2).toFixed(2)}"/>`; } }
-  const sx=W*0.82, sy=Math.max(60,apex-110);
-  o+=`<circle cx="${sx}" cy="${sy}" r="90" fill="url(#glow)" opacity="${dark?.35:1}"/><circle cx="${sx}" cy="${sy}" r="${dark?18:24}" fill="${dark?'#EDE8DA':'#FFF1CF'}"/>${dark?`<circle cx="${sx+10}" cy="${sy-7}" r="15" fill="#080C16"/>`:''}`;
-  // distant ranges on both sides, one per camp, paler higher up
-  secs.forEach(s=>{ const y0=s.a+70, amp=90; let d=`M0 ${y0}`; for(let q=0;q<=14;q++){ const x=q*W/14; d+=`L${x.toFixed(1)} ${(y0-R()*amp+(Math.abs(x-cx)<maxHW?20:0)).toFixed(1)}`; } d+=`L${W} ${H}L0 ${H}Z`;
-    o+=`<path d="${d}" fill="${shade(Z[s.k], dark?1.25:1.08)}" opacity="${dark?.55:.5}"/>`; });
-  // the massif
-  const step=12; let L=[], Rr=[]; for(let y=apex;y<=H;y+=step){ L.push([cx-hw(y,0),y]); Rr.push([cx+hw(y,2.1),y]); }
-  o+=`<path d="M${cx} ${apex-8}${L.map(p=>`L${p[0].toFixed(1)} ${p[1]}`).join('')}L${-20} ${H}L${W+20} ${H}${Rr.reverse().map(p=>`L${p[0].toFixed(1)} ${p[1]}`).join('')}Z" fill="url(#rock)"/>`;
-  // snow cap
-  let cap=`M${cx} ${apex-8}`; for(let y=apex;y<=apex+170;y+=10) cap+=`L${(cx-hw(y,0)+2).toFixed(1)} ${y}`; for(let x=-1;x<=1;x+=.25) cap+=`L${(cx+x*hw(apex+170,1)*0.9).toFixed(1)} ${(apex+170+Math.sin(x*9)*14+22).toFixed(1)}`; for(let y=apex+170;y>=apex;y-=10) cap+=`L${(cx+hw(y,2.1)-2).toFixed(1)} ${y}`;
-  o+=`<path d="${cap}Z" fill="${dark?'#8F99A6':'#FFFFFF'}" opacity="${dark?.55:.9}"/>`;
-  // scenery per zone, kept away from the trail in the middle
-  const spot=(y,pad)=>{ const w=hw(y,1)-pad; if(w<130) return null; const side=R()<.5?-1:1; return cx+side*(120+R()*(w-120)); };
-  secs.forEach(s=>{ const n=Math.round((s.b-s.a)/38);
-    for(let i=0;i<n;i++){ const y=s.a+60+R()*(s.b-s.a-120), x=spot(y,14); if(x==null) continue; const z=s.k, c=shade(Z[z],dark?.7:.72), h=12+R()*16;
-      if(z<=2&&R()<(z?0.95:.55)) o+=`<path d="M${x.toFixed(1)} ${(y-h).toFixed(1)}l${(h*.42).toFixed(1)} ${h.toFixed(1)}h${(-h*.84).toFixed(1)}Z" fill="${c}"/><path d="M${x.toFixed(1)} ${(y-h*1.5).toFixed(1)}l${(h*.3).toFixed(1)} ${(h*.75).toFixed(1)}h${(-h*.6).toFixed(1)}Z" fill="${c}"/>`;
-      else if(z>=3&&z<=5) o+=`<path d="M${(x-h*.5).toFixed(1)} ${y.toFixed(1)}l${(h*.2).toFixed(1)} ${(-h*.5).toFixed(1)}l${(h*.45).toFixed(1)} ${(-h*.15).toFixed(1)}l${(h*.35).toFixed(1)} ${(h*.65).toFixed(1)}Z" fill="${c}" opacity=".8"/>`;
-      else if(z>=6) o+=`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(h*1.3).toFixed(1)}" ry="${(h*.35).toFixed(1)}" fill="${dark?'#9AA3AE':'#fff'}" opacity="${dark?.3:.75}"/>`; } });
-  // clouds drifting across the slopes
-  for(let i=0;i<Math.max(4,Math.round(H/700));i++){ const y=apex+120+R()*(H-apex-400), x=R()<.5?R()*W*0.3:W*0.7+R()*W*0.3, s=0.8+R()*0.9;
-    o+=`<g opacity="${dark?.05:.55}" fill="#fff"><ellipse cx="${x}" cy="${y}" rx="${46*s}" ry="${13*s}"/><ellipse cx="${x-22*s}" cy="${y-6*s}" rx="${24*s}" ry="${12*s}"/><ellipse cx="${x+16*s}" cy="${y-10*s}" rx="${22*s}" ry="${14*s}"/></g>`; }
-  // foothills and base camp
-  o+=`<path d="M-10 ${H}L-10 ${H-110}Q${W*.25} ${H-190} ${W*.5} ${H-120}T${W+10} ${H-150}L${W+10} ${H}Z" fill="${shade(Z[0],dark?1.1:.92)}"/><path d="M-10 ${H}L-10 ${H-50}Q${W*.35} ${H-110} ${W*.7} ${H-60}T${W+10} ${H-70}L${W+10} ${H}Z" fill="${shade(Z[0],dark?.9:.84)}"/>`;
-  const tx=cx-120, ty=H-72; o+=`<path d="M${tx} ${ty}l18 -26l18 26Z" fill="${dark?'#C9A15A':'#B8893B'}"/><path d="M${tx+18} ${ty-26}l-5 26h10Z" fill="${dark?'#8C6B34':'#7A5A23'}"/>`;
-  // summit flag
-  const reached=sum.classList.contains('reached'); o+=`<path d="M${cx} ${apex-8}v-40" stroke="${dark?'#E7E2D6':'#3A4048'}" stroke-width="2"/><path d="M${cx} ${apex-48}h26l-6 7 6 7h-26Z" fill="${reached?'#C9A04F':dark?'#56606B':'#9AA0A8'}"/>`;
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.style.height=H+'px'; svg.innerHTML=o;
-  drawTrails();
-}
-
-function viewLessons(){
-  return `<h1 class="page-title">Lessons</h1>${UNIT_DEF.filter(u=>LESSONS.some(l=>(l.unit||'Foundation')===u.name)).map(u=>`<h2 class="sec-h">${u.name}</h2><div class="list u-${u.color}">${LESSONS.map((l,i)=>(l.unit||'Foundation')!==u.name?'':`<button class="row" type="button" data-act="ls-start" data-i="${i}">
-      <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':i+1}</span>
-      <span class="row-body"><span class="row-title">${l.title}</span></span>
-      <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>`).join('')}`;
+    <li><b>Let silence work.</b> After a key point, a number, or a hard question.</li></ol></details>`;
 }
 function renderScript(arr){ return arr.map(([t,type])=>{ t=personal(t);
   if(type==='pause') return '<span class="pause">‧‧‧</span>'; if(type==='pause-long') return '<span class="pause">‧‧‧‧‧</span>';
@@ -2749,7 +2821,10 @@ function act(a,btn){
   if(a==='profile'){ state.onboarded=false; save(); render(); window.scrollTo(0,0); return; }
   if(a.startsWith('ls-')||a==='nextup') return lessonAct(a,btn);
   if(a==='speed'){ state.rate=SPEEDS.find(x=>x>state.rate+0.001)??SPEEDS[0]; save(); btn.textContent=(+state.rate.toFixed(2))+'×'; return; }
-  if(a==='node'){ pathOpen=pathOpen===btn.dataset.k?null:btn.dataset.k; return render(); }
+  if(a==='node') return mtnSheet(btn.dataset.k);
+  if(a==='mzoom'){ const st=$('mstage'); camMode=camMode==='all'?'you':'all'; zoomLabel(); $('msheet').hidden=true;
+    return camTo(camMode==='all'?camOverview(st.clientWidth,st.clientHeight):camFor(MTN.now,st.clientWidth,st.clientHeight),true); }
+  if(a==='mcamp'){ const st=$('mstage'); camMode='camp'; zoomLabel(); return camTo(camCamp(+btn.dataset.u,st.clientWidth,st.clientHeight),true); }
   if(a.startsWith('st-')) return studioAct(a,btn);
   if(a==='coach') return runBtn(btn,t=>coachSay(btn.dataset.k,t));
   if(a==='coachv'){ state.coachVoice=!coachOn(); save(); btn.textContent=coachOn()?'Coach on':'Coach off'; btn.setAttribute('aria-pressed',coachOn()); return; }
