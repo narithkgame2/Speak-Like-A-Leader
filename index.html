@@ -281,6 +281,9 @@ body.focus main{ padding-top:16px; padding-bottom:calc(240px + env(safe-area-ins
 
 /* settings */
 .settings{ display:grid; gap:14px; }
+.sec-k{ font-size:.66rem; font-weight:600; text-transform:uppercase; letter-spacing:.14em; color:var(--gold-text); margin:26px 0 8px; }
+.src-row{ display:flex; gap:8px; }
+.small-btn.on{ background:var(--ink); color:var(--on-ink); border-color:var(--ink); }
 .settings label.toggle{ display:flex; color:var(--text); font-size:0.92rem; }
 .rate-val{ float:right; color:var(--text); font-weight:600; }
 .settings input[type=range]{ accent-color:var(--gold); width:100%; }
@@ -1552,7 +1555,7 @@ function stopAll(){ tok++; try{ speechSynthesis.cancel(); }catch(e){}
 function wait(ms,t){ return new Promise(r=>setTimeout(()=>r(t===tok),ms)); }
 function say(text,t,opts={}){ return new Promise(res=>{ if(t!==tok) return res(false);
   const u=new SpeechSynthesisUtterance(text); const v=opts.voice!==undefined?opts.voice:pickVoice();
-  if(v&&!opts.lang) u.voice=v; u.lang=opts.lang||(v?v.lang:'en-US'); u.rate=state.rate; u.pitch=opts.pitch||1;
+  if(v&&!opts.lang) try{ u.voice=v; }catch(e){} u.lang=opts.lang||(v?v.lang:'en-US'); u.rate=state.rate; u.pitch=opts.pitch||1;
   if(opts.onb) u.onboundary=opts.onb; u.onend=()=>res(t===tok); u.onerror=()=>res(t===tok); speechSynthesis.speak(u); }); }
 function segsOf(line){ const out=[]; line.split(/(‧‧‧‧‧|‧‧‧)/).forEach(p=>{ if(p==='‧‧‧') out.push(['','pause']); else if(p==='‧‧‧‧‧') out.push(['','pause-long']); else { const t=p.replace(/\[[^\]]*\]/g,'').trim(); if(t.replace(/↘/g,'').trim()) out.push([t.replace(/[↘*]/g,'').trim(), t.includes('↘')?'down':null]); } }); return out; }
 async function playSegs(btn, segs, lang){
@@ -1805,8 +1808,8 @@ const IDB={ db:null,
   get(k){ return this.req('readonly',s=>s.get(k)); }, set(k,v){ return this.req('readwrite',s=>s.put(v,k)); },
   del(k){ return this.req('readwrite',s=>s.delete(k)); }, keys(){ return this.req('readonly',s=>s.getAllKeys()); } };
 async function loadMine(){ try{ for(const k of (await IDB.keys())||[]){ const v=await IDB.get(k); if(v&&v.blob) MINE[k]={url:URL.createObjectURL(v.blob), start:v.start, stop:v.stop}; } }catch(e){} }
-function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||AUDIO[id]||null; }
-function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':AUDIO[id]?'Mac voice':'browser voice'; }
+function clipFor(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return (state.useMine!==false&&MINE[id])||(useFiles()&&AUDIO[id])||null; }
+function voiceOf(sc,li){ const id=lineId(SCENARIOS.indexOf(sc),li); return state.useMine!==false&&MINE[id]?'your voice':useFiles()&&AUDIO[id]?'Mac voice':'device voice'; }
 /* Voiced-time envelope of a clip, so the highlight pauses during silences. null if the clip can't be read. */
 const ENV={};
 function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
@@ -1859,8 +1862,9 @@ function coachText(k){ let m;
   if((m=k.match(/^c-lesson(\d+)-drill$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.drill.tag} ${l.drill.note}`); }
   return ''; }
 const coachOn=()=>state.coachVoice!==false;
-function coachSay(k,t){ const c=AUDIO[k]; if(c) return playClip(c,[],t); const txt=coachText(k);
-  return txt&&hasTTS?say(txt,t,{}):Promise.resolve(true); }
+const useFiles=()=>state.voiceSrc!=='device';   // Settings → Model voice: Recorded files, or this device's own voice
+function coachSay(k,t){ const c=useFiles()&&AUDIO[k]; if(c) return playClip(c,[],t); const txt=coachText(k);
+  return txt&&hasTTS?say(txt,t,{voice:themVoice(pickVoice())}):Promise.resolve(true); }
 const coachBtn=(k,label)=>`<button class="small-btn coach-btn" type="button" data-act="coach" data-k="${k}">▶ ${label}</button>`;
 
 /* ---------------- VOICE STUDIO ---------------- */
@@ -1958,7 +1962,7 @@ function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=ls
 async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
-async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=AUDIO[c.clip]; let ok=true;
+async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=useFiles()&&AUDIO[c.clip]; let ok=true;
   if(clip) ok=await playClip(clip,[...document.querySelectorAll('.w[data-l="L"]')],t);
   else for(const s of parseLine(c.text)){
     if(s.type==='pause'){ if(!(ok=await wait(800/state.rate,t))) break; }
@@ -2260,10 +2264,13 @@ function viewSettings(){
     <label class="toggle"><input type="checkbox" id="coachVoiceT" ${coachOn()?'checked':''}> Coach voice</label>
     <div><button class="ghost-btn" type="button" data-go="studio">Voice studio · ${SCENARIOS.flatMap((s,si)=>yourLines(s).map(li=>lineId(si,li))).filter(id=>MINE[id]).length} recorded</button></div>
   </div>
-  <details class="fold"><summary>Backup voice</summary><div class="card settings">
-    <label>Practice voice<select id="voiceSel">${VOICES.length?VOICES.slice().sort((a,b)=>rankVoice(b)-rankVoice(a)).map(v=>`<option value="${esc(v.name)}" ${cur&&v.name===cur.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join(''):'<option>Default voice</option>'}</select></label>
+  <p class="sec-k">Model voice</p>
+  <div class="card settings">
+    <div class="src-row"><button class="small-btn${useFiles()?' on':''}" type="button" data-src="rec">Recorded</button><button class="small-btn${useFiles()?'':' on'}" type="button" data-src="device">Device voice</button></div>
+    ${useFiles()?'':`<label>Voice<select id="voiceSel">${VOICES.length?VOICES.slice().sort((a,b)=>rankVoice(b)-rankVoice(a)).map(v=>`<option value="${esc(v.name)}" ${cur&&v.name===cur.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join(''):'<option>Default voice</option>'}</select></label>`}
     <div>${playBtn('id="testVoice"','▶ Test')}</div>
-  </div></details>
+    ${useFiles()?'':'<p class="hint" style="margin:0">Better voices: phone Settings → Accessibility → Spoken Content → Voices → English. Download a Premium or Enhanced voice.</p>'}
+  </div>
   <p class="hint" style="margin-top:28px">Progress is saved on this device.</p>
   <button class="ghost-btn danger" type="button" id="resetBtn">Reset progress</button>`;
 }
@@ -2314,10 +2321,11 @@ function bind(n,i){
     document.querySelectorAll('.studio-sc').forEach(d=>d.addEventListener('toggle',()=>{ const si=+d.dataset.si; d.open?studioOpen.add(si):studioOpen.delete(si); }));
   }
   if(n==='settings'){
-    $('voiceSel').addEventListener('change',e=>{ state.voice=e.target.value; save(); });
+    $('voiceSel')?.addEventListener('change',e=>{ state.voice=e.target.value; save(); });
     $('coachVoiceT').addEventListener('change',e=>{ state.coachVoice=e.target.checked; save(); });
     $('rate').addEventListener('input',e=>{ state.rate=+e.target.value; $('rateVal').textContent=state.rate.toFixed(2)+'×'; save(); });
-    $('testVoice').addEventListener('click',e=>playSegs(e.currentTarget, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')));
+    $('testVoice').addEventListener('click',e=>{ const b=e.currentTarget, c=AUDIO['s0-l1']; if(useFiles()&&c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')); });
+    document.querySelectorAll('[data-src]').forEach(b=>b.addEventListener('click',()=>{ stopAll(); state.voiceSrc=b.dataset.src; save(); render(); }));
     $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress, ratings and notes? This cannot be undone.')){ const keep={rate:state.rate,voice:state.voice}; try{ localStorage.removeItem(KEY); }catch(e){} state=Object.assign({route:{name:'home'},done:{},own:{},notes:{},ratings:{},intro:{name:'',who:'',get:'',avoid:''},scMode:'shadow',coach:true,scOwn:{},scDone:{},lastSc:null},keep); save(); render(); } });
   }
 }

@@ -41,6 +41,10 @@ Owner: Nick (CEO, Property Hub Cambodia). Built for him first, then his team.
   1) the user's own take from the Voice studio (route `studio`, under Settings; stored in IndexedDB `sla-voice`,
   this device only, trimmed to the speech), 2) a file in `audio/` listed in `audio/manifest.js`
   (`window.AUDIO_FILES` → `AUDIO`), 3) browser `speechSynthesis`.
+- Settings → Model voice: **Recorded** (the generated files, default) or **Device voice** (`state.voiceSrc='device'`:
+  skip `AUDIO` for model, other speakers and coach, and use the device's best speechSynthesis voice, ranked by
+  `rankVoice` so Premium/Enhanced come first; the coach uses a different voice via `themVoice`). The user's own
+  studio takes still win in both modes.
 - `tools/make_voice.py` generates `audio/` + the manifest with macOS `say` (free, offline): ‧‧‧ become real
   silences, *stressed* words get `[[emph +]]`, each character gets a voice by title (Mr./Ms.). Rerun after editing
   any script line; only changed lines are regenerated. To upgrade quality, download a Premium voice in macOS
