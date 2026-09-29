@@ -442,6 +442,9 @@ main.home{ padding-bottom:0; }
 .node.now.half{ box-shadow:inset 0 0 0 3px var(--gold-hi), 0 2px 0 var(--u-d), 0 12px 24px -10px var(--u); }
 .wave.dim rect{ fill:var(--mute); } .wave.dim rect.sil{ fill:var(--line); }
 .cmp-row.first .cmp-lab small{ display:block; font-size:.66rem; font-weight:500; color:var(--dim); }
+.q-listen{ margin:-6px 0 14px; }
+.ls-opt.reading{ border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent), var(--shadow); }
+.qtext.reading{ background:var(--gold-soft); border-radius:12px; box-shadow:0 0 0 8px var(--gold-soft); }
 .qtext{ font-family:var(--serif); font-weight:500; font-size:1.3rem; line-height:2.1; margin-top:6px; }
 .qchip{ font:inherit; color:var(--text); background:var(--card); border:1px solid var(--line); border-radius:10px; padding:2px 9px; margin:3px 0; cursor:pointer; box-shadow:0 1px 0 var(--line-d); }
 .qchip.sel{ background:var(--ink); color:var(--on-ink); border-color:var(--ink); }
@@ -2245,6 +2248,8 @@ const COACH_FX = {
  "done1": "Round one complete. Next, say it from memory.",
  "done2": "Scenario complete. Now rewrite the key lines in your own words.",
  "quiz": "Which is stronger?",
+ "right": "Right.",
+ "wrong": "Not quite.",
  "say": "Listen, then say it.",
  "ldone": "Lesson complete. Well done.",
  "breathe": "Breathe with the circle. In for four. Out for six."
@@ -2387,12 +2392,33 @@ function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '
   if(q.type==='choice') return `<div class="ls-opts">${q.options.map((o,n)=>`<button class="ls-opt ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''}>${esc(o)}</button>`).join('')}</div>`;
   if(q.type==='pause') return `<p class="qtext">${words.map((w,n)=>`<span class="qw">${esc(w)}</span> <button class="qgap ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''} aria-label="Pause after ${esc(w)}">‧‧‧</button>`).join(' ')}</p>`;
   return `<p class="qtext">${words.map((w,n)=>`<button class="qchip ${st(n)}" type="button" data-act="ls-qpick" data-n="${n}" ${done?'disabled':''}>${esc(w)}</button>`).join(' ')}</p>`; }
+/* Quiz audio: the coach asks, each answer is read aloud (highlighted while it plays), and after a tap the coach
+   says "Right." or "Not quite." and why. Spoken answers use the model voice; described actions ("[sitting still…]")
+   are read by the coach. Clips: qz{i}-a / qz{i}-b (first example), qz{i}-{k}-o{n} (choice), qz{i}-{k}-t (tap quizzes). */
+const spokenText=t=>segsOf(t).some(s=>s[0]);
+async function qzPlay(id,text,coach,t){ const c=useFiles()&&AUDIO[id]; if(c) return playClip(c,[],t);
+  if(!hasTTS) return true;
+  if(coach||!spokenText(text)) return say(plainText(personal(text).replace(/[\[\]]/g,'')),t,{voice:themVoice(pickVoice())});
+  for(const [txt,type] of segsOf(text)){
+    if(type==='pause'||type==='pause-long'){ if(!await wait((type==='pause'?650:1300)/state.rate,t)) return false; continue; }
+    if(txt&&!await say(txt,t,{pitch:type==='down'?0.88:1})) return false; }
+  return t===tok; }
+async function quizRead(){ const c=lsess&&lsess.cards[lsess.n]; if(!c||c.pick||c.checked) return; stopAll(); const t=++tok, i=lsess.i, l=LESSONS[i];
+  let items=[];
+  if(c.type==='quiz'){ const p=l.pairs[c.k]; items=[...document.querySelectorAll('.ls-opt[data-act="ls-pick"]')].map(el=>({el,id:`qz${i}-${el.dataset.o}`,text:el.dataset.o==='a'?p.normal:p.better})); }
+  else if(c.q.type==='choice') items=[...document.querySelectorAll('.ls-opt[data-act="ls-qpick"]')].map(el=>({el,id:`qz${i}-${c.k}-o${el.dataset.n}`,text:c.q.options[+el.dataset.n],coach:true}));
+  else items=[{el:document.querySelector('.qtext'),id:`qz${i}-${c.k}-t`,text:c.q.text}];
+  if(!await coachSay(c.type==='quiz'?'c-fx-quiz':`c-lesson${i}-q${c.k}`,t)||!await wait(300,t)) return;
+  for(const it of items){ if(!it.el||!it.el.isConnected) it.el=null; if(it.el) it.el.classList.add('reading');
+    const ok=await qzPlay(it.id,it.text,it.coach,t); if(it.el) it.el.classList.remove('reading'); if(!ok||!await wait(350,t)) return; } }
+async function quizVerdict(ok,why){ stopAll(); if(!coachOn()) return; const t=++tok;
+  if(await coachSay(ok?'c-fx-right':'c-fx-wrong',t)&&await wait(150,t)) coachSay(why,t); }
 function quizPick(c,n){ const q=c.q; if(c.checked) return;
   if(q.type==='weak'){ c.sel=c.sel||new Set(); c.sel.has(n)?c.sel.delete(n):c.sel.add(n); return render(); }
   c.pick=n; quizCheck(c); }
 function quizCheck(c){ const q=c.q; c.checked=true;
   c.ok=q.type==='weak'?c.sel.size===q.answer.length&&q.answer.every(n=>c.sel.has(n)):c.pick===q.answer;
-  render(); if(coachOn()){ const t=++tok; coachSay(`c-lesson${lsess.i}-q${c.k}-why`,t); } }
+  stopAll(); render(); quizVerdict(c.ok,`c-lesson${lsess.i}-q${c.k}-why`); }
 
 /* ---------------- FIRST TRY vs TODAY ----------------
    Every recorded line keeps its first take and its latest one (IndexedDB store "history", this device).
@@ -2523,10 +2549,9 @@ function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=ls
   if(c.type==='r3') return r3Listen();
   if(c.type==='breathe') breatheStart();
   if(!coachOn()) return;
-  if(c.type==='q') coachSay(`c-lesson${i}-q${c.k}`,t);
-  else if(c.type==='breathe') coachSay('c-fx-breathe',t);
+  if(c.type==='q'||c.type==='quiz') return quizRead();
+  if(c.type==='breathe') coachSay('c-fx-breathe',t);
   if(c.type==='idea') coachSay(`c-lesson${i}-rule`,t);
-  else if(c.type==='quiz') coachSay('c-fx-quiz',t);
   else if(c.type==='done'&&lsess.kind==='lesson') coachSay('c-fx-ldone',t); }
 async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
@@ -2564,7 +2589,8 @@ function lessonAct(a,btn){
   if(a==='ls-exit'){ const f=lsess.from; endLesson(); return go(f); }
   if(a==='ls-next'){ if(lsess.n<lsess.cards.length-1){ lsess.n++; enterCard(); } return; }
   if(a==='ls-why'){ c.why=true; return render(); }
-  if(a==='ls-pick'){ if(c.pick) return; c.pick=btn.dataset.o; render(); if(coachOn()){ const t=++tok; coachSay(`c-lesson${lsess.i}-p${c.k}-note`,t); } return; }
+  if(a==='ls-pick'){ if(c.pick) return; c.pick=btn.dataset.o; stopAll(); render(); quizVerdict(c.pick==='b',`c-lesson${lsess.i}-p${c.k}-note`); return; }
+  if(a==='ls-qread') return quizRead();
   if(a==='ls-listen') return lsListen();
   if(a==='ls-skipaudio'){ stopAll(); c.step='ready'; return render(); }
   if(a==='ls-rec') return lsRecord();
@@ -2590,6 +2616,7 @@ function lessonAct(a,btn){
 }
 function viewLessonSession(){
   const i=lsess.i, l=lsess.kind==='lesson'?LESSONS[i]:null, c=lsess.cards[lsess.n], total=lsess.cards.length-1, pct=Math.round(lsess.n/total*100);
+  const qListen=`<div class="q-listen"><button class="small-btn coach-btn" type="button" data-act="ls-qread">▶ Listen</button></div>`;
   const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="ls-exit" aria-label="End lesson">${ICO.x}</button>
     <div class="pbar" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${lsess.n}"><i style="width:${pct}%"></i></div>
     <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button>
@@ -2602,13 +2629,13 @@ function viewLessonSession(){
       ${c.why?`<p class="body ls-why">${l.why}</p>`:`<button class="link-btn ls-left" type="button" data-act="ls-why">Why it works</button>`}`;
     ft=cont(); }
   else if(c.type==='quiz'){ const p=l.pairs[c.k], opts=[{o:'a',t:p.normal},{o:'b',t:p.better}]; if((i+c.k)%2) opts.reverse();
-    body=`<p class="eyebrow">${esc(p.moment)}</p><h1 class="fx-title">Which is stronger?</h1>
+    body=`<p class="eyebrow">${esc(p.moment)}</p><h1 class="fx-title">Which is stronger?</h1>${c.pick?'':qListen}
       <div class="ls-opts">${opts.map(x=>{ const st=!c.pick?'':x.o==='b'?'right':x.o===c.pick?'wrong':'dim';
         return `<button class="ls-opt ${st}" type="button" data-act="ls-pick" data-o="${x.o}" ${c.pick?'disabled':''}>${quizText(x.t)}</button>`; }).join('')}</div>`;
     if(c.pick){ const ok=c.pick==='b'; cls=ok?'good':'almost';
       ft=`<div class="res" role="status"><span class="res-ic">${ok?ICO.check:ICO.warn}</span><div><div class="res-t">${ok?'Right':'Not quite'}</div><p class="fb-tip">${plainText(p.note)}</p></div></div>${cont()}`; } }
   else if(c.type==='q'){ const q=c.q;
-    body=`<p class="eyebrow">Quick check</p><h1 class="fx-title">${esc(q.prompt)}</h1>${viewQuiz(c)}`;
+    body=`<p class="eyebrow">Quick check</p><h1 class="fx-title">${esc(q.prompt)}</h1>${c.checked?'':qListen}${viewQuiz(c)}`;
     if(c.checked){ cls=c.ok?'good':'almost';
       ft=`<div class="res" role="status"><span class="res-ic">${c.ok?ICO.check:ICO.warn}</span><div><div class="res-t">${c.ok?'Right':'Not quite'}</div><p class="fb-tip">${esc(q.why)}</p></div></div>${cont()}`; }
     else if(q.type==='weak') ft=`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-qcheck" ${c.sel&&c.sel.size?'':'disabled'}>Check</button></div>`; }

@@ -186,6 +186,16 @@ def main():
         k = next((k for k, pr in enumerate(l["pairs"]) if not pr["noPlay"] and "lang" not in pr), None)
         if k is not None: jobs.append((f"l{n}-p{k}", *YOU, l["pairs"][k]["better"]))
         jobs.append((f"l{n}-d", *YOU, drill_markup(l["script"])))
+    ls = lessons(); i = src.index("const LESSON_QUIZ = ") + len("const LESSON_QUIZ = ")   # quiz answers read aloud
+    for n, l in enumerate(ls):   # "Which is stronger?": spoken lines in the model voice, described actions by the coach
+        pr = l["pairs"][0]
+        if "lang" in pr: continue
+        for o, key in (("a", "normal"), ("b", "better")):
+            t = pr[key]; jobs.append((f"qz{n}-{o}", *YOU, t) if segments(t) else (f"qz{n}-{o}", *COACH, plain(t.replace("[", "").replace("]", ""))))
+    for n, qs in json.loads(src[i:src.index("\n};", i) + 2]).items():
+        for k, q in enumerate(qs):
+            if q["type"] == "choice": jobs += [(f"qz{n}-{k}-o{o}", *COACH, t) for o, t in enumerate(q["options"])]
+            else: jobs.append((f"qz{n}-{k}-t", *YOU, q["text"]))
     for lid, text in coach_lines().items(): jobs.append((lid, *COACH, text))
     jobs = [j for j in jobs if not re.search(r"\{(name|intro)\}", j[3])]   # personal lines use the device voice
     for lid, voice, speed, text in jobs:

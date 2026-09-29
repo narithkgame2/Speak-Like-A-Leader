@@ -34,6 +34,11 @@ real estate (his direction, 2026-09-29).
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
   after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.
+- Quiz audio (`quizRead`, `quizVerdict`): on every quiz card the coach asks the question, then each answer is read
+  aloud and highlighted (`.reading`); tapping any time stops it. Spoken answers use the model voice, described actions
+  ("[sitting still…]") and choice options the coach. After a tap the coach says "Right." / "Not quite." (`c-fx-right`,
+  `c-fx-wrong`) and the reason. "▶ Listen" replays. Clips: `qz{i}-a` / `qz{i}-b` (first example), `qz{i}-{k}-o{n}`
+  (choice options), `qz{i}-{k}-t` (tap-quiz sentence). Coach off = silent unless Listen is tapped.
 - Breathing card (`type:'breathe'`) replaces "breath" marks in a drill: 3 guided breaths, in 4 / out 6.
 - First try vs today: every recorded line (scenario `s{si}-l{li}`, lesson `l{i}-p{k}` / `l{i}-d`) keeps its first
   and latest take in IndexedDB store `history` (db `sla-voice` v2). The review shows "First" (date, grey
