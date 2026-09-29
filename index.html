@@ -1985,7 +1985,7 @@ function isDark(){ const bg=getComputedStyle(document.documentElement).getProper
 function shade(hex,f){ const n=parseInt(hex.slice(1),16), c=[n>>16,n>>8&255,n&255].map(v=>Math.max(0,Math.min(255,Math.round(v*f)))); return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''); }
 const trailHW=y=>Math.max(0,(y-PEAK[1])/(BASE_Y-PEAK[1]))*470;          // how wide the switchbacks swing
 const massHW=y=>Math.max(0,(y-PEAK[1]+6)/(BASE_Y-PEAK[1]))*640;          // the mountain's half width
-let MTN=null, cam={x:500,y:800,s:.3}, camTween=0, camMode='you';
+let MTN=null, cam={x:500,y:800,s:.3}, camTween=0, camMode='you', flown=false, flyT=0;
 
 function mtnModel(){ const legs=10, P=[];
   for(let i=0;i<=legs;i++){ const y=BASE_Y-(BASE_Y-PEAK[1]-14)*(i/legs); P.push(i===legs?[PEAK[0],PEAK[1]+14]:[500+(i%2?1:-1)*trailHW(y)*0.74,y]); }
@@ -2049,9 +2049,11 @@ function viewHome(){
 }
 /* Camera: s = pixels per world unit. Frame a step so its neighbours sit ~62px apart, a little below centre. */
 function camFor(step,W,H){ const over=Math.min(W/MW,H/(MH-60));
-  if(!step) return camOverview(W,H);
-  const s=Math.min(3.2,Math.max(over,70/Math.max(step.arc,1)));
-  return {x:step.x*0.7+500*0.3,y:step.y-H*0.12/s,s}; }
+  if(!step||!MTN.steps.indexOf(step)) return camOverview(W,H);
+  let s=Math.min(2.4,Math.max(over,0.9,95/Math.max(step.arc,1)));
+  // In the last camp, keep the summit in view above you.
+  if(step.ui===MTN.us.length-1){ const top=PEAK[1]-110; s=Math.min(s,(H-90)/(step.y-top)); return {x:step.x*0.5+250,y:top+H/2/s,s}; }
+  return {x:step.x*0.7+500*0.3,y:step.y-H*0.15/s,s}; }
 function camOverview(W,H){ const s=Math.min(W/MW,H/(MH-60)); return {x:500,y:(MH-60)/2+30,s}; }
 function camClamp(c,W,H){ const hw=W/2/c.s, hh=H/2/c.s;
   c.x=hw*2>=MW?500:Math.min(MW-hw,Math.max(hw,c.x)); c.y=Math.min(MH-hh+10,Math.max(PEAK[1]-120+hh,c.y)); return c; }
@@ -2066,10 +2068,10 @@ function mtnApply(){ const st=$('mstage'); if(!st||!MTN) return; const W=st.clie
     if(kind==='step'){ const g=gap*c.s; el.classList.toggle('mini',g<34); el.style.setProperty('--ns',Math.max(30,Math.min(52,g*0.66)).toFixed(0)+'px'); }
     el.hidden=a<-60||a>W+60||b<-60||b>H+60||(kind==='camp'&&(b<54||!mine&&span*c.s<110)); });
 }
-function camTo(target,animate){ const st=$('mstage'); if(!st) return; const W=st.clientWidth, H=st.clientHeight; camClamp(target,W,H);
+function camTo(target,animate,dur=900){ const st=$('mstage'); if(!st) return; const W=st.clientWidth, H=st.clientHeight; camClamp(target,W,H);
   cancelAnimationFrame(camTween);
   if(!animate||matchMedia('(prefers-reduced-motion: reduce)').matches){ cam=target; return mtnApply(); }
-  const a={...cam}, t0=performance.now(), dur=900, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const a={...cam}, t0=performance.now(), ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   const step=now=>{ const t=Math.min(1,(now-t0)/dur), e=ease(t), ls=Math.log(a.s)+(Math.log(target.s)-Math.log(a.s))*e;
     cam={x:a.x+(target.x-a.x)*e, y:a.y+(target.y-a.y)*e, s:Math.exp(ls)}; mtnApply(); if(t<1) camTween=requestAnimationFrame(step); };
   camTween=requestAnimationFrame(step); }
@@ -2091,7 +2093,12 @@ function drawScene(){ const st=$('mstage'); if(!st) return;
   layer.querySelectorAll('.mcamp').forEach(el=>{ const k=+el.dataset.u, ss=MTN.steps.filter(x=>x.ui===k), s=ss[0], nx=MTN.steps[MTN.steps.indexOf(ss[ss.length-1])+1];
     const side=s.x<500?1:-1; els.push({el,x:500+side*(trailHW(s.y)*0.74+26),y:s.y,kind:'camp',side,span:s.y-(nx?nx.y:PEAK[1]),mine:k===myCamp}); });
   els.push({el:layer.querySelector('.msummit'),x:PEAK[0]+46,y:PEAK[1]-36,kind:'summit'}); MTN.els=els;
-  if(camMode==='camp') camMode='you'; zoomLabel(); camTo(camMode==='all'?camOverview(W,H):camFor(now,W,H),false);
+  if(camMode==='camp') camMode='you'; zoomLabel();
+  // Once per visit: the whole mountain first, then fly in to where you are.
+  if(flyT) camTo(camOverview(W,H),false);
+  else if(!flown&&camMode==='you'&&now&&MTN.steps.indexOf(now)>0){ flown=true; camTo(camOverview(W,H),false);
+    flyT=setTimeout(()=>{ flyT=0; const s2=$('mstage'); if(s2&&camMode==='you') camTo(camFor(MTN.now,s2.clientWidth,s2.clientHeight),true,1600); },700); }
+  else camTo(camMode==='all'?camOverview(W,H):camFor(now,W,H),false);
   mtnDrag(st); }
 function camCamp(k,W,H){ const ss=MTN.steps.filter(x=>x.ui===k), xs=ss.map(x=>x.x), ys=ss.map(x=>x.y), over=Math.min(W/MW,H/(MH-60));
   const bw=Math.max(...xs)-Math.min(...xs)+180, bh=Math.max(...ys)-Math.min(...ys)+220, s=Math.min(3.2,Math.max(over,Math.min(W/bw,H/bh)));
@@ -2104,7 +2111,7 @@ function mtnSheet(key){ const sh=$('msheet'); if(!sh) return; const s=MTN.steps.
     <button class="pop-btn" type="button" ${s.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${s.i}">${s.done?(s.kind==='lesson'?'Review':'Round 3 · your words'):'Start'}</button></div>`;
   sh.hidden=false; sh.dataset.k=key; }
 function mtnDrag(st){ if(st.dataset.drag) return; st.dataset.drag='1'; let d=null;
-  st.addEventListener('pointerdown',e=>{ if(e.target.closest('button')) return; d={x:e.clientX,y:e.clientY,c:{...cam},moved:false}; st.setPointerCapture(e.pointerId); });
+  st.addEventListener('pointerdown',e=>{ clearTimeout(flyT); flyT=0; if(e.target.closest('button')) return; d={x:e.clientX,y:e.clientY,c:{...cam},moved:false}; st.setPointerCapture(e.pointerId); });
   st.addEventListener('pointermove',e=>{ if(!d) return; const dx=e.clientX-d.x, dy=e.clientY-d.y; if(Math.hypot(dx,dy)>5) d.moved=true;
     if(d.moved){ cancelAnimationFrame(camTween); cam=camClamp({x:d.c.x-dx/cam.s,y:d.c.y-dy/cam.s,s:cam.s},st.clientWidth,st.clientHeight); mtnApply(); } });
   const end=()=>{ if(d&&!d.moved){ const sh=$('msheet'); if(sh) sh.hidden=true; } d=null; };
@@ -2822,9 +2829,9 @@ function act(a,btn){
   if(a.startsWith('ls-')||a==='nextup') return lessonAct(a,btn);
   if(a==='speed'){ state.rate=SPEEDS.find(x=>x>state.rate+0.001)??SPEEDS[0]; save(); btn.textContent=(+state.rate.toFixed(2))+'×'; return; }
   if(a==='node') return mtnSheet(btn.dataset.k);
-  if(a==='mzoom'){ const st=$('mstage'); camMode=camMode==='all'?'you':'all'; zoomLabel(); $('msheet').hidden=true;
+  if(a==='mzoom'){ clearTimeout(flyT); flyT=0; const st=$('mstage'); camMode=camMode==='all'?'you':'all'; zoomLabel(); $('msheet').hidden=true;
     return camTo(camMode==='all'?camOverview(st.clientWidth,st.clientHeight):camFor(MTN.now,st.clientWidth,st.clientHeight),true); }
-  if(a==='mcamp'){ const st=$('mstage'); camMode='camp'; zoomLabel(); return camTo(camCamp(+btn.dataset.u,st.clientWidth,st.clientHeight),true); }
+  if(a==='mcamp'){ clearTimeout(flyT); flyT=0; const st=$('mstage'); camMode='camp'; zoomLabel(); return camTo(camCamp(+btn.dataset.u,st.clientWidth,st.clientHeight),true); }
   if(a.startsWith('st-')) return studioAct(a,btn);
   if(a==='coach') return runBtn(btn,t=>coachSay(btn.dataset.k,t));
   if(a==='coachv'){ state.coachVoice=!coachOn(); save(); btn.textContent=coachOn()?'Coach on':'Coach off'; btn.setAttribute('aria-pressed',coachOn()); return; }

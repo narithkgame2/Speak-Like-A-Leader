@@ -64,8 +64,9 @@ real estate (his direction, 2026-09-29).
   snow cap, trees/rocks/snow, clouds, tent, summit flag). `drawScene()` sizes `#mstage` to fill the viewport above
   the Continue bar and tab bar and builds HTML overlay buttons (steps `.mn`, camp chips `.mcamp`, `.msummit`);
   `mtnApply()` projects them with the camera `cam={x,y,s}` each frame and redraws the trail (brass up to you,
-  dotted after). `camFor(step)` keeps neighbouring steps ~70px apart, so Base Camp shows the whole mountain and
-  the view zooms in as you climb; all done = whole mountain. Steps shrink to dots when crowded; camp chips show only
+  dotted after). `camFor(step)`: before the first step and when all is done = whole mountain; otherwise a close
+  view that follows you (scale >=0.9, steps ~95px apart), and in the last camp it frames you and the summit.
+  Once per app load (`flown`), home opens on the whole mountain and flies in to you (`flyT`, 1.6s). Steps shrink to dots when crowded; camp chips show only
   when readable or it's your camp. "Whole mountain" / "Back to me" toggles `camMode`; tapping a camp chip zooms to
   it (`camCamp`); drag or wheel pans (`mtnDrag`); `camTo` tweens (reduced motion = jump). Tapping a step opens a
   bottom sheet (`mtnSheet`) with Start. Reruns on resize, font load and theme change. "Your climb" card shows rank
