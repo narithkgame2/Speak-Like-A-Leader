@@ -17,6 +17,20 @@ real estate (his direction, 2026-09-29).
 - Name: **Speak Like a Leader** (renamed 2026-09-29; summit rank "Trusted Leader"). iPhone app icon + web manifest:
   `icons/` (source `icons/icon.svg`, PNGs rendered with headless Chrome), `manifest.webmanifest`; opens full screen
   from the Home Screen as "Speak Leader".
+- Units (`UNIT_DEF`, climbing order): Foundation, Clarity, First impressions, Presenting and persuading, Under pressure,
+  Negotiation, Video calls, People and hard conversations. A lesson joins a unit with `unit:"Clarity"` (none =
+  Foundation); a scenario joins by its `cat`. Each unit is a camp (`CAMPS`, `ALTS` up to 5,000 m, `RANKS` one per
+  camp, `ZONES` scenery). 14 lessons (8 Foundation, 3 Clarity, 3 Video calls), 20 scenarios. Keep new lessons in
+  the form `  { title:"…", unit:"…",` so tools/make_voice.py can read them.
+- More session kinds on the lesson card engine (`lsess.kind`): 'lesson', 'r3', 'prep', 'breathe'; non-lesson kinds
+  run on route `session`.
+- Round 3 "Your words" (`ROUND3`, JSON by scenario index): no script; a question from the other person (or a coach
+  instruction when `"coach": true`), three points to hit, record, listen back, tap the points you made (self-check;
+  no speech recognition). Starts from a scenario once round 2 is done; `state.scR3`. Clips `r3-{scenario}-{k}`.
+- Meeting prep (Prep tab, routes `prep` / `prepedit`, `state.preps`): who, goal, up to 6 key lines; per line tap
+  words to stress and dots to pause (stored as word indices, `prepMarkup`), rehearse with record/compare, First vs
+  Today, a "Ready" screen, and "Breathe first". The model is the device voice until "Use this take as my model"
+  (saved like a studio take, id `pp-{id}-l{k}`). No reminders (needs a server).
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
   after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.

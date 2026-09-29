@@ -177,6 +177,11 @@ def main():
         cast = speakers(sc)
         for li, (who, text, *_) in enumerate(sc["lines"]):
             if who != "stage": jobs.append((f"s{si}-l{li}", *cast[who], text))
+    src = source(); i = src.index("const ROUND3 = ") + len("const ROUND3 = ")   # round 3 questions
+    scs = scenarios()
+    for key, qs in json.loads(src[i:src.index("\n};", i) + 2]).items():
+        cast = speakers(scs[int(key)]); them = cast.get("them") or next((v for k, v in cast.items() if k != "you"), COACH)
+        for k, q in enumerate(qs): jobs.append((f"r3-{key}-{k}", *(COACH if q.get("coach") else them), q["q"]))
     for n, l in enumerate(lessons()):   # lesson model lines: the stronger example and the drill
         k = next((k for k, pr in enumerate(l["pairs"]) if not pr["noPlay"] and "lang" not in pr), None)
         if k is not None: jobs.append((f"l{n}-p{k}", *YOU, l["pairs"][k]["better"]))

@@ -448,6 +448,15 @@ main.home{ padding-bottom:calc(var(--tabh) + 110px + env(safe-area-inset-bottom,
 .br-circle span{ font-size:.8rem; font-weight:600; color:var(--pri); } .br-circle b{ font-family:var(--serif); font-size:2.4rem; font-weight:600; color:var(--pri); line-height:1; }
 .br-round{ text-align:center; color:var(--dim); font-size:.9rem; }
 @media (prefers-reduced-motion: reduce){ .br-circle{ transition:none; } }
+.u-slate{ --u:#4A6378; --u-d:#324555; } .u-indigo{ --u:#474F8C; --u-d:#2F3566; }
+.qchip.stress-on{ border-color:var(--gold); background:var(--gold-soft); box-shadow:inset 0 -2px 0 var(--gold); }
+.kp{ display:flex; flex-wrap:wrap; gap:8px; } .kp span, .kpb{ font:600 .86rem var(--sans); color:var(--text); padding:7px 12px; border-radius:999px; background:var(--bg-2); border:1px solid var(--line); }
+.kpb{ cursor:pointer; } .kpb.on{ background:var(--pri-soft); border-color:var(--pri); color:var(--pri); }
+.r3-pts{ margin-top:12px; }
+.prep-card{ border-left:3px solid var(--gold); margin-bottom:12px; }
+.prep-btns{ display:flex; gap:8px; margin-top:14px; align-items:center; } .prep-btns .solid-btn{ flex:1; }
+.prep-empty{ margin-bottom:12px; }
+.builder textarea.need{ border-color:var(--red); }
 @media (max-width:420px){ .page-title{ font-size:1.7rem; } .how3{ grid-template-columns:1fr; } }
 @media (prefers-reduced-motion: reduce){ .tip, .eq i, .spk.playing, .pop, .fx-foot, .done-badge{ animation:none; } .say.hide .say-text{ filter:none; color:transparent; } }
 </style>
@@ -552,7 +561,73 @@ const LESSONS = [
       {moment:"Closing the meeting", normal:"So… yeah, that's all. Thank you.", better:"To summarize: ‧‧‧ we agree the timing works. ‧‧‧ The next step is a proposal by Friday. ‧‧‧ Does that work for you?", note:"The last thing you say is what they remember. Make it the point and the next step."}],
     drill:{ tag:"The full opening. Record a video of this, from sitting down to the purpose.", script:[["[sit, settle, breathe out, look up]","note"],["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null],["","pause-long"],["Thank you for your time.",null],["","pause"],["I'd like to cover two things today,",null],["and I'd value your view on the second.","down"]],
       note:"Final check: compare this video with your first recording from Lesson 1. The difference is your progress." },
-    own:"Write the opening and closing for a real meeting you have coming up. Practice both out loud the day before." }
+    own:"Write the opening and closing for a real meeting you have coming up. Practice both out loud the day before." },
+
+  { title:"Finish every word", unit:"Clarity",
+    sub:"Swallowed endings make strong ideas sound unsure. Crisp endings sound prepared.",
+    rule:"Land the last sound of every word, especially t, d, s and ed.",
+    why:"Under pressure we speed up, and the first thing to go is the <b>end of each word</b>: checked becomes check, last becomes las. Listeners fill the gap, but it costs them effort and it sounds rushed. Slow down just enough to <b>finish every word</b>. It matters most for numbers, names and the last word of a sentence.",
+    pairs:[
+      {moment:"Reporting a result", normal:"We check' the contrac' las' week, it's fine.", better:"We *checked* the *contract* last *week*. ↘ ‧‧‧ It's *fine*.", note:"Same words, finished. It sounds checked, not guessed."},
+      {moment:"Saying a number", normal:"The cos' is eigh' percen' higher.", better:"The cost is *eight* percent ‧‧‧ *higher*. ↘", note:"Land the t in eight and percent. Numbers must be heard exactly."}],
+    drill:{ tag:"Over-finish the endings. It will feel too crisp. It isn't.", script:[["We checked the contract.",null],["","pause"],["It's signed.","down"],["","pause"],["The cost is eight percent lower.","down"]],
+      note:"Record it, then listen only to the last sound of each word. If you can't hear the t or the d, say it again, slower." },
+    own:"Write a sentence you'll say this week that ends in a number or a name. Practice landing the last sound." },
+
+  { title:"Stress the right word", unit:"Clarity",
+    sub:"Every sentence has one word that carries the meaning. Hit it, and the rest can stay light.",
+    rule:"One stressed word per phrase: the new idea, the number, or the contrast.",
+    why:"Flat sentences sound read. When every word gets the same weight, listeners can't tell what matters. Pick the <b>one word</b> that carries the meaning, usually the new information, a number, or a contrast, and give it a little more <b>length</b> and volume. Everything else stays light and quick.",
+    pairs:[
+      {moment:"Correcting a date", normal:"The deadline is Friday, not Thursday.", better:"The deadline is *Friday*, ‧‧‧ not *Thursday*. ↘", note:"The contrast is the message, so the two days carry the stress."},
+      {moment:"Giving a recommendation", normal:"I think that we should probably choose the second option.", better:"I recommend the *second* option. ↘", note:"Fewer words, one stressed word. The choice is impossible to miss."}],
+    drill:{ tag:"Make the stressed words longer, not just louder.", script:[["We need the report",null],["today,","stress"],["","pause"],["not tomorrow.","down"],["","pause"],["The client meets at",null],["noon.","down"]],
+      note:"Say it three times, moving the stress: today, report, client. Hear how the meaning changes." },
+    own:"Take one sentence from your next presentation. Underline the one word that carries it." },
+
+  { title:"Carry to the back", unit:"Clarity",
+    sub:"A voice that fades in a big room sounds unsure, however good the idea.",
+    rule:"Speak to the farthest person. Power comes from the breath, not the throat.",
+    why:"When the room gets bigger, most people push from the throat: the voice gets higher and thinner. Instead, <b>breathe low</b>, into your stomach, and aim your voice at the <b>back wall</b>. You'll sound louder without shouting, and your pitch stays low. Keep the end of every sentence as strong as the start.",
+    pairs:[
+      {moment:"Opening in a large room", normal:"[quietly, to the front row] Good morning, everyone, um, can you hear me at the back?", better:"[breathe low, look at the back wall] ‧‧‧‧‧ Good *morning*. ‧‧‧ Let's *begin*. ↘", note:"Asking \"can you hear me?\" tells the room you're not sure. Make sure they can."},
+      {moment:"Your key point", normal:"…and so that's basically the main thing, I guess.", better:"*This* is the point. ‧‧‧ We move in *March*. ↘", note:"Full volume on the key line, all the way to the last word."}],
+    drill:{ tag:"Stand up. Pick a spot on the far wall. Say it to that spot.", script:[["Good morning.",null],["","pause"],["Thank you for coming.",null],["","pause-long"],["Today, one decision:",null],["","pause"],["we move in March.","down"]],
+      note:"Record from across the room if you can. The last word should be as clear as the first." },
+    own:"Where is your next big-room moment? Write your opening line and practice it to the back wall." },
+
+  { title:"Look at the lens", unit:"Video calls",
+    sub:"On a call, looking at their face means looking away from them.",
+    rule:"For your key point, look at the camera, not at their face.",
+    why:"On video, the other person sees your eyes pointing at their image, which sits below your camera, so you look down and away. For normal talk that's fine. But for your <b>key point</b>, your number, or your ask, <b>look straight at the lens</b>. It's the only eye contact a screen allows. Move their video window right under the camera, so the gap is small.",
+    pairs:[
+      {moment:"Your key point on a call", normal:"[looking at their faces on the screen while you say the number]", better:"[look into the lens, say it, then back to their faces] ‧‧‧ The price is fifty thousand.", note:"Eye contact on video means the lens. Use it for the moments that matter.", noPlay:true},
+      {moment:"Asking for the decision", normal:"So, um, what do you all think, maybe?", better:"Maria, ‧‧‧ can we agree on *March*? ↘", note:"Name the person and ask one clear question. Look at the lens as you ask."}],
+    drill:{ tag:"Look at the lens for the whole line. It feels strange. It looks confident.", script:[["Thank you for joining.",null],["","pause"],["I'll be brief.",null],["","pause-long"],["We need one decision today.","down"]],
+      note:"Record a video of yourself on your laptop. Watch it: are your eyes on the lens for the last line?" },
+    own:"Move your video window right under your camera before your next call. Write the one line you'll say to the lens." },
+
+  { title:"Frame yourself", unit:"Video calls",
+    sub:"People judge your presence from a small rectangle. Make it work for you.",
+    rule:"Eyes in the top third. Light in front of you. Nothing moving behind you.",
+    why:"On a call, your frame is your stage. Put the camera at <b>eye level</b>, not below your chin. Sit so your <b>eyes are about a third from the top</b> and your shoulders are in the picture. Face a window or a lamp, never sit with the light behind you. Keep the background still and simple: movement pulls attention away from your words.",
+    pairs:[
+      {moment:"Before the call starts", normal:"[laptop on the desk, camera looking up at your chin, a bright window behind you]", better:"[laptop raised to eye level, a lamp in front, a plain wall behind]", note:"Thirty seconds of setup changes how senior you look.", noPlay:true},
+      {moment:"The first words on the call", normal:"Sorry, can you see me? Is my camera working? Sorry, one second…", better:"Good *morning*, everyone. ‧‧‧ Thank you for *joining*. ↘", note:"Test your setup before. Then open like you would in the room."}],
+    drill:{ tag:"Check your frame first, then say your opening.", script:[["[camera at eye level, light in front]","note"],["Good morning, everyone.",null],["","pause"],["Thank you for joining.","down"]],
+      note:"Take a screenshot of yourself on your usual call setup. Fix one thing: height, light, or background." },
+    own:"Write the three things you'll fix in your call setup, and when." },
+
+  { title:"Talk into silence", unit:"Video calls",
+    sub:"On a call, silence feels like rejection. Usually it's lag, or people waiting to be asked.",
+    rule:"Pause longer than feels natural. Then name the next speaker.",
+    why:"Video adds <b>delay</b>: your pause and their reply cross in the air, so people talk over each other or say nothing. Leave a slightly <b>longer pause</b> after a question, and don't fill the silence with more words. When nobody answers, <b>name a person</b>: an open question to a silent grid of faces gets more silence.",
+    pairs:[
+      {moment:"Asking for input", normal:"So, any thoughts? Anyone? No? Okay, well, I guess…", better:"Maria, ‧‧‧ how does this look from *finance*?", note:"Name a person. Then wait the full pause."},
+      {moment:"Someone's audio cuts out", normal:"Sorry, you broke up, sorry, can you, sorry, say that again?", better:"You broke up for a *moment*. ‧‧‧ Could you repeat the *last* part?", note:"One clear request, no apologies."}],
+    drill:{ tag:"After the question, count two full seconds before you speak again.", script:[["Maria,",null],["","pause"],["how does this look from finance?",null],["","pause-long"],["[wait]","note"],["Thank you. That helps.","down"]],
+      note:"On your next call, count the silence after each question. Two seconds is shorter than it feels." },
+    own:"Write the names of the people on your next call, and the one question you'll ask each." }
 ];
 const SCENARIOS = [
  {
@@ -1556,6 +1631,216 @@ const SCENARIOS = [
     "Summarize the decision and who owns the next step."
    ]
   ]
+ },
+ {
+  "cat": "Clarity",
+  "title": "Numbers in a Noisy Room",
+  "setting": "A busy restaurant. Mr. Kim, a partner, asks for last quarter's numbers over the noise.",
+  "goal": "Be understood the first time. Every number lands.",
+  "them": "Mr. Kim",
+  "lessons": [
+   9,
+   10,
+   11
+  ],
+  "lines": [
+   [
+    "them",
+    "So, how did last quarter go?"
+   ],
+   [
+    "you",
+    "*Well*. ‧‧‧ Revenue grew *fourteen* percent. ↘",
+    "Answer first. Land the t in percent."
+   ],
+   [
+    "them",
+    "Sorry, fourteen or forty?"
+   ],
+   [
+    "you",
+    "*Fourteen*. ‧‧‧ One, *four*. ↘",
+    "Don't get louder. Get slower and clearer."
+   ],
+   [
+    "them",
+    "Good. And costs?"
+   ],
+   [
+    "you",
+    "Costs went *down*. ‧‧‧ *Eight* percent, ‧‧‧ mostly from *travel*. ↘",
+    "Finish every ending: eight, percent, travel."
+   ],
+   [
+    "them",
+    "Impressive. What's next?"
+   ],
+   [
+    "you",
+    "We *hire* two people in *March*. ‧‧‧ I'll send you the *plan* tomorrow. ↘",
+    "Numbers and dates carry the stress."
+   ]
+  ]
+ },
+ {
+  "cat": "Clarity",
+  "title": "The Update to Your Manager",
+  "setting": "A two-minute update to your manager, Ms. Rivera, who is between meetings and only half listening.",
+  "goal": "Make three points she can repeat to her boss.",
+  "them": "Ms. Rivera",
+  "lessons": [
+   3,
+   9,
+   10
+  ],
+  "lines": [
+   [
+    "them",
+    "Quick update? I have two minutes."
+   ],
+   [
+    "you",
+    "*Three* things. ‧‧‧ The launch is *on* time, ‧‧‧ the budget is *under* plan, ‧‧‧ and I need *one* decision from you. ↘",
+    "Say how many points first. It holds a busy listener."
+   ],
+   [
+    "them",
+    "Okay. What decision?"
+   ],
+   [
+    "you",
+    "Whether we launch in *two* markets ‧‧‧ or *one*. ↘",
+    "The contrast carries the stress: two, one."
+   ],
+   [
+    "them",
+    "What do you recommend?"
+   ],
+   [
+    "you",
+    "*One*. ‧‧‧ We learn *faster*, ‧‧‧ and we keep the *risk* small. ↘",
+    "Answer first, then two short reasons."
+   ],
+   [
+    "them",
+    "Fine. One market."
+   ],
+   [
+    "you",
+    "*Thank* you. ‧‧‧ I'll confirm it in *writing* today. ↘",
+    "Close with the next step. Land the last word."
+   ]
+  ]
+ },
+ {
+  "cat": "Video calls",
+  "title": "The Frozen Call",
+  "setting": "A video call with Mr. Osei, a new client. Right at your key point, your connection freezes for ten seconds.",
+  "goal": "Recover calmly, without apologizing, and land the point again.",
+  "them": "Mr. Osei",
+  "lessons": [
+   1,
+   12,
+   13
+  ],
+  "lines": [
+   [
+    "stage",
+    "[your screen freezes mid-sentence, then comes back]"
+   ],
+   [
+    "them",
+    "…you froze there for a moment."
+   ],
+   [
+    "you",
+    "Thank you for *waiting*. ‧‧‧ Let me say that *again*. ↘",
+    "No apology. Thank them and take the point back."
+   ],
+   [
+    "you",
+    "‧‧‧ Our proposal saves you *twenty* percent ‧‧‧ in the *first* year. ↘",
+    "Say the key point to the lens, slower than before."
+   ],
+   [
+    "them",
+    "Twenty percent? How?"
+   ],
+   [
+    "you",
+    "*Two* ways. ‧‧‧ *Fewer* manual steps, ‧‧‧ and *faster* approvals. ↘ ‧‧‧ I'll share my *screen* and show you.",
+    "Structure, then offer to show, not tell."
+   ],
+   [
+    "them",
+    "Please do."
+   ],
+   [
+    "you",
+    "*Here*. ‧‧‧ The number at the *bottom* is your saving. ↘",
+    "Guide their eyes. One sentence at a time."
+   ]
+  ]
+ },
+ {
+  "cat": "Video calls",
+  "title": "Leading a Quiet Call",
+  "setting": "You lead a video call with five people, most with cameras off. Nobody speaks after your first question.",
+  "goal": "Get real input, and end with a decision.",
+  "them": "Ms. Diaz",
+  "lessons": [
+   3,
+   7,
+   14
+  ],
+  "lines": [
+   [
+    "you",
+    "Thank you all for *joining*. ‧‧‧ We have *twenty* minutes, ‧‧‧ and *one* goal: ‧‧‧ agree on the *launch* date. ↘",
+    "Time and goal first. People relax when they know the end."
+   ],
+   [
+    "you",
+    "‧‧‧ What's the *biggest* risk you see?",
+    "One open question. Then wait."
+   ],
+   [
+    "stage",
+    "[silence, five black squares]"
+   ],
+   [
+    "you",
+    "‧‧‧‧‧ Ms. *Diaz*, ‧‧‧ how does it look from *sales*?",
+    "Name a person. Then wait the full pause."
+   ],
+   [
+    "them",
+    "Honestly, June is tight for my team."
+   ],
+   [
+    "you",
+    "*Thank* you. ‧‧‧ That's *exactly* what we need to hear. ‧‧‧ What would make June *possible*?",
+    "Reward honesty, then ask a solving question."
+   ],
+   [
+    "them",
+    "Two more people for training, for three weeks."
+   ],
+   [
+    "you",
+    "Then here's the *proposal*: ‧‧‧ *June*, ‧‧‧ with *two* people for sales training. ‧‧‧ Can everyone *live* with that?",
+    "Summarize into a decision and check it."
+   ],
+   [
+    "them",
+    "Yes, that works."
+   ],
+   [
+    "you",
+    "*Good*. ‧‧‧ June it is. ‧‧‧ I'll send the *summary* in an hour. ↘",
+    "Decision, owner, time. Then end on time."
+   ]
+  ]
  }
 ];
 const KEY='sla-highstakes-v1';
@@ -1614,9 +1899,12 @@ function lastRating(i){ const r=state.ratings[i]; return r&&r.length?r[r.length-
 
 /* ---------------- VIEWS ---------------- */
 /* Home is a learning path: one unit for the lessons, then one unit per scenario category. */
-const UNIT_COLORS=['green','blue','purple','orange','teal','pink'];
-const CATS=[...new Set(SCENARIOS.map(x=>x.cat))];
-const catColor=cat=>UNIT_COLORS[(CATS.indexOf(cat)+1)%UNIT_COLORS.length];
+/* Units in climbing order. Foundation holds the lessons without a unit; other units gather lessons with that
+   "unit" and scenarios with that "cat". Each unit is a camp on the mountain. */
+const UNIT_DEF=[{name:'Foundation',color:'green'},{name:'Clarity',color:'slate'},{name:'First impressions',color:'blue'},{name:'Presenting and persuading',color:'purple'},
+  {name:'Under pressure',color:'orange'},{name:'Negotiation',color:'teal'},{name:'Video calls',color:'indigo'},{name:'People and hard conversations',color:'pink'}];
+const CATS=UNIT_DEF.map(u=>u.name).filter(n=>SCENARIOS.some(s=>s.cat===n));
+const catColor=cat=>(UNIT_DEF.find(u=>u.name===cat)||UNIT_DEF[0]).color;
 const XS=[0,-50,-76,-50,0,50,76,50];
 const ICO={
   star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2-4.6-4.4 6.3-.9z"/></svg>',
@@ -1642,31 +1930,31 @@ function streak(){ const set=new Set(state.days||[]), d=new Date(); if(!set.has(
 
 let pathOpen=null;
 function units(){
-  return [{name:'Foundation',sub:`${LESSONS.length} lessons · the core skills`,color:'green',list:'lessons',
-      items:LESSONS.map((l,i)=>({kind:'lesson',i,title:l.title,sub:l.rule,done:!!state.done[i]}))},
-    ...CATS.map(c=>{ const items=SCENARIOS.map((s,i)=>({kind:'scenario',i,title:s.title,sub:s.goal,done:!!state.scDone[i],cat:s.cat})).filter(x=>x.cat===c);
-      return {name:c,sub:`${items.length} scenario${items.length>1?'s':''} to practice`,color:catColor(c),list:'scenarios',items}; })];
+  return UNIT_DEF.map(u=>{ const ls=LESSONS.map((l,i)=>({kind:'lesson',i,title:l.title,sub:l.rule,done:!!state.done[i],u:l.unit||'Foundation'})).filter(x=>x.u===u.name);
+    const ss=SCENARIOS.map((s,i)=>({kind:'scenario',i,title:s.title,sub:s.goal,done:!!state.scDone[i],u:s.cat})).filter(x=>x.u===u.name);
+    const parts=[ls.length&&`${ls.length} lesson${ls.length>1?'s':''}`,ss.length&&`${ss.length} scenario${ss.length>1?'s':''}`].filter(Boolean);
+    return {name:u.name,color:u.color,list:ls.length?'lessons':'scenarios',sub:parts.join(' · '),items:[...ls,...ss]}; }).filter(u=>u.items.length);
 }
 /* The home path is a climb: base camp at the bottom, the summit at the top.
    Each unit is a camp at a higher altitude, and a rank is earned at each one. */
-const RANKS=['Newcomer','Composed','Credible','Persuasive','Unshakable','Commanding','Trusted Leader'];
-const CAMPS=['Base Camp','Camp I','Camp II','Camp III','Camp IV','High Camp'];
-const ALTS=[800,1600,2400,3200,3900,4500,5000];
+const RANKS=['Newcomer','Composed','Clear','Credible','Persuasive','Unshakable','Commanding','Present','Trusted Leader'];
+const CAMPS=['Base Camp','Camp I','Camp II','Camp III','Camp IV','Camp V','Camp VI','High Camp'];
+const ALTS=[800,1300,1900,2500,3100,3600,4100,4550,5000];
 const fmtM=m=>`${Math.round(m/10)*10}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')+' m';
 function climb(us){ const r0=us.findIndex(u=>!u.items.every(x=>x.done)), r=r0<0?us.length:r0;
   if(r>=us.length) return {r,alt:ALTS[ALTS.length-1]};
   const u=us[r], frac=u.items.filter(x=>x.done).length/u.items.length;
   return {r,alt:ALTS[r]+frac*(ALTS[r+1]-ALTS[r])}; }
-function profileSVG(alt){ const W=260,H=92, X=k=>14+k*(222/6), Y=a=>H-8-(a/5000)*(H-18);
-  const camps=ALTS.map((a,k)=>[X(k),Y(a)]), seg=ALTS.findIndex(a=>a>alt), k=seg<0?6:Math.max(1,seg),
-    t=seg<0?1:(alt-ALTS[k-1])/(ALTS[k]-ALTS[k-1]), me=seg<0?camps[6]:[camps[k-1][0]+(camps[k][0]-camps[k-1][0])*t, camps[k-1][1]+(camps[k][1]-camps[k-1][1])*t];
+function profileSVG(alt){ const W=260,H=92, X=k=>14+k*(222/(ALTS.length-1)), Y=a=>H-8-(a/5000)*(H-18);
+  const camps=ALTS.map((a,k)=>[X(k),Y(a)]), seg=ALTS.findIndex(a=>a>alt), k=seg<0?ALTS.length-1:Math.max(1,seg),
+    t=seg<0?1:(alt-ALTS[k-1])/(ALTS[k]-ALTS[k-1]), me=seg<0?camps[ALTS.length-1]:[camps[k-1][0]+(camps[k][0]-camps[k-1][0])*t, camps[k-1][1]+(camps[k][1]-camps[k-1][1])*t];
   const line=pts=>pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
-  const done=[...camps.slice(0,seg<0?7:k),me];
+  const done=[...camps.slice(0,seg<0?ALTS.length:k),me];
   return `<svg class="j-prof" viewBox="0 0 ${W} ${H}" aria-hidden="true">
     <path class="j-ridge" d="M0 ${H} L10 ${H-14} L34 ${H-22} L52 ${H-18} L78 ${H-36} L98 ${H-32} L124 ${H-52} L146 ${H-47} L170 ${H-66} L188 ${H-62} L212 ${H-80} L236 ${H-84} L250 ${H-70} L${W} ${H-58} L${W} ${H}Z"/>
     <path class="j-todo" d="${line(camps)}"/><path class="j-done" d="${line(done)}"/>
     ${camps.map((p,i)=>`<circle class="j-camp${ALTS[i]<=alt?' on':''}" cx="${p[0]}" cy="${p[1]}" r="3"/>`).join('')}
-    <path class="j-flag" d="M${camps[6][0]} ${camps[6][1]}v-14h9l-2.5 3 2.5 3h-9"/>
+    <path class="j-flag" d="M${camps[ALTS.length-1][0]} ${camps[ALTS.length-1][1]}v-14h9l-2.5 3 2.5 3h-9"/>
     <circle class="j-me-ring" cx="${me[0]}" cy="${me[1]}" r="8"/><circle class="j-me" cx="${me[0]}" cy="${me[1]}" r="4.5"/></svg>`; }
 function viewJourney(us){
   const all=us.flatMap(u=>u.items), c=climb(us), next=us[c.r], left=next?next.items.filter(x=>!x.done).length:0;
@@ -1684,11 +1972,11 @@ function viewHome(){
       return `<div class="node-wrap${isNow?' is-now':''}" style="--x:${x}px">${isNow?`<span class="me" aria-hidden="true">${ICO.flag}</span>`:''}
         <button class="node ${cls}${half?' half':''}${open?' open':''}" type="button" data-act="node" data-k="${key}" data-s="${cls}" aria-expanded="${open}" aria-label="${esc(it.title)}${it.done?', done':isNow?', you are here':''}">${it.done?ICO.check:it.kind==='lesson'?LICO[it.i]:ICO.chat}</button></div>
         ${open?`<div class="pop${cls==='todo'?' todo':''}" style="--x:${x}px"><div class="pop-t">${esc(it.title)}</div><div class="pop-s">${esc(it.sub)}</div>
-          <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Practice again'):'Start'}</button></div>`:''}`; }).reverse().join('');
+          <button class="pop-btn" type="button" ${it.kind==='lesson'?'data-act="ls-start"':'data-act="sc-start"'} data-i="${it.i}">${it.done?(it.kind==='lesson'?'Review':'Round 3 · your words'):'Start'}</button></div>`:''}`; }).reverse().join('');
     return `<section class="unit-sec u-${u.color}" data-k="${k}"><div class="path"><svg class="trail" aria-hidden="true"></svg>${nodes}</div>${sign}</section>`; }).reverse().join('');
   return `<div class="home-grid">${viewJourney(us)}<div class="home-main">
     <div class="scene" id="scene"><svg class="scene-bg" aria-hidden="true"></svg>
-      <div class="summit${now?'':' reached'}"><div class="summit-k">Summit · ${fmtM(ALTS[6])}</div><div class="summit-t">${RANKS[RANKS.length-1]}</div>${now?'':'<div class="summit-s">You made it.</div>'}</div>
+      <div class="summit${now?'':' reached'}"><div class="summit-k">Summit · ${fmtM(ALTS[ALTS.length-1])}</div><div class="summit-t">${RANKS[RANKS.length-1]}</div>${now?'':'<div class="summit-s">You made it.</div>'}</div>
       ${secs}<p class="path-start">Start here ↑</p></div>
     ${now?`<div class="cont-bar"><button class="solid-btn" type="button" data-act="nextup">Continue · ${esc(now.title)}</button></div>`:''}
   <details class="fold principles"><summary>The five principles behind everything</summary><ol class="how">
@@ -1708,7 +1996,7 @@ function drawTrails(){ document.querySelectorAll('.path').forEach(p=>{ const svg
 
 /* The mountain behind the path, drawn to fit the page: sky, distant ranges, the massif with an altitude
    zone per unit (foothills → forest → alpine meadow → rock → snow line → snowfield), trees, rocks, snow, clouds. */
-const ZONES={ light:['#AFC6A0','#7FA588','#B9B893','#A99D90','#C4CCD4','#E8EDF1'], dark:['#243A2E','#1E3528','#34352A','#312D2A','#2B323B','#3A424C'] };
+const ZONES={ light:['#AFC6A0','#9BBC92','#7FA588','#B9B893','#A99D90','#9F9A94','#C4CCD4','#E8EDF1'], dark:['#243A2E','#213A2C','#1E3528','#34352A','#312D2A','#2D2C2C','#2B323B','#3A424C'] };
 function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 function isDark(){ const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim(); return parseInt(bg.slice(1,3),16)<80; }
 function shade(hex,f){ const n=parseInt(hex.slice(1),16), c=[n>>16,n>>8&255,n&255].map(v=>Math.max(0,Math.min(255,Math.round(v*f)))); return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''); }
@@ -1718,7 +2006,7 @@ function drawScene(){
   const secs=[...sc.querySelectorAll('.unit-sec')].map(s=>({k:+s.dataset.k, a:s.getBoundingClientRect().top-top, b:s.getBoundingClientRect().bottom-top}));
   const maxHW=Math.min(W*0.42, 250), base=H-260;
   const hw=(y,ph)=>{ const t=y-apex; let w=Math.min(maxHW, 16+t*0.75); if(y>base) w+= (y-base)*1.2; return Math.max(8, w+Math.sin(y/83+ph)*9+Math.sin(y/31+ph*2)*4); };
-  const zoneAt=y=>{ const s=secs.find(s=>y>=s.a&&y<=s.b); return s?s.k:(y<apex+200?6:0); };
+  const zoneAt=y=>{ const s=secs.find(s=>y>=s.a&&y<=s.b); return s?s.k:(y<apex+200?UNIT_DEF.length-1:0); };
   let o=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="${H}" gradientUnits="userSpaceOnUse">${dark
       ?'<stop offset="0" stop-color="#060A13"/><stop offset=".55" stop-color="#0E1522"/><stop offset="1" stop-color="#1E1A1C"/>'
       :'<stop offset="0" stop-color="#C9D9E6"/><stop offset=".5" stop-color="#E4E6E2"/><stop offset="1" stop-color="#F3E3CB"/>'}</linearGradient>
@@ -1742,9 +2030,9 @@ function drawScene(){
   const spot=(y,pad)=>{ const w=hw(y,1)-pad; if(w<130) return null; const side=R()<.5?-1:1; return cx+side*(120+R()*(w-120)); };
   secs.forEach(s=>{ const n=Math.round((s.b-s.a)/38);
     for(let i=0;i<n;i++){ const y=s.a+60+R()*(s.b-s.a-120), x=spot(y,14); if(x==null) continue; const z=s.k, c=shade(Z[z],dark?.7:.72), h=12+R()*16;
-      if(z<=1&&R()<(z?0.95:.55)) o+=`<path d="M${x.toFixed(1)} ${(y-h).toFixed(1)}l${(h*.42).toFixed(1)} ${h.toFixed(1)}h${(-h*.84).toFixed(1)}Z" fill="${c}"/><path d="M${x.toFixed(1)} ${(y-h*1.5).toFixed(1)}l${(h*.3).toFixed(1)} ${(h*.75).toFixed(1)}h${(-h*.6).toFixed(1)}Z" fill="${c}"/>`;
-      else if(z===2||z===3) o+=`<path d="M${(x-h*.5).toFixed(1)} ${y.toFixed(1)}l${(h*.2).toFixed(1)} ${(-h*.5).toFixed(1)}l${(h*.45).toFixed(1)} ${(-h*.15).toFixed(1)}l${(h*.35).toFixed(1)} ${(h*.65).toFixed(1)}Z" fill="${c}" opacity=".8"/>`;
-      else if(z>=4) o+=`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(h*1.3).toFixed(1)}" ry="${(h*.35).toFixed(1)}" fill="${dark?'#9AA3AE':'#fff'}" opacity="${dark?.3:.75}"/>`; } });
+      if(z<=2&&R()<(z?0.95:.55)) o+=`<path d="M${x.toFixed(1)} ${(y-h).toFixed(1)}l${(h*.42).toFixed(1)} ${h.toFixed(1)}h${(-h*.84).toFixed(1)}Z" fill="${c}"/><path d="M${x.toFixed(1)} ${(y-h*1.5).toFixed(1)}l${(h*.3).toFixed(1)} ${(h*.75).toFixed(1)}h${(-h*.6).toFixed(1)}Z" fill="${c}"/>`;
+      else if(z>=3&&z<=5) o+=`<path d="M${(x-h*.5).toFixed(1)} ${y.toFixed(1)}l${(h*.2).toFixed(1)} ${(-h*.5).toFixed(1)}l${(h*.45).toFixed(1)} ${(-h*.15).toFixed(1)}l${(h*.35).toFixed(1)} ${(h*.65).toFixed(1)}Z" fill="${c}" opacity=".8"/>`;
+      else if(z>=6) o+=`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(h*1.3).toFixed(1)}" ry="${(h*.35).toFixed(1)}" fill="${dark?'#9AA3AE':'#fff'}" opacity="${dark?.3:.75}"/>`; } });
   // clouds drifting across the slopes
   for(let i=0;i<Math.max(4,Math.round(H/700));i++){ const y=apex+120+R()*(H-apex-400), x=R()<.5?R()*W*0.3:W*0.7+R()*W*0.3, s=0.8+R()*0.9;
     o+=`<g opacity="${dark?.05:.55}" fill="#fff"><ellipse cx="${x}" cy="${y}" rx="${46*s}" ry="${13*s}"/><ellipse cx="${x-22*s}" cy="${y-6*s}" rx="${24*s}" ry="${12*s}"/><ellipse cx="${x+16*s}" cy="${y-10*s}" rx="${22*s}" ry="${14*s}"/></g>`; }
@@ -1758,12 +2046,10 @@ function drawScene(){
 }
 
 function viewLessons(){
-  return `<h1 class="page-title">Lessons</h1>
-  <div class="list u-green">${LESSONS.map((l,i)=>{ const r=lastRating(i);
-    return `<button class="row" type="button" data-act="ls-start" data-i="${i}">
+  return `<h1 class="page-title">Lessons</h1>${UNIT_DEF.filter(u=>LESSONS.some(l=>(l.unit||'Foundation')===u.name)).map(u=>`<h2 class="sec-h">${u.name}</h2><div class="list u-${u.color}">${LESSONS.map((l,i)=>(l.unit||'Foundation')!==u.name?'':`<button class="row" type="button" data-act="ls-start" data-i="${i}">
       <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':i+1}</span>
       <span class="row-body"><span class="row-title">${l.title}</span></span>
-      <span class="chev" aria-hidden="true">›</span></button>`; }).join('')}</div>`;
+      <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>`).join('')}`;
 }
 function renderScript(arr){ return arr.map(([t,type])=>{ t=personal(t);
   if(type==='pause') return '<span class="pause">‧‧‧</span>'; if(type==='pause-long') return '<span class="pause">‧‧‧‧‧</span>';
@@ -1976,18 +2262,44 @@ function viewWelcome(){ const n=state.intro;
    and "what do you do?" choices. Indices count words split on spaces; a pause answer n = after word n.
    JSON so tools/make_voice.py can read it (coach clips c-lesson{i}-q{k} and c-lesson{i}-q{k}-why). */
 const LESSON_QUIZ = {
- "0": [{"type":"choice","prompt":"A hard question lands. What do you do first?","options":["Answer quickly to show confidence","Say \"Great question\" to buy time","Breathe out, pause, then answer"],"answer":2,"why":"A slow exhale steadies your voice, and the pause looks thoughtful, not lost."}],
- "1": [{"type":"pause","prompt":"Where does the pause go?","text":"The return is twelve percent.","answer":2,"why":"Slow down just before the number. It tells them: this matters."},
-       {"type":"stress","prompt":"Which word must stay strongest?","text":"Today, one decision.","answer":2,"why":"Keep the volume up to the last word. It's usually the important one."}],
- "2": [{"type":"pause","prompt":"Where do you stay silent?","text":"The price is fifty thousand.","answer":4,"why":"After a number, stop and wait. Whoever talks first usually gives something away."},
-       {"type":"choice","prompt":"They ask a hard question. Your best first two seconds are…","options":["Silence, while you think","\"Um, well, so…\"","\"That's a really great question!\""],"answer":0,"why":"Two seconds of silence looks thoughtful. Fillers look lost."}],
- "3": [{"type":"weak","prompt":"Tap the weak words","text":"I just wanted to maybe suggest that we could sort of try it.","answer":[1,4,9,10],"why":"Remove them and the same idea sounds twice as strong."},
-       {"type":"choice","prompt":"How should your voice end a proposal?","options":["Rising, to sound open","Falling, like setting something down","Fading, to sound polite"],"answer":1,"why":"A rising end turns a statement into a question."}],
- "4": [{"type":"choice","prompt":"While you speak, where are your hands?","options":["In your lap, out of sight","Holding a pen, to stay busy","Visible and still on the table"],"answer":2,"why":"Visible, still hands say: I belong here."}],
- "5": [{"type":"choice","prompt":"Across a table, what comes right after your name?","options":["One line: who you help and what they get","Your job title and company","A quick joke to break the ice"],"answer":0,"why":"A title gets forgotten. A clear line gets repeated."}],
- "6": [{"type":"weak","prompt":"Tap the weak words","text":"So basically I think maybe the plan could possibly work.","answer":[0,1,2,3,4,8],"why":"Say it straight: the plan will work."},
-       {"type":"choice","prompt":"\"Your numbers look optimistic.\" Your best reply?","options":["\"No, they're realistic. We checked carefully.\"","\"Fair question. Which number concerns you most?\"","\"Trust me, they're conservative.\""],"answer":1,"why":"A calm question sounds more secure than any defense."}],
- "7": [{"type":"choice","prompt":"The meeting is ending. Your last sentence is…","options":["\"So… yeah, that's all from me.\"","\"Sorry for taking so long.\"","A one-line summary and the next step"],"answer":2,"why":"People remember the end. Make it the point and the next step."}]
+ "0": [{"type": "choice", "prompt": "A hard question lands. What do you do first?", "options": ["Answer quickly to show confidence", "Say \"Great question\" to buy time", "Breathe out, pause, then answer"], "answer": 2, "why": "A slow exhale steadies your voice, and the pause looks thoughtful, not lost."}],
+ "1": [{"type": "pause", "prompt": "Where does the pause go?", "text": "The return is twelve percent.", "answer": 2, "why": "Slow down just before the number. It tells them: this matters."}, {"type": "stress", "prompt": "Which word must stay strongest?", "text": "Today, one decision.", "answer": 2, "why": "Keep the volume up to the last word. It's usually the important one."}],
+ "2": [{"type": "pause", "prompt": "Where do you stay silent?", "text": "The price is fifty thousand.", "answer": 4, "why": "After a number, stop and wait. Whoever talks first usually gives something away."}, {"type": "choice", "prompt": "They ask a hard question. Your best first two seconds are…", "options": ["Silence, while you think", "\"Um, well, so…\"", "\"That's a really great question!\""], "answer": 0, "why": "Two seconds of silence looks thoughtful. Fillers look lost."}],
+ "3": [{"type": "weak", "prompt": "Tap the weak words", "text": "I just wanted to maybe suggest that we could sort of try it.", "answer": [1, 4, 9, 10], "why": "Remove them and the same idea sounds twice as strong."}, {"type": "choice", "prompt": "How should your voice end a proposal?", "options": ["Rising, to sound open", "Falling, like setting something down", "Fading, to sound polite"], "answer": 1, "why": "A rising end turns a statement into a question."}],
+ "4": [{"type": "choice", "prompt": "While you speak, where are your hands?", "options": ["In your lap, out of sight", "Holding a pen, to stay busy", "Visible and still on the table"], "answer": 2, "why": "Visible, still hands say: I belong here."}],
+ "5": [{"type": "choice", "prompt": "Across a table, what comes right after your name?", "options": ["One line: who you help and what they get", "Your job title and company", "A quick joke to break the ice"], "answer": 0, "why": "A title gets forgotten. A clear line gets repeated."}],
+ "6": [{"type": "weak", "prompt": "Tap the weak words", "text": "So basically I think maybe the plan could possibly work.", "answer": [0, 1, 2, 3, 4, 8], "why": "Say it straight: the plan will work."}, {"type": "choice", "prompt": "\"Your numbers look optimistic.\" Your best reply?", "options": ["\"No, they're realistic. We checked carefully.\"", "\"Fair question. Which number concerns you most?\"", "\"Trust me, they're conservative.\""], "answer": 1, "why": "A calm question sounds more secure than any defense."}],
+ "7": [{"type": "choice", "prompt": "The meeting is ending. Your last sentence is…", "options": ["\"So… yeah, that's all from me.\"", "\"Sorry for taking so long.\"", "A one-line summary and the next step"], "answer": 2, "why": "People remember the end. Make it the point and the next step."}],
+ "8": [{"type": "weak", "prompt": "Tap the words whose endings people swallow", "text": "We checked the contract last week.", "answer": [1, 3, 4], "why": "Land the t and the ed. Swallowed endings sound unsure."}],
+ "9": [{"type": "stress", "prompt": "Which word carries the meaning?", "text": "The deadline is Friday, not Thursday.", "answer": 3, "why": "The new information carries the stress. Friday is the message."}, {"type": "choice", "prompt": "Your sentence sounds flat. The fix?", "options": ["Stress every important word", "Stress one word per phrase", "Speak louder overall"], "answer": 1, "why": "One stressed word per phrase. Stress everything and nothing stands out."}],
+ "10": [{"type": "choice", "prompt": "Your voice sounds thin in a big room. The fix?", "options": ["Push harder from your throat", "Breathe low and aim at the back wall", "Speak faster to keep the energy"], "answer": 1, "why": "Power comes from the breath. Pushing from the throat raises your pitch."}],
+ "11": [{"type": "choice", "prompt": "On a call, where do you look for your key point?", "options": ["At their face on screen", "At your notes", "Into the camera lens"], "answer": 2, "why": "The lens is the only eye contact a screen allows."}],
+ "12": [{"type": "choice", "prompt": "Where should the light be?", "options": ["Behind you, from the window", "In front of you, facing you", "Only above you"], "answer": 1, "why": "Light in front shows your face. Light behind turns you into a shadow."}],
+ "13": [{"type": "pause", "prompt": "Where do you wait for the answer?", "text": "Maria, how does this look from finance?", "answer": 6, "why": "Ask, then wait the full pause. Two seconds feels long to you, normal to them."}, {"type": "choice", "prompt": "Nobody answers your question on a call. Next?", "options": ["Ask again, louder", "Add more context to fill the silence", "Name one person and ask them"], "answer": 2, "why": "An open question to a silent grid gets silence. A name gets an answer."}]
+};
+/* Round 3, "Your words": per scenario, questions without a script and the points to hit (self-checked).
+   "coach": true = an instruction read by the coach; otherwise the other person asks it. Clips r3-{scenario}-{k}. */
+const ROUND3 = {
+ "0": [{"q": "Some people tell me your market is too risky. Convince me.", "points": ["Agree first", "Name the risks", "Offer proof"]}, {"q": "Why should I meet you again?", "points": ["One clear reason", "A specific next step", "A date"]}],
+ "1": [{"q": "So, how's business been for you lately?", "points": ["Short answer", "One detail", "A question back"]}, {"q": "Have you been to this area before?", "points": ["Brief answer", "Turn it to them", "Pick up their detail"]}],
+ "2": [{"q": "What made you choose this field?", "points": ["One real reason", "One sentence", "Stop cleanly"]}, {"q": "What's one lesson you'd give our audience?", "points": ["The lesson first", "A short example", "End on the message"]}],
+ "3": [{"q": "Open your talk. You have ten seconds before people look at their phones.", "points": ["Idea first", "A pause", "Your name last"], "coach": true}, {"q": "Now close your talk in one breath.", "points": ["One-line summary", "The line to remember", "Invite questions"], "coach": true}],
+ "4": [{"q": "Why should we pay for outside help at all?", "points": ["Agree with what's true", "One short story", "The point, once, at the end"]}, {"q": "Give me an example of a mistake you prevented.", "points": ["Set the scene fast", "The turning point", "The result, with a number"]}],
+ "5": [{"q": "These numbers look too good to be true.", "points": ["Ask which number", "Precise data", "Agree with the fair part"]}, {"q": "Why decide today and not next month?", "points": ["The cost of waiting", "One clear decision", "A safety check"]}],
+ "6": [{"q": "What's your exact churn rate this quarter?", "points": ["No guessing", "A deadline", "Why they deserve the exact number"]}, {"q": "What would make this project fail?", "points": ["Name the risks", "Your plan for each", "Stop cleanly"]}],
+ "7": [{"q": "The meeting is moving on without your point. Step in.", "points": ["A short entry line", "Connect to what was said", "The new fact"], "coach": true}, {"q": "We've always done it this way. Why change?", "points": ["Respect what worked", "What changed", "A proposal"]}],
+ "8": [{"q": "Your competitor is twenty percent cheaper. Why should I pay more?", "points": ["Agree with the fact", "Ask what they compare", "One line on value"]}, {"q": "Can you just give me a small discount?", "points": ["A calm no", "Trade scope instead", "Keep the door open"]}],
+ "9": [{"q": "That's my final offer. Take it or leave it.", "points": ["Pause first", "Ask how they got there", "Your number, calmly"]}, {"q": "Just meet me in the middle.", "points": ["Don't split it", "Trade for something", "A gentle deadline"]}],
+ "10": [{"q": "Give me a number. What would it take?", "points": ["Don't name it first", "Ask for their thinking", "Ask for it in writing"]}, {"q": "Why wouldn't you sell?", "points": ["What you've built", "What matters to you", "The next step"]}],
+ "11": [{"q": "It looks fine, I suppose.", "points": ["An open question", "Make doubts normal", "Thank the honesty"]}, {"q": "I'll need to talk to my partner first.", "points": ["Welcome it", "Offer help for both", "Set a time together"]}],
+ "12": [{"q": "Come on, just this once. For our friendship?", "points": ["Acknowledge the relationship", "A clear no", "An offer, not a retreat"]}, {"q": "Can you at least introduce them to one client?", "points": ["Your principle", "What you can do", "Warmth at the end"]}],
+ "13": [{"q": "A team member's presentation had three errors the client noticed. Open the conversation.", "points": ["Name the topic", "The facts and impact", "Ask what happened"], "coach": true}, {"q": "Everyone makes mistakes, don't they?", "points": ["Agree it happens", "The real issue", "A clear standard"]}],
+ "14": [{"q": "Tell your client the budget will be fifteen percent over.", "points": ["The news in two sentences", "Acknowledge the impact", "What you've already done"], "coach": true}, {"q": "Why didn't you see this coming?", "points": ["No excuses", "What you learned", "How you'll keep them updated"]}],
+ "15": [{"q": "Two colleagues argue about who owns the project. Step in.", "points": ["Pause the room", "The shared goal", "A question they can answer"], "coach": true}, {"q": "This isn't your call to make.", "points": ["Stay calm", "Agree on the process", "Move to a decision"]}],
+ "16": [{"q": "Sorry, what did you say the price was?", "points": ["Slower, not louder", "The number, finished", "Confirm it"]}, {"q": "Give your three key results in one breath.", "points": ["Say three first", "Land every ending", "Stop cleanly"], "coach": true}],
+ "17": [{"q": "I have one minute. What's the status?", "points": ["How many points", "The headline first", "The decision you need"]}, {"q": "Why should we choose your option?", "points": ["Answer first", "Two short reasons", "Land the last word"]}],
+ "18": [{"q": "Your audio dropped during your price. Take it back.", "points": ["No apology", "Say it again, slower", "Look at the lens"], "coach": true}, {"q": "Share your screen and walk them through one chart.", "points": ["Guide their eyes", "One sentence at a time", "The takeaway"], "coach": true}],
+ "19": [{"q": "Nobody answers your question on the call. What now?", "points": ["Wait the full pause", "Name a person", "One clear question"], "coach": true}, {"q": "Close the call with a decision.", "points": ["Summarize", "Check everyone can live with it", "Owner and time"], "coach": true}]
 };
 function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '):[];
   const st=n=>{ if(!done) return q.type==='weak'&&c.sel&&c.sel.has(n)?'sel':'';
@@ -2023,6 +2335,68 @@ function breatheStart(){ let s=0; const tick=()=>{ const el=$('brc'); if(!el){ c
     $('brCount').textContent=inP?4-(s%10):10-(s%10); $('brRound').textContent=`Breath ${Math.floor(s/10)+1} of 3`; s++; };
   tick(); timerId=setInterval(tick,1000); }
 
+/* ---------------- ROUND 3 · MEETING PREP · BREATHE ----------------
+   More session kinds on the lesson card engine: lsess.kind is 'lesson', 'r3', 'prep' or 'breathe'.
+   They run on route "session" (full screen). */
+function startKind(kind,cards,extra){ const from=['home','scenarios','prep','lessons'].includes(state.route.name)?state.route.name:'home';
+  endSession(); endLesson(); lsess=Object.assign({kind,n:0,cards,from,t0:Date.now()},extra); state.route={name:'session'}; save(); enterCard(); }
+function startR3(i){ startKind('r3',(ROUND3[i]||[]).map((q,k)=>({type:'r3',q:q.q,coach:!!q.coach,points:q.points,id:`r3-${i}-${k}`,clip:`r3-${i}-${k}`,k,got:new Set()})).concat({type:'done'}),{i}); }
+function startBreathe(){ startKind('breathe',[{type:'breathe'},{type:'done'}],{}); }
+async function r3Listen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
+  const clip=useFiles()&&AUDIO[c.clip]; if(clip) await playClip(clip,[],t); else await say(c.q,t,{voice:c.coach?themVoice(pickVoice()):undefined});
+  if(t===tok&&lsess){ c.step='ready'; render(); } }
+
+/* Meeting prep: your own key lines for a real meeting. You mark stress and pauses; practice uses the
+   device voice as the model, or one of your own takes ("Use this take as my model"). */
+let pedit=null;
+const preps=()=>state.preps||(state.preps=[]);
+function prepMarkup(ln){ const n=ln.words.length;
+  return ln.words.map((w,k)=>(ln.stress.includes(k)?`*${w}*`:w)+(ln.pauses.includes(k)&&k<n-1?' ‧‧‧':'')).join(' ')+(/[.!]$/.test(ln.words[n-1]||'')?' ↘':''); }
+function prepLines(raw,old){ return raw.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,6).map(t=>(old||[]).find(o=>o.words.join(' ')===t)||{words:t.split(/\s+/),stress:[],pauses:[]}); }
+function startPrep(id){ const m=preps().find(x=>x.id===id); if(!m) return;
+  startKind('prep',m.lines.map((ln,k)=>({type:'say',text:prepMarkup(ln),id:`pp-${id}-l${k}`,clip:null,label:`${m.who||'Meeting'} · line ${k+1} of ${m.lines.length}`,title:'Say this line'})).concat({type:'done'}),{id}); }
+function viewPrep(){ const list=preps();
+  return `<h1 class="page-title">Meeting prep</h1>
+  ${list.length?'':`<div class="card prep-empty"><p class="ls-rule" style="font-size:1.2rem">Rehearse the lines that must land in your next real meeting.</p></div>`}
+  ${list.map(m=>`<div class="card prep-card"><p class="eyebrow">${esc(m.who||'Meeting')}</p><div class="j-rank" style="font-size:1.25rem">${esc(m.goal||'Your key lines')}</div>
+    <p class="j-next">${m.lines.length} line${m.lines.length>1?'s':''} · rehearsed ${m.reps||0}×</p>
+    <div class="prep-btns"><button class="solid-btn" type="button" data-act="pp-go" data-id="${m.id}">Rehearse</button><button class="ghost-btn" type="button" data-act="pp-edit" data-id="${m.id}">Edit</button><button class="small-btn quiet" type="button" data-act="pp-del" data-id="${m.id}">Delete</button></div></div>`).join('')}
+  <button class="${list.length?'ghost-btn':'solid-btn'} wide" type="button" data-act="pp-new">New meeting</button>
+  <button class="link-btn" type="button" data-act="pp-breathe">Breathe first</button>`; }
+function viewPrepEdit(){ const e=pedit, pct=e.step==='form'?10:Math.round(20+80*(e.k+1)/e.lines.length);
+  const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="pp-cancel" aria-label="Cancel">${ICO.x}</button><div class="pbar"><i style="width:${pct}%"></i></div></div>`;
+  const foot=inner=>`<div class="fx-foot"><div class="fx-foot-in">${inner}</div></div>`;
+  if(e.step==='form') return `<div class="u-green">${top}<p class="eyebrow">Meeting prep</p><h1 class="fx-title">What's the meeting?</h1>
+    <div class="card builder"><label>Who are you meeting?<input id="pWho" value="${esc(e.who)}" placeholder="The board"></label>
+    <label>Your goal<input id="pGoal" value="${esc(e.goal)}" placeholder="Approve the Q3 budget"></label>
+    <label>Your key lines, one per row<textarea id="pLines" style="min-height:150px" placeholder="We need one decision today.">${esc(e.raw)}</textarea></label></div></div>
+    ${foot(`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="pp-mark">Next</button></div>`)}`;
+  const ln=e.lines[e.k], n=ln.words.length;
+  return `<div class="u-green">${top}<p class="eyebrow">Line ${e.k+1} of ${e.lines.length}</p><h1 class="fx-title">Make it land</h1>
+    <p class="hint">Tap a word to stress it. Tap the dots to pause.</p>
+    <p class="qtext">${ln.words.map((w,k)=>`<button class="qchip${ln.stress.includes(k)?' stress-on':''}" type="button" data-act="pp-w" data-n="${k}">${esc(w)}</button>${k<n-1?` <button class="qgap${ln.pauses.includes(k)?' right':''}" type="button" data-act="pp-g" data-n="${k}" aria-label="Pause after ${esc(w)}">‧‧‧</button>`:''}`).join(' ')}</p>
+    <div class="say" style="margin-top:18px"><div class="say-body"><div class="say-text" style="font-size:1.2rem">${parseLine(prepMarkup(ln)).map((s,si)=>segHTML(s,'P',si)).join(' ')}</div></div></div></div>
+    ${foot(`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="pp-back">Back</button><button class="solid-btn" type="button" data-act="pp-next">${e.k<e.lines.length-1?'Next line':'Save'}</button></div>`)}`; }
+function prepAct(a,btn){ const id=btn&&btn.dataset.id;
+  if(a==='pp-new'){ pedit={id:null,who:'',goal:'',raw:'',lines:[],step:'form',k:0}; state.route={name:'prepedit'}; render(); window.scrollTo(0,0); return; }
+  if(a==='pp-edit'){ const m=preps().find(x=>x.id===id); if(!m) return;
+    pedit={id,who:m.who,goal:m.goal,raw:m.lines.map(l=>l.words.join(' ')).join('\n'),lines:m.lines.map(l=>({words:[...l.words],stress:[...l.stress],pauses:[...l.pauses]})),step:'form',k:0};
+    state.route={name:'prepedit'}; render(); window.scrollTo(0,0); return; }
+  if(a==='pp-del'){ if(!confirm('Delete this meeting?')) return; state.preps=preps().filter(x=>x.id!==id); save(); return render(); }
+  if(a==='pp-go') return startPrep(id);
+  if(a==='pp-breathe') return startBreathe();
+  if(a==='pp-cancel'){ pedit=null; return go('prep'); }
+  const e=pedit; if(!e) return;
+  if(a==='pp-mark'){ e.who=$('pWho').value.trim(); e.goal=$('pGoal').value.trim(); e.raw=$('pLines').value; e.lines=prepLines(e.raw,e.lines);
+    if(!e.lines.length){ $('pLines').classList.add('need'); $('pLines').focus(); return; } e.step='mark'; e.k=0; return render(); }
+  const ln=e.lines[e.k], n=+(btn&&btn.dataset.n), tog=(arr,v)=>{ const i=arr.indexOf(v); i<0?arr.push(v):arr.splice(i,1); };
+  if(a==='pp-w'){ tog(ln.stress,n); return render(); }
+  if(a==='pp-g'){ tog(ln.pauses,n); return render(); }
+  if(a==='pp-back'){ if(e.k>0) e.k--; else e.step='form'; return render(); }
+  if(a==='pp-next'){ if(e.k<e.lines.length-1){ e.k++; return render(); }
+    const m={id:e.id||('m'+Date.now().toString(36)),who:e.who,goal:e.goal,lines:e.lines,reps:(preps().find(x=>x.id===e.id)||{}).reps||0,at:Date.now()};
+    state.preps=[m,...preps().filter(x=>x.id!==m.id)]; save(); pedit=null; return go('prep'); } }
+
 /* ---------------- LESSON SESSIONS ----------------
    A lesson runs as short cards, one idea per screen (Duolingo style):
    idea → one quiz per example ("Which is stronger?") → say it → drill → [builder] → [timed] → done.
@@ -2035,7 +2409,13 @@ const LICO=[
  '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/>',
  '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/>',
  '<path d="M5 8h14M5 12h9M5 16h5"/>',
- '<path d="M8 4H5v16h3M16 4h3v16h-3"/>'].map(p=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`);
+ '<path d="M8 4H5v16h3M16 4h3v16h-3"/>',
+ '<path d="M4 12h9M13 8l4 4-4 4"/><circle cx="20" cy="12" r="1.5"/>',
+ '<path d="M5 18h14"/><path d="M8 14l4-8 4 8"/>',
+ '<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>',
+ '<circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>',
+ '<rect x="3" y="4" width="18" height="14" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M7.5 18c.8-2.5 2.5-4 4.5-4s3.7 1.5 4.5 4"/>',
+ '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M10 10h.01M14 10h.01"/>'].map(p=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`);
 let lsess=null;
 /* A lesson drill as script markup, so it plays and highlights like a scenario line. */
 function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧‧‧':type==='pause-long'?'‧‧‧‧‧':type==='note'||type==='breath'?'':type==='down'?`${t} ↘`:type==='stress'?`*${t}*`:t).filter(Boolean).join(' '); }
@@ -2051,25 +2431,28 @@ function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'},{type:'quiz',k
 function nextItem(){ return units().flatMap(u=>u.items).find(x=>!x.done)||null; }
 function nextUp(){ const it=nextItem(); endSession(); endLesson(); if(!it) return go('home'); if(it.kind==='lesson') startLesson(it.i); else startScenario(it.i); }
 function startLesson(i){ const from=state.route.name==='lessons'?'lessons':'home'; endSession(); endLesson();
-  lsess={i,n:0,cards:lessonCards(i),from,t0:Date.now()}; state.route={name:'lesson',i}; save(); enterCard(); }
+  lsess={kind:'lesson',i,n:0,cards:lessonCards(i),from,t0:Date.now()}; state.route={name:'lesson',i}; save(); enterCard(); }
 function endLesson(){ if(!lsess) return; stopAll(); cancelRec(); lsess.cards.forEach(c=>{ if(c.url) URL.revokeObjectURL(c.url); }); lsess=null; }
 function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=lsess.i;
   if(c.url) URL.revokeObjectURL(c.url); if(c.first) URL.revokeObjectURL(c.first.url); Object.assign(c,{step:null,res:null,err:null,url:null,first:null,checked:false,pick:null,sel:new Set()});
-  if(c.type==='done'){ state.done[i]=true; markDay(); save(); }
+  if(c.type==='done'){ const k=lsess.kind; markDay();
+    if(k==='lesson') state.done[i]=true; else if(k==='r3'){ state.scR3=state.scR3||{}; state.scR3[i]=true; }
+    else if(k==='prep'){ const m=preps().find(x=>x.id===lsess.id); if(m) m.reps=(m.reps||0)+1; } save(); }
   render(); window.scrollTo(0,0);
   const t=++tok;
   if(c.type==='say') return lsListen();
+  if(c.type==='r3') return r3Listen();
   if(c.type==='breathe') breatheStart();
   if(!coachOn()) return;
   if(c.type==='q') coachSay(`c-lesson${i}-q${c.k}`,t);
   else if(c.type==='breathe') coachSay('c-fx-breathe',t);
   if(c.type==='idea') coachSay(`c-lesson${i}-rule`,t);
   else if(c.type==='quiz') coachSay('c-fx-quiz',t);
-  else if(c.type==='done') coachSay('c-fx-ldone',t); }
+  else if(c.type==='done'&&lsess.kind==='lesson') coachSay('c-fx-ldone',t); }
 async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
-async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=useFiles()&&AUDIO[c.clip]; let ok=true;
+async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip]); let ok=true;
   if(clip) ok=await playClip(clip,[...document.querySelectorAll('.w[data-l="L"]')],t);
   else for(const s of parseLine(c.text)){
     if(s.type==='pause'){ if(!(ok=await wait(800/state.rate,t))) break; }
@@ -2087,7 +2470,7 @@ async function lsRecord(){ const c=lsess.cards[lsess.n], key=lsess.n; stopAll();
   const chunks=[], mr=new MediaRecorder(micStream), t0=Date.now();
   mr.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); };
   mr.onstop=async()=>{ releaseMic(); if(!lsess||lsess.n!==key) return;
-    const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'});
+    const blob=new Blob(chunks,{type:mr.mimeType||(chunks[0]&&chunks[0].type)||'audio/mp4'}); c.blob=blob;
     if(c.url) URL.revokeObjectURL(c.url); c.url=URL.createObjectURL(blob); c.step='review'; c.res='wait'; render();
     const r=await analyze(blob); if(lsess&&lsess.n===key&&c.step==='review'){ c.res=r; c.first=await trackTake(c.id,blob,r,lsess.t0); render();
       const k=judgeRes(r,c.modelDur,innerPauses(c.text),key).key; if(coachOn()&&k){ const t=++tok; coachSay('c-fx-'+k,t); } } };
@@ -2098,7 +2481,7 @@ function lessonAct(a,btn){
   if(a==='nextup') return nextUp();
   if(a==='ls-start') return startLesson(+btn.dataset.i);
   if(!lsess) return;
-  const c=lsess.cards[lsess.n], P=LESSONS[lsess.i].practice;
+  const c=lsess.cards[lsess.n], P=lsess.kind==='lesson'?LESSONS[lsess.i].practice:null;
   if(a==='ls-exit'){ const f=lsess.from; endLesson(); return go(f); }
   if(a==='ls-next'){ if(lsess.n<lsess.cards.length-1){ lsess.n++; enterCard(); } return; }
   if(a==='ls-why'){ c.why=true; return render(); }
@@ -2110,6 +2493,11 @@ function lessonAct(a,btn){
   if(a==='ls-again'){ stopAll(); cancelRec(); c.step='ready'; c.err=null; return render(); }
   if(a==='ls-pmodel') return runBtn(btn,t=>lsModel(t));
   if(a==='ls-pme') return runBtn(btn,t=>playUrl(c.url,t));
+  if(a==='ls-r3pt'){ const n=+btn.dataset.n; c.got.has(n)?c.got.delete(n):c.got.add(n); return render(); }
+  if(a==='ls-r3q') return r3Listen();
+  if(a==='ls-r3again') return startR3(lsess.i);
+  if(a==='ls-mymodel'){ if(!c.blob||!c.res||c.res.a==null) return; const take={blob:c.blob,type:c.blob.type,start:Math.max(0,c.res.a-0.12),stop:c.res.b+0.3,at:Date.now()};
+    IDB.set(c.id,take).then(()=>{ if(MINE[c.id]) URL.revokeObjectURL(MINE[c.id].url); MINE[c.id]={url:URL.createObjectURL(c.blob),start:take.start,stop:take.stop}; render(); }); return; }
   if(a==='ls-pfirst') return runBtn(btn,t=>playUrl(c.first&&c.first.url,t));
   if(a==='ls-qpick') return quizPick(c,+btn.dataset.n);
   if(a==='ls-qcheck') return quizCheck(c);
@@ -2122,7 +2510,7 @@ function lessonAct(a,btn){
     timerId=setInterval(()=>{ s--; el.textContent=Math.max(s,0); if(s<=0){ clearInterval(timerId); timerId=null; el.textContent='Time'; el.classList.add('up'); btn.textContent='Start timer'; } },1000); }
 }
 function viewLessonSession(){
-  const i=lsess.i, l=LESSONS[i], c=lsess.cards[lsess.n], total=lsess.cards.length-1, pct=Math.round(lsess.n/total*100);
+  const i=lsess.i, l=lsess.kind==='lesson'?LESSONS[i]:null, c=lsess.cards[lsess.n], total=lsess.cards.length-1, pct=Math.round(lsess.n/total*100);
   const top=`<div class="fx-top"><button class="fx-x" type="button" data-act="ls-exit" aria-label="End lesson">${ICO.x}</button>
     <div class="pbar" role="progressbar" aria-label="Lesson progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${lsess.n}"><i style="width:${pct}%"></i></div>
     <button class="speed" type="button" data-act="coachv" aria-pressed="${coachOn()}" aria-label="Coach voice">${coachOn()?'Coach on':'Coach off'}</button>
@@ -2159,7 +2547,7 @@ function viewLessonSession(){
     else if(st==='review'){ const j=judgeRes(c.res,c.modelDur,innerPauses(c.text),lsess.n); cls=j.v;
       body+=`<div class="card cmp"><div class="cmp-row"><span class="cmp-lab">Model</span><span class="cmp-wave">${c.modelDur?c.modelDur.toFixed(1)+'s':''}</span><button class="play-btn" type="button" data-act="ls-pmodel">▶ Play</button></div>
         ${firstRow(c.first,'ls-pfirst')}<div class="cmp-row"><span class="cmp-lab">${c.first?'Today':'You'}</span><span class="cmp-wave">${c.res&&c.res.bars?waveSVG(c.res.bars):''}</span><button class="play-btn" type="button" data-act="ls-pme">▶ Play</button></div>
-        <button class="small-btn both" type="button" data-act="ls-pboth">▶ Both</button></div>`;
+        <button class="small-btn both" type="button" data-act="ls-pboth">▶ Both</button></div>${lsess.kind==='prep'?`<button class="link-btn" type="button" data-act="ls-mymodel">${MINE[c.id]?'✓ Your take is the model':'Use this take as my model'}</button>`:''}`;
       ft=`<div class="res" role="status"><span class="res-ic">${j.v==='good'?ICO.check:j.v==='almost'?ICO.warn:ICO.spk}</span><div><div class="res-t">${j.t}</div>${j.tip?`<p class="fb-tip">${j.tip}</p>`:''}</div></div>
         <div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-again">Try again</button><button class="solid-btn${j.v==='almost'?' gold':j.v==='neutral'?' blue':''}" type="button" data-act="ls-next">Continue</button></div>`; }
     else { body+=`${c.err?`<div class="alert">${MIC_ERR[c.err]}</div>`:''}<button class="speak-btn" type="button" data-act="ls-rec">${ICO.mic}Tap to speak</button>`; ft=skip; } }
@@ -2176,10 +2564,33 @@ function viewLessonSession(){
       <div class="card timer-card"><div class="drill-topic">${c.topic?esc(c.topic):'Tap New question.'}</div>
       <div class="timer-row"><button class="ghost-btn" type="button" data-act="ls-topic">New ${P.secs<=10?'setting':'question'}</button>${c.topic?'<button class="solid-btn" type="button" data-act="ls-timer">Start timer</button>':''}<span class="timer" id="ltimer">${P.secs}</span></div></div>`;
     ft=cont(); }
+  else if(c.type==='r3'){ const st=c.step, sc=SCENARIOS[i], init=esc(sc.them.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/,'')[0]||'?');
+    const ask=c.coach?`<h1 class="fx-title">${esc(c.q)}</h1>`:`<h1 class="fx-title">Answer your way</h1><div class="char"><div class="av" aria-hidden="true">${init}</div><div class="bub"><div class="sl-who">${esc(sc.them)}</div><div class="sl-text">${esc(c.q)}</div></div></div>`;
+    const pts=`<div class="card r3-pts"><p class="eyebrow" style="margin-bottom:8px">${st==='review'?'Tap the points you made':'Hit these points'}</p><p class="kp">${c.points.map((pt,n)=>st==='review'?`<button class="kpb${c.got.has(n)?' on':''}" type="button" data-act="ls-r3pt" data-n="${n}">${c.got.has(n)?'✓ ':''}${esc(pt)}</button>`:`<span>${esc(pt)}</span>`).join('')}</p></div>`;
+    body=`<p class="eyebrow">Round 3 · Your words</p>${ask}${pts}`;
+    const skip=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-next">Skip</button></div>`;
+    if(st==='listen'){ body+=`<p class="listening">${eq} Listening</p>`; ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-skipaudio">Skip audio</button></div>`; }
+    else if(st==='arming'){ body+=`<button class="speak-btn" type="button" disabled>${ICO.mic}Starting microphone…</button>`; ft=skip; }
+    else if(st==='rec'){ body+=`<button class="speak-btn on" type="button" data-act="ls-stop">${eq}Tap to stop · <span id="recTime">0.0s</span></button>`; ft=skip; }
+    else if(st==='review'){ const got=c.got.size, all=c.points.length, j=c.res==='wait'?null:judgeRes(c.res,null,0,lsess.n); cls=got===all?'good':'almost';
+      body+=`<div class="card cmp">${firstRow(c.first,'ls-pfirst')}<div class="cmp-row"><span class="cmp-lab">${c.first?'Today':'You'}</span><span class="cmp-wave">${c.res&&c.res.bars?waveSVG(c.res.bars):''}</span><button class="play-btn" type="button" data-act="ls-pme">▶ Play</button></div></div>`;
+      ft=`<div class="res" role="status"><span class="res-ic">${got===all?ICO.check:ICO.warn}</span><div><div class="res-t">${got} of ${all} points</div><p class="fb-tip">${got===all?(j&&j.tip)||'Clear, and in your own words.':'Listen back, then tap the points you made.'}</p></div></div>
+        <div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-again">Try again</button><button class="solid-btn${got===all?'':' gold'}" type="button" data-act="ls-next">Continue</button></div>`; }
+    else { body+=`${c.err?`<div class="alert">${MIC_ERR[c.err]}</div>`:''}<button class="speak-btn" type="button" data-act="ls-rec">${ICO.mic}Tap to speak</button><button class="link-btn" type="button" data-act="ls-r3q">▶ Hear it again</button>`; ft=skip; } }
+  else if(c.type==='done'&&lsess.kind!=='lesson'){ const nx=nextItem(), k=lsess.kind;
+    if(k==='r3'){ body=`<div class="done-wrap"><div class="done-badge">${ICO.star}</div><h1 class="done-title">Round 3 complete</h1><p class="lead" style="margin:0 auto">${esc(SCENARIOS[i].title)}</p></div>`;
+      ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-r3again">Again</button><button class="solid-btn" type="button" data-act="nextup">${nx?`Next: ${esc(nx.title)}`:'Done'}</button></div>`; }
+    else if(k==='prep'){ const m=preps().find(x=>x.id===lsess.id)||{lines:[],reps:0};
+      body=`<div class="done-wrap"><div class="done-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M7 4h11l-3 4 3 4H7z" fill="#fff"/></svg></div><h1 class="done-title">Ready</h1><p class="lead" style="margin:0 auto">${esc(m.who||'Your meeting')}${m.goal?` · ${esc(m.goal)}`:''}</p>
+        <div class="tiles"><div class="tile"><span>Lines</span><b>${m.lines.length}</b></div><div class="tile"><span>Rehearsals</span><b>${m.reps||0}</b></div><div class="tile t3"><span>Streak</span><b>${streak()}</b></div></div></div>`;
+      ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="pp-breathe">Breathe first</button><button class="solid-btn" type="button" data-act="ls-exit">Done</button></div>`; }
+    else { body=`<div class="done-wrap"><div class="done-badge">${LICO[0]}</div><h1 class="done-title">Calm and ready</h1><p class="lead" style="margin:0 auto">Go in slow. Let the first pause work.</p></div>`;
+      ft=`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-exit">Done</button></div>`; } }
   else if(c.type==='done'){ const nx=nextItem();
     body=`<div class="done-wrap"><div class="done-badge">${LICO[i]}</div><h1 class="done-title">Lesson complete</h1><p class="lead" style="margin:0 auto">${l.title}</p></div>`;
     ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-more">More</button><button class="solid-btn" type="button" data-act="nextup">${nx?`Next: ${esc(nx.title)}`:'Done'}</button></div>`; }
-  return `<div class="u-green">${top}${body}</div>${ft?foot(cls,ft):''}`;
+  const col=lsess.kind==='lesson'?catColor(l.unit||'Foundation'):lsess.kind==='r3'?catColor(SCENARIOS[i].cat):'green';
+  return `<div class="u-${col}">${top}${body}</div>${ft?foot(cls,ft):''}`;
 }
 
 /* ---------------- GUIDED PRACTICE (scenarios) ----------------
@@ -2219,7 +2630,7 @@ async function runBtn(btn,fn){ const same=activeBtn===btn; stopAll(); if(same) r
 
 /* Start a scenario straight into practice. The first card is the setting (the coach reads it), then the lines.
    Round 2 (from memory) is picked automatically once round 1 is done. */
-function startScenario(i){ startSession(i,state.scDone[i]||(state.scR1||{})[i]?2:1,true); }
+function startScenario(i){ if(state.scDone[i]&&(ROUND3[i]||[]).length) return startR3(i); startSession(i,(state.scR1||{})[i]?2:1,true); }
 function startSession(i,round,intro){ const from=sess?sess.from:['home','scenarios'].includes(state.route.name)?state.route.name:'home';
   endSession(); endLesson(); sess={i,round,k:0,lines:yourLines(SCENARIOS[i]),modelDur:{},peek:false,from,t0:Date.now()};
   state.route={name:'scenario',i}; state.lastSc=i; save();
@@ -2303,9 +2714,9 @@ function viewSession(){
     ${foot('',`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="sc-go">Start</button></div>`)}`;
   if(step==='done') return `<div class="u-${catColor(sc.cat)}">${top}<div class="done-wrap">
       <div class="done-badge">${ICO.star}</div><h1 class="done-title">${last?'Scenario complete':'Round 1 complete'}</h1>
-      <p class="lead" style="margin:0 auto">${last?'Now put the key lines in your own words.':'Next: from memory.'}</p>
+      <p class="lead" style="margin:0 auto">${last?'Now put the key lines in your own words.':'Next: from memory.'}</p>${last?'<button class="link-btn" type="button" data-act="exit">Script and notes</button>':''}
       <div class="tiles"><div class="tile t1"><span>Lines</span><b>${total}</b></div><div class="tile t2"><span>Round</span><b>${sess.round}/2</b></div><div class="tile t3"><span>Streak</span><b>${streak()}</b></div></div></div></div>
-    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="exit">More</button><button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button></div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
+    ${foot('',last?`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="sc-r3">Round 3 ›</button><button class="solid-btn" type="button" data-act="nextup">${nextItem()?`Next: ${esc(nextItem().title)}`:'Done'}</button></div>`:`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="round1">Repeat</button><button class="solid-btn" type="button" data-act="round2">Round 2 ›</button></div>`)}`;
   const li=sess.lines[sess.k], note=sc.lines[li][2], hide=last&&step!=='review'&&!sess.peek;
   const ctx=contextOf(sc,li).map(c=>{ const [who,text]=sc.lines[c], nm=nameOf(sc,who), alt=altSpeaker(sc,who);
     return who==='stage'?`<p class="stagenote">${esc(text)}</p>`:`<div class="char"><div class="av${alt?' alt':''}" aria-hidden="true">${esc(nm.replace(/^(Mr|Mrs|Ms|Dr)\.?\s+/,'')[0]||'?')}</div><div class="bub"><div class="sl-who">${esc(nm)}</div><div class="sl-text">${lineHTML(sc,c)}</div></div></div>`; }).join('');
@@ -2333,6 +2744,7 @@ function viewSession(){
     ${last?'':legend}${body}</div>${foot('',ft)}`;
 }
 function act(a,btn){
+  if(a.startsWith('pp-')) return prepAct(a,btn);
   if(a==='welcome-done'){ if(!state.intro.name){ $('bName').classList.add('need'); $('bName').focus(); return; } state.onboarded=true; save(); return go('home'); }
   if(a==='profile'){ state.onboarded=false; save(); render(); window.scrollTo(0,0); return; }
   if(a.startsWith('ls-')||a==='nextup') return lessonAct(a,btn);
@@ -2342,6 +2754,7 @@ function act(a,btn){
   if(a==='coach') return runBtn(btn,t=>coachSay(btn.dataset.k,t));
   if(a==='coachv'){ state.coachVoice=!coachOn(); save(); btn.textContent=coachOn()?'Coach on':'Coach off'; btn.setAttribute('aria-pressed',coachOn()); return; }
   if(a==='sc-start') return startScenario(+btn.dataset.i);
+  if(a==='sc-r3'){ const i=sess?sess.i:state.route.i; return startR3(i); }
   if(!sess&&a!=='start1'&&a!=='start2') return;
   const i=sess?sess.i:state.route.i;
   if(a==='start1'||a==='start2') return startSession(i,a==='start1'?1:2,true);
@@ -2370,7 +2783,7 @@ function viewScenario(i){
   return `<div class="u-${catColor(sc.cat)}"><div class="hero"><p class="eyebrow">${sc.cat} · Scenario ${letter(i)}</p><h1 class="page-title">${sc.title}</h1><p class="hero-goal">${sc.goal}</p></div></div>
   <div class="card brief"><p style="margin:0">${sc.setting}</p></div>
   <button class="solid-btn start-btn" type="button" data-act="start1">${state.scDone[i]?'Practice again':'Start practice'}</button>
-  ${state.scDone[i]?'<button class="ghost-btn wide" type="button" data-act="start2">Round 2 · From memory</button>':''}
+  ${state.scDone[i]?'<button class="ghost-btn wide" type="button" data-act="start2">Round 2 · From memory</button><button class="ghost-btn wide" type="button" data-act="sc-r3">Round 3 · Your words</button>':''}
   <p class="hint" style="text-align:center">${n} lines · ${Math.max(3,Math.round(n*0.8))} min</p>
   <details class="fold"><summary>Full script</summary>
     <div class="script-head"><label class="toggle"><input type="checkbox" id="coachT" ${state.coach?'checked':''}> Coach notes</label></div>
@@ -2402,12 +2815,13 @@ function viewSettings(){
 }
 
 /* ---------------- RENDER ---------------- */
-const TABS=[['home','Learn','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>'],['lessons','Lessons','<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>'],['scenarios','Scenarios','<path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>'],['settings','Settings','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>']];
+const TABS=[['home','Learn','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>'],['prep','Prep','<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>'],['lessons','Lessons','<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>'],['scenarios','Scenarios','<path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>'],['settings','Settings','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>']];
 function render(){
   const r=state.route, n=r.name;
   const parent = n==='lesson'?'lessons':n==='scenario'?'scenarios':n==='studio'?'settings':null;
   const welcome=!state.onboarded;
-  document.body.classList.toggle('focus', welcome||(n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess));
+  if((n==='session'&&!lsess)||(n==='prepedit'&&!pedit)){ state.route={name:n==='prepedit'?'prep':'home'}; return render(); }
+  document.body.classList.toggle('focus', welcome||(n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess)||n==='session'||n==='prepedit');
   const tt=$('topTitle'); tt.textContent = n==='lesson'?`Lesson ${r.i+1}`:n==='scenario'?`Scenario ${letter(r.i)}`:n==='studio'?'Voice studio':'Speak Like a Leader'; tt.classList.toggle('logo',!parent);
   $('backBtn').hidden=!parent; $('backBtn').dataset.go=parent||'';
   const done=Object.values(state.done).filter(Boolean).length+Object.values(state.scDone).filter(Boolean).length;
@@ -2415,7 +2829,7 @@ function render(){
   $('tabbar').innerHTML=TABS.map(([k,label,icon])=>{ const on=(k===n)||(k===parent);
     return `<button type="button" class="tb ${on?'on':''}" data-go="${k}" ${on?'aria-current="page"':''}><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><span>${label}</span></button>`; }).join('');
   const main=$('main'); main.className=n==='home'?'home':'';
-  main.innerHTML = welcome?viewWelcome(): n==='lessons'?viewLessons(): n==='lesson'?viewLesson(r.i): n==='scenarios'?viewScenarios(): n==='scenario'?viewScenario(r.i): n==='settings'?viewSettings(): n==='studio'?viewStudio(): viewHome();
+  main.innerHTML = welcome?viewWelcome(): n==='session'?viewLessonSession(): n==='prep'?viewPrep(): n==='prepedit'?viewPrepEdit(): n==='lessons'?viewLessons(): n==='lesson'?viewLesson(r.i): n==='scenarios'?viewScenarios(): n==='scenario'?viewScenario(r.i): n==='settings'?viewSettings(): n==='studio'?viewStudio(): viewHome();
   if(welcome){ bindBuilder(); return; }
   bind(n,r.i);
   if(n==='home') drawScene();
