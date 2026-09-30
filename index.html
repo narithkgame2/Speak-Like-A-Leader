@@ -443,6 +443,9 @@ main.home{ padding-bottom:0; }
 .wave.dim rect{ fill:var(--mute); } .wave.dim rect.sil{ fill:var(--line); }
 .cmp-row.first .cmp-lab small{ display:block; font-size:.66rem; font-weight:500; color:var(--dim); }
 .q-listen{ margin:-6px 0 14px; }
+/* the situation a card is about: readable, not a tiny label */
+.ctx{ display:flex; align-items:center; gap:10px; font-size:1.02rem; font-weight:600; line-height:1.35; color:var(--text); margin:2px 0 10px; }
+.ctx::before{ content:''; flex:0 0 4px; align-self:stretch; min-height:20px; border-radius:2px; background:var(--u,var(--gold)); }
 .ls-opt.reading{ border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent), var(--shadow); }
 .qtext.reading{ background:var(--gold-soft); border-radius:12px; box-shadow:0 0 0 8px var(--gold-soft); }
 .qtext{ font-family:var(--serif); font-weight:500; font-size:1.3rem; line-height:2.1; margin-top:6px; }
@@ -2747,6 +2750,7 @@ function coachText(k){ let m;
   if((m=k.match(/^c-s(\d+)-l(\d+)$/))) return plainText(SCENARIOS[+m[1]].lines[+m[2]][2]||'');
   if((m=k.match(/^c-sc(\d+)-intro$/))){ const sc=SCENARIOS[+m[1]]; return plainText(`${sc.setting} Your goal: ${sc.goal}`); }
   if((m=k.match(/^c-lesson(\d+)-q(\d+)(-why)?$/))){ const q=(LESSON_QUIZ[m[1]]||[])[+m[2]]; return q?(m[3]?q.why:q.prompt):''; }
+  if((m=k.match(/^c-lesson(\d+)-ask$/))){ const mo=plainText(LESSONS[+m[1]].pairs[0].moment); return `${mo}${/[.?!"”]$/.test(mo)?'':'.'} Which is stronger?`; }
   if((m=k.match(/^c-lesson(\d+)-rule$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.rule}`); }
   if((m=k.match(/^c-lesson(\d+)-p(\d+)-note$/))) return plainText(LESSONS[+m[1]].pairs[+m[2]].note);
   if((m=k.match(/^c-lesson(\d+)-intro$/))){ const l=LESSONS[+m[1]]; return plainText(`${l.title}. ${l.sub} The rule. ${l.rule} ${l.why}`); }
@@ -2828,7 +2832,7 @@ function kCast(sc){ const cast={you:KCAST.you}; let m=0,f=0;
   [...new Set(sc.lines.map(l=>l[0]).filter(w=>w!=='you'&&w!=='stage'))].forEach(k=>{ const name=k==='them'?sc.them:k.split(':')[1];
     cast[k]=KCAST.neutral[name]||(/^(Ms|Mrs|Miss)\.?\s/.test(name)?KCAST.female[f++%3]:KCAST.male[m++%2]); }); return cast; }
 function fnv(t){ let h=0x811c9dc5; for(let i=0;i<t.length;i++){ h^=t.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(16); }
-const pvKey=(text,v)=>'pv:'+fnv(personal(text)+'|'+v[0]+'|'+v[1]);
+const pvKey=(text,v)=>'pv:'+fnv(personal(text)+'|'+v[0]+'|'+v[1]+'|lead150');
 function pvClip(text,v){ return useFiles()&&isPersonal(text)&&MINE[pvKey(text,v||KCAST.you)]||null; }
 const prepClip=text=>useFiles()&&MINE[pvKey(text,KCAST.you)]||null;   // Meeting prep lines: your own words, made on this device
 function pvJobs(){ const jobs=new Map(), add=(t,v,pri=2)=>{ if(isPersonal(t)) jobs.set(pvKey(t,v),[t,v,pri]); };
@@ -2852,7 +2856,7 @@ async function pvBuild(){ if(pvRun){ pvAgain=true; return; } if(!useFiles()||!st
       pvTTS=await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX',{dtype:'q8',device:'wasm'}); }
     const seg=new Map();   // the same phrase in the same voice is made once (the introduction appears in several lines)
     for(const [k,[text,v]] of todo){ if(isPersonal(text)&&!state.intro.name) continue;
-      const parts=[]; let sr=24000;
+      const parts=[new Float32Array(3600)]; let sr=24000;   // 150 ms before the first word, like the clips
       for(const [t,type] of segsOf(text)){
         if(type==='pause'||type==='pause-long'){ parts.push(new Float32Array(Math.round(sr*(type==='pause'?0.65:1.3)))); continue; }
         if(!t) continue; const sk=t+'|'+v[0]+'|'+v[1]; if(!seg.has(sk)){ const a=await pvTTS.generate(t,{voice:v[0],speed:v[1]}); seg.set(sk,[a.audio,a.sampling_rate]); }
@@ -2959,12 +2963,14 @@ async function qzPlay(id,text,coach,t){ const c=(useFiles()&&AUDIO[id])||pvClip(
     if(type==='pause'||type==='pause-long'){ if(!await wait((type==='pause'?650:1300)/state.rate,t)) return false; continue; }
     if(txt&&!await say(txt,t,{pitch:type==='down'?0.88:1})) return false; }
   return t===tok; }
-async function quizRead(){ const c=lsess&&lsess.cards[lsess.n]; if(!c||c.pick||c.checked) return; stopAll(); const t=++tok, i=lsess.i, l=LESSONS[i];
+async function quizRead(auto){ const c=lsess&&lsess.cards[lsess.n]; if(!c||c.pick||c.checked) return; stopAll(); const t=++tok, i=lsess.i, l=LESSONS[i];
+  if(auto&&!await wait(LEAD,t)) return;
   let items=[];
   if(c.type==='quiz'){ const p=l.pairs[c.k]; items=[...document.querySelectorAll('.ls-opt[data-act="ls-pick"]')].map(el=>({el,id:`qz${i}-${el.dataset.o}`,text:el.dataset.o==='a'?p.normal:p.better})); }
   else if(c.q.type==='choice') items=[...document.querySelectorAll('.ls-opt[data-act="ls-qpick"]')].map(el=>({el,id:`qz${i}-${c.k}-o${el.dataset.n}`,text:c.q.options[+el.dataset.n],coach:true}));
   else items=[{el:document.querySelector('.qtext'),id:`qz${i}-${c.k}-t`,text:c.q.text}];
-  if(!await coachSay(c.type==='quiz'?'c-fx-quiz':`c-lesson${i}-q${c.k}`,t)||!await wait(300,t)) return;
+  const ask=c.type==='quiz'?(useFiles()&&AUDIO[`c-lesson${i}-ask`]||!useFiles()?`c-lesson${i}-ask`:'c-fx-quiz'):`c-lesson${i}-q${c.k}`;
+  if(!await coachSay(ask,t)||!await wait(300,t)) return;
   for(const it of items){ if(!it.el||!it.el.isConnected) it.el=null; if(it.el) it.el.classList.add('reading');
     const ok=await qzPlay(it.id,it.text,it.coach,t); if(it.el) it.el.classList.remove('reading'); if(!ok||!await wait(350,t)) return; } }
 async function quizVerdict(ok,why){ stopAll(); if(!coachOn()) return; const t=++tok;
@@ -3003,7 +3009,8 @@ function startKind(kind,cards,extra){ const from=['home','scenarios','prep','les
   endSession(); endLesson(); lsess=Object.assign({kind,n:0,cards,from,t0:Date.now()},extra); state.route={name:'session'}; save(); enterCard(); }
 function startR3(i){ startKind('r3',(ROUND3[i]||[]).map((q,k)=>({type:'r3',q:q.q,coach:!!q.coach,points:q.points,id:`r3-${i}-${k}`,clip:`r3-${i}-${k}`,k,got:new Set()})).concat({type:'done'}),{i}); }
 function startBreathe(){ startKind('breathe',[{type:'breathe'},{type:'done'}],{}); }
-async function r3Listen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
+async function r3Listen(auto){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
+  if(auto&&!await wait(LEAD,t)) return;
   const clip=useFiles()&&AUDIO[c.clip]; if(clip) await playClip(clip,[],t); else await say(c.q,t,{voice:c.coach?themVoice(pickVoice()):undefined});
   if(t===tok&&lsess){ c.step='ready'; render(); } }
 
@@ -3092,7 +3099,7 @@ function drillMarkup(script){ return script.map(([t,type])=>type==='pause'?'‧�
 function lessonCards(i){ const l=LESSONS[i], cards=[{type:'idea'},{type:'quiz',k:0}];
   (LESSON_QUIZ[i]||[]).forEach((q,k)=>cards.push({type:'q',q,k}));
   const k=l.pairs.findIndex(p=>!p.noPlay&&!p.lang);
-  if(k>=0) cards.push({type:'say',text:l.pairs[k].better,id:`l${i}-p${k}`,clip:isPersonal(l.pairs[k].better)?null:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
+  if(k>=0) cards.push({type:'say',moment:l.pairs[k].moment,text:l.pairs[k].better,id:`l${i}-p${k}`,clip:isPersonal(l.pairs[k].better)?null:`l${i}-p${k}`,label:'Say it',title:'Now you say it'});
   const breath=l.drill.script.some(x=>x[1]==='breath'); if(breath) cards.push({type:'breathe'});
   const dm=drillMarkup(l.drill.script); cards.push({type:'say',text:dm,id:`l${i}-d`,clip:isPersonal(dm)?null:`l${i}-d`,label:'Drill',title:breath?'Now say it, calm and slow':l.drill.tag});
   if(l.builder) cards.push({type:'builder'});
@@ -3111,15 +3118,18 @@ function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=ls
     else if(k==='prep'){ const m=preps().find(x=>x.id===lsess.id); if(m) m.reps=(m.reps||0)+1; } save(); }
   render(); window.scrollTo(0,0);
   const t=++tok;
-  if(c.type==='say') return lsListen();
-  if(c.type==='r3') return r3Listen();
+  if(c.type==='say') return lsListen(true);
+  if(c.type==='r3') return r3Listen(true);
   if(c.type==='breathe') breatheStart();
   if(!coachOn()) return;
-  if(c.type==='q'||c.type==='quiz') return quizRead();
-  if(c.type==='breathe') coachSay('c-fx-breathe',t);
-  if(c.type==='idea') coachSay(`c-lesson${i}-rule`,t);
-  else if(c.type==='done'&&lsess.kind==='lesson') coachSay('c-fx-ldone',t); }
-async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
+  if(c.type==='q'||c.type==='quiz') return quizRead(true);
+  const cs=k=>wait(LEAD,t).then(ok=>ok&&coachSay(k,t));
+  if(c.type==='breathe') cs('c-fx-breathe');
+  if(c.type==='idea') cs(`c-lesson${i}-rule`);
+  else if(c.type==='done'&&lsess.kind==='lesson') cs('c-fx-ldone'); }
+const LEAD=500;   // ms of quiet before audio that starts by itself, so the screen settles first (a tap plays at once)
+async function lsListen(auto){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
+  if(auto&&!await wait(LEAD,t)) return;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
 async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you)||(lsess.kind==='prep'&&prepClip(c.text)); let ok=true;
@@ -3195,7 +3205,7 @@ function viewLessonSession(){
       ${c.why?`<p class="body ls-why">${l.why}</p>`:`<button class="link-btn ls-left" type="button" data-act="ls-why">Why it works</button>`}`;
     ft=cont(); }
   else if(c.type==='quiz'){ const p=l.pairs[c.k], opts=[{o:'a',t:p.normal},{o:'b',t:p.better}]; if((i+c.k)%2) opts.reverse();
-    body=`<p class="eyebrow">${esc(p.moment)}</p><h1 class="fx-title">Which is stronger?</h1>${c.pick?'':qListen}
+    body=`<p class="ctx">${esc(p.moment)}</p><h1 class="fx-title">Which is stronger?</h1>${c.pick?'':qListen}
       <div class="ls-opts">${opts.map(x=>{ const st=!c.pick?'':x.o==='b'?'right':x.o===c.pick?'wrong':'dim';
         return `<button class="ls-opt ${st}" type="button" data-act="ls-pick" data-o="${x.o}" ${c.pick?'disabled':''}>${quizText(x.t)}</button>`; }).join('')}</div>`;
     if(c.pick){ const ok=c.pick==='b'; cls=ok?'good':'almost';
@@ -3211,7 +3221,7 @@ function viewLessonSession(){
     ft=cont(); }
   else if(c.type==='say'){ const st=c.step;
     const card=`<div class="say"><button class="spk" type="button" data-act="${st==='review'?'ls-pmodel':'ls-listen'}" aria-label="Listen">${ICO.spk}</button><div class="say-body"><div class="say-text">${parseLine(c.text).map((s,si)=>segHTML(s,'L',si)).join(' ')}</div></div></div>`;
-    body=`<p class="eyebrow">${c.label}</p><h1 class="fx-title">${c.title}</h1>${card}`;
+    body=`${c.moment?`<p class="ctx">${esc(c.moment)}</p>`:`<p class="eyebrow">${c.label}</p>`}<h1 class="fx-title">${c.title}</h1>${card}`;
     const skip=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-next">Skip</button></div>`;
     if(st==='listen'){ body+=`<p class="listening">${eq} Listening</p>`; ft=`<div class="fx-btns"><button class="ghost-btn" type="button" data-act="ls-skipaudio">Skip audio</button></div>`; }
     else if(st==='arming'){ body+=`<button class="speak-btn" type="button" disabled>${ICO.mic}Starting microphone…</button>`; ft=skip; }
@@ -3308,12 +3318,12 @@ function startSession(i,round,intro){ const from=sess?sess.from:['home','scenari
   state.route={name:'scenario',i}; state.lastSc=i; save();
   if(!intro){ enterLine(); window.scrollTo(0,0); return; }
   sess.step='intro'; render(); window.scrollTo(0,0);
-  if(coachOn()){ const t=++tok; coachSay(`c-sc${i}-intro`,t).then(ok=>{ if(ok&&sess&&sess.i===i&&sess.step==='intro') enterLine(); }); } }   // after the setting is read, the lines start by themselves
+  if(coachOn()){ const t=++tok; wait(LEAD,t).then(ok=>ok&&coachSay(`c-sc${i}-intro`,t)).then(ok=>{ if(ok&&sess&&sess.i===i&&sess.step==='intro') enterLine(); }); } }   // after the setting is read, the lines start by themselves
 function endSession(){ stopAll(); cancelRec(); if(sess&&sess.url) URL.revokeObjectURL(sess.url); sess=null; }
-function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); if(sess.first) URL.revokeObjectURL(sess.first.url); Object.assign(sess,{url:null,res:null,err:null,peek:false,first:null}); listen(); }
-async function listen(){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv), note=sc.lines[li][2];
+function enterLine(){ if(sess.url) URL.revokeObjectURL(sess.url); if(sess.first) URL.revokeObjectURL(sess.first.url); Object.assign(sess,{url:null,res:null,err:null,peek:false,first:null}); listen(true); }
+async function listen(auto){ const sc=SCENARIOS[sess.i], li=sess.lines[sess.k], yv=pickVoice(), tv=themVoice(yv), note=sc.lines[li][2];
   stopAll(); sess.step='listen'; render();
-  const t=++tok, coach=coachOn();
+  const t=++tok, coach=coachOn(); if(auto&&!await wait(LEAD,t)) return;
   if(coach&&!sess.introDone){ sess.introDone=true; const cue=sess.round===1?'r1':'r2'; state.cues=state.cues||{};   // the round explanation plays once, ever
     if(!state.cues[cue]){ state.cues[cue]=true; save(); if(!await coachSay('c-fx-'+cue,t)||!await wait(300,t)) return; } }
   for(const c of contextOf(sc,li)){ if(!await speakLine(sc,c,t,yv,tv)) return; if(!await wait(350/state.rate,t)) return; }

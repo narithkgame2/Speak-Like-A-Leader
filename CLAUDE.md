@@ -37,6 +37,11 @@ real estate (his direction, 2026-09-29).
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
   after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.
+- Pacing (Nick, 2026-09-30: "the voice starts a bit too fast"): audio that starts by itself waits `LEAD` (500 ms) after
+  the screen appears (cards, quiz reading, scenario setting and each new line); a tap plays at once. Every clip starts
+  with 150 ms of silence (`LEAD` in make_voice.py; on-device lines too) so iPhones don't clip the first syllable.
+- The situation a card is about is a readable `.ctx` line (unit colour bar, normal case), not a tiny eyebrow; the coach
+  opens the first quiz with it (`c-lesson{i}-ask`: "Reporting a result. Which is stronger?").
 - Quiz audio (`quizRead`, `quizVerdict`): on every quiz card the coach asks the question, then each answer is read
   aloud and highlighted (`.reading`); tapping any time stops it. Spoken answers use the model voice, described actions
   ("[sitting still…]") and choice options the coach. After a tap the coach says "Right." / "Not quite." (`c-fx-right`,

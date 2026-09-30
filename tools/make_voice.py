@@ -18,6 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "audio")
 MODELS = os.path.join(ROOT, "tools", "models")
 SHORT, LONG = 650, 1300                                # ms of silence for ‧‧‧ and ‧‧‧‧‧
+LEAD = 150                                             # ms of silence before every clip
 
 # Cast: (voice, speed). Kokoro speed is a multiplier; macOS say speed is words per minute.
 CASTS = {
@@ -66,6 +67,8 @@ def coach_lines():
         out[f"c-lesson{n}-intro"] = plain(f"{l['title']}. {l['sub']} The rule. {l['rule']} {l['why']}")
         out[f"c-lesson{n}-drill"] = plain(f"{l['tag']} {l['drill_note']}")
         out[f"c-lesson{n}-rule"] = plain(f"{l['title']}. {l['rule']}")
+        mo = plain(l["pairs"][0]["moment"])   # the quiz opens with its situation, so the topic is heard, not just seen
+        out[f"c-lesson{n}-ask"] = mo + ("" if re.search(r'[.?!"”]$', mo) else ".") + " Which is stronger?"
         for k, pr in enumerate(l["pairs"]): out[f"c-lesson{n}-p{k}-note"] = plain(pr["note"])
     i = s.index("const LESSON_QUIZ = ") + len("const LESSON_QUIZ = ")
     for n, qs in json.loads(s[i:s.index("\n};", i) + 2]).items():
@@ -142,7 +145,8 @@ class Kokoro:
         self.k = K(os.path.join(MODELS, "kokoro-v1.0.onnx"), os.path.join(MODELS, "voices-v1.0.bin"))
 
     def render(self, voice, speed, text, wav):
-        np, parts, sr = self.np, [], 24000
+        np, sr = self.np, 24000
+        parts = [np.zeros(int(sr * LEAD / 1000), dtype=np.float32)]   # a breath before the first word; iPhones can clip the first syllable
         for t, ms in segments(text):
             if t is None: parts.append(np.zeros(int(sr * ms / 1000), dtype=np.float32)); continue
             a, sr = self.k.create(t, voice=voice, speed=speed, lang="en-gb" if voice.startswith("b") else "en-us")
@@ -199,7 +203,7 @@ def main():
     for lid, text in coach_lines().items(): jobs.append((lid, *COACH, text))
     jobs = [j for j in jobs if not re.search(r"\{(name|intro)\}", j[3])]   # personal lines use the device voice
     for lid, voice, speed, text in jobs:
-        h = hashlib.sha1(f"{ENGINE}|norm1|{voice}|{speed}|{SHORT}|{LONG}|{text}".encode()).hexdigest()[:12]
+        h = hashlib.sha1(f"{ENGINE}|norm1|lead{LEAD}|{voice}|{speed}|{SHORT}|{LONG}|{text}".encode()).hexdigest()[:12]
         fn = f"{lid}.m4a"; path = os.path.join(OUT, fn)
         if old.get(lid, {}).get("h") == h and os.path.exists(path):
             manifest[lid] = old[lid]; kept += 1; continue
