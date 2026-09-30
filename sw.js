@@ -13,7 +13,8 @@ self.addEventListener('install', e => {
   e.waitUntil(caches.open(CORE).then(c => c.addAll(CORE_FILES)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => ![CORE, CLIPS, FONTS].includes(k)).map(k => caches.delete(k))))
+  // Only our own old caches. Never touch others (the on-device voice model lives in "transformers-cache").
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('sla-') && ![CORE, CLIPS, FONTS].includes(k)).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 

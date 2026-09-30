@@ -68,7 +68,8 @@ real estate (his direction, 2026-09-29).
 - Script markup inside text: `‧‧‧` = short pause, `‧‧‧‧‧` = long pause, `↘` = pitch falls at the end,
   `*word*` = sentence stress (may span words: `*three years*`; never across a pause). Mark the one word per
   phrase that carries the meaning: new information, a contrast, or a number. Every "you" line has stress marks.
-- Routes: home, lessons, lesson/i, scenarios, scenario/i, settings. Navigation: bottom tab bar on phones, which becomes
+- Routes: home, lessons, lesson/i, scenarios, scenario/i, settings. Every visit opens on home (the mountain at your
+  current step), whatever screen was open last. Navigation: bottom tab bar on phones, which becomes
   a left rail at >=900px wide. Home is ONE screen, no page scroll: a mountain seen from afar with the trail switching
   back and forth up its face ("camera follows you"). Unit 1 (the lessons) is Base Camp at the bottom, each scenario
   `cat` is a higher camp (`CAMPS`, `ALTS` in metres), the summit "Trusted Leader" is at the top. World is 1000×1600
@@ -141,7 +142,10 @@ real estate (his direction, 2026-09-29).
   stored in IndexedDB `takes` as `pv:<fnv hash of filled text|voice|speed>` and played via `pvClip` (hooked into
   `clipFor`, `lsModel`, `qzPlay`, the intro builder). A new name/intro = new keys; old ones are deleted. Until
   ready, or if the model can't run, those lines use the device voice. Settings shows the status (`#pvRow`).
-  ~2.5 min on a Mac; slower on a phone. Meeting prep lines use the same builder (priority 0, first), keyed the
+  ~2.5 min on a Mac; slower on a phone. If a personal line is needed before it's made, `pvWait` moves it to the front
+  (`pvFirst`), shows "Preparing your line in the lesson voice…" (`#pvToast`) and waits; the device voice is used only
+  when the model can't run (`PV.state==='fail'`). Nick: robotic = unacceptable, a short wait is fine. sw.js only deletes
+  its own `sla-` caches (the model is in `transformers-cache`). Meeting prep lines use the same builder (priority 0, first), keyed the
   same way; deleting a meeting deletes its lines. The lesson More page plays clips too (`l{i}-p{k}` for every
   speakable example, `l{i}-d`).
 - Scenario lines render as chat bubbles: `them` left, `you` right, a second speaker gets `.alt`.

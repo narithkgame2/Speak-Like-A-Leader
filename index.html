@@ -443,6 +443,10 @@ main.home{ padding-bottom:0; }
 .wave.dim rect{ fill:var(--mute); } .wave.dim rect.sil{ fill:var(--line); }
 .cmp-row.first .cmp-lab small{ display:block; font-size:.66rem; font-weight:500; color:var(--dim); }
 .q-listen{ margin:-6px 0 14px; }
+.pv-toast{ position:fixed; left:50%; top:calc(env(safe-area-inset-top,0px) + 12px); translate:-50% 0; z-index:50; display:flex; align-items:center; gap:10px; padding:9px 16px; border-radius:999px;
+  font-size:.82rem; color:var(--text); background:color-mix(in srgb, var(--card) 92%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border:1px solid var(--line); box-shadow:0 12px 30px -16px rgba(0,0,0,.5); animation:fadeIn .3s ease-out; white-space:nowrap; }
+.pv-dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); animation:pvPulse 1.2s ease-in-out infinite; }
+@keyframes pvPulse{ 50%{ opacity:.3; transform:scale(.7); } }
 /* the situation a card is about: readable, not a tiny label */
 .ctx{ display:flex; align-items:center; gap:10px; font-size:1.02rem; font-weight:600; line-height:1.35; color:var(--text); margin:2px 0 10px; }
 .ctx::before{ content:''; flex:0 0 4px; align-self:stretch; min-height:20px; border-radius:2px; background:var(--u,var(--gold)); }
@@ -2840,7 +2844,15 @@ function pvJobs(){ const jobs=new Map(), add=(t,v,pri=2)=>{ if(isPersonal(t)) jo
   SCENARIOS.forEach(sc=>{ const c=kCast(sc); sc.lines.forEach(([w,t])=>{ if(w!=='stage') add(t,c[w]); }); });
   LESSONS.forEach(l=>{ l.pairs.forEach(p=>{ if(!p.noPlay&&!p.lang){ add(p.normal,KCAST.you); add(p.better,KCAST.you); } }); add(drillMarkup(l.drill.script),KCAST.you); });
   add("Good to meet you. I'm {name}. ‧‧‧ {intro}",KCAST.you,1); return jobs; }
-let PV={state:'idle',done:0,total:0}, pvTTS=null, pvRun=false, pvAgain=false;
+let PV={state:'idle',done:0,total:0}, pvTTS=null, pvRun=false, pvAgain=false; const pvFirst=new Set();
+/* A personal line that isn't made yet: make it next, show a quiet note, and wait for it (the device voice only if the
+   phone can't run the model). Returns the clip, or null. */
+async function pvWait(text,v,t,max=150000){ if(!useFiles()||!isPersonal(text)) return null; const k=pvKey(text,v); if(MINE[k]) return MINE[k];
+  if(PV.state==='fail') return null; pvFirst.add(k); pvBuild(); const t0=Date.now(); pvToast(true);
+  try{ while(Date.now()-t0<max){ if(!await wait(400,t)) return null; if(MINE[k]) return MINE[k]; if(PV.state==='fail') return null; } return null; }
+  finally{ pvToast(false); } }
+function pvToast(on){ let el=$('pvToast'); if(on&&!el){ document.body.insertAdjacentHTML('beforeend','<div class="pv-toast" id="pvToast" role="status"><span class="pv-dot"></span>Preparing your line in the lesson voice…</div>'); }
+  else if(!on&&el) el.remove(); }
 function pvStatusText(){ const p=PV; if(p.state==='ready') return 'Your name, introduction and meeting lines play in the lesson voice.';
   if(p.state==='work') return `Preparing your lines in the lesson voice… ${p.done}/${p.total}`;
   if(p.state==='fail') return 'Your own lines use the device voice on this browser.'; return ''; }
@@ -2850,12 +2862,13 @@ function prepVoiceText(m){ if(!m||!useFiles()) return ''; const ready=m.lines.ev
 async function pvBuild(){ if(pvRun){ pvAgain=true; return; } if(!useFiles()||!state.onboarded) return; pvRun=true;
   try{ const jobs=pvJobs(), keys=new Set(jobs.keys());
     for(const k of Object.keys(MINE)) if(k.startsWith('pv:')&&!keys.has(k)){ URL.revokeObjectURL(MINE[k].url); delete MINE[k]; try{ await IDB.del(k); }catch(e){} }
-    const todo=[...jobs].filter(([k])=>!MINE[k]).sort((a,b)=>a[1][2]-b[1][2]); PV={state:todo.length?'work':'ready',done:jobs.size-todo.length,total:jobs.size}; pvShow();
+    const todo=[...jobs].filter(([k])=>!MINE[k]); PV={state:todo.length?'work':'ready',done:jobs.size-todo.length,total:jobs.size}; pvShow();
     if(!todo.length) return;
     if(!pvTTS){ const { KokoroTTS }=await import('https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm');
       pvTTS=await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX',{dtype:'q8',device:'wasm'}); }
     const seg=new Map();   // the same phrase in the same voice is made once (the introduction appears in several lines)
-    for(const [k,[text,v]] of todo){ if(isPersonal(text)&&!state.intro.name) continue;
+    const pri=([k,j])=>pvFirst.has(k)?-1:j[2];
+    while(todo.length){ todo.sort((a,b)=>pri(a)-pri(b)); const [k,[text,v]]=todo.shift(); pvFirst.delete(k); if(MINE[k]||isPersonal(text)&&!state.intro.name) continue;
       const parts=[new Float32Array(3600)]; let sr=24000;   // 150 ms before the first word, like the clips
       for(const [t,type] of segsOf(text)){
         if(type==='pause'||type==='pause-long'){ parts.push(new Float32Array(Math.round(sr*(type==='pause'?0.65:1.3)))); continue; }
@@ -2956,7 +2969,7 @@ function viewQuiz(c){ const q=c.q, done=c.checked, words=q.text?q.text.split(' '
    says "Right." or "Not quite." and why. Spoken answers use the model voice; described actions ("[sitting still…]")
    are read by the coach. Clips: qz{i}-a / qz{i}-b (first example), qz{i}-{k}-o{n} (choice), qz{i}-{k}-t (tap quizzes). */
 const spokenText=t=>segsOf(t).some(s=>s[0]);
-async function qzPlay(id,text,coach,t){ const c=(useFiles()&&AUDIO[id])||pvClip(text,coach?KCAST.coach:KCAST.you); if(c) return playClip(c,[],t);
+async function qzPlay(id,text,coach,t){ const c=(useFiles()&&AUDIO[id])||pvClip(text,coach?KCAST.coach:KCAST.you)||await pvWait(text,coach?KCAST.coach:KCAST.you,t); if(t!==tok) return false; if(c) return playClip(c,[],t);
   if(!hasTTS) return true;
   if(coach||!spokenText(text)) return say(plainText(personal(text).replace(/[\[\]]/g,'')),t,{voice:themVoice(pickVoice())});
   for(const [txt,type] of segsOf(text)){
@@ -3132,7 +3145,8 @@ async function lsListen(auto){ const c=lsess.cards[lsess.n]; stopAll(); c.step='
   if(auto&&!await wait(LEAD,t)) return;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
-async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you)||(lsess.kind==='prep'&&prepClip(c.text)); let ok=true;
+async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you)||(lsess.kind==='prep'&&prepClip(c.text))||await pvWait(c.text,KCAST.you,t); let ok=true;
+  if(t!==tok) return false;
   if(clip) ok=await playClip(clip,[...document.querySelectorAll('.w[data-l="L"]')],t);
   else for(const s of parseLine(c.text)){
     if(s.type==='pause'){ if(!(ok=await wait(800/state.rate,t))) break; }
@@ -3291,7 +3305,8 @@ function lineHTML(sc,li){ return parseLine(sc.lines[li][1]).map((s,si)=>segHTML(
 async function speakLine(sc,li,t,yv,tv){
   const [who,text]=sc.lines[li];
   if(who==='stage') return wait(1200/state.rate,t);
-  const clip=clipFor(sc,li); if(clip) return playClip(clip,[...document.querySelectorAll(`.w[data-l="${li}"]`)],t);
+  const clip=clipFor(sc,li)||await pvWait(text,kCast(sc)[who],t); if(t!==tok) return false;
+  if(clip) return playClip(clip,[...document.querySelectorAll(`.w[data-l="${li}"]`)],t);
   const segs=parseLine(text), mine=who==='you', alt=altSpeaker(sc,who);
   for(let si=0;si<segs.length;si++){ const s=segs[si];
     if(s.type==='pause'){ if(!await wait(800/state.rate,t)) return false; continue; }
@@ -3530,9 +3545,11 @@ function bind(n,i){
   if(n==='lesson'){ if(lsess){ if(lsess.cards[lsess.n].type==='builder') bindBuilder(); return; } const l=LESSONS[i];
     // The same voice as the lesson cards: the recorded clip, or the line made on this device, else the device voice.
     document.querySelectorAll('[data-pair]').forEach(b=>b.addEventListener('click',()=>{ const k=+b.dataset.pair, p=l.pairs[k], c=!p.lang&&((useFiles()&&AUDIO[`l${i}-p${k}`])||pvClip(p.better,KCAST.you));
-      if(c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf(p.better), p.lang); }));
+      if(c) return runBtn(b,t=>playClip(c,[],t)); if(!p.lang&&useFiles()&&isPersonal(p.better)&&PV.state!=='fail') return runBtn(b,async t=>{ const w=await pvWait(p.better,KCAST.you,t); if(w) await playClip(w,[],t); });
+      playSegs(b, segsOf(p.better), p.lang); }));
     $('drillPlay').addEventListener('click',e=>{ const b=e.currentTarget, dm=drillMarkup(l.drill.script), c=(useFiles()&&AUDIO[`l${i}-d`])||pvClip(dm,KCAST.you);
-      if(c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, l.drill.script); });
+      if(c) return runBtn(b,t=>playClip(c,[],t)); if(useFiles()&&isPersonal(dm)&&PV.state!=='fail') return runBtn(b,async t=>{ const w=await pvWait(dm,KCAST.you,t); if(w) await playClip(w,[],t); });
+      playSegs(b, segsOf(dm)); });
     if(l.builder) bindBuilder();
     if(l.practice){ let last=-1; const P=l.practice, nt=$('newTopic'), st=$('startT'), tm=$('timer'), tp=$('topic');
       nt.addEventListener('click',()=>{ if(timerId){ clearInterval(timerId); timerId=null; } let k; do{ k=Math.floor(Math.random()*P.list.length); }while(k===last&&P.list.length>1); last=k; tp.textContent=P.list[k]; tm.textContent=P.secs; tm.classList.remove('up'); st.disabled=false; st.textContent='Start timer'; });
@@ -3557,7 +3574,7 @@ function bind(n,i){
     $('voiceSel')?.addEventListener('change',e=>{ state.voice=e.target.value; save(); });
     $('coachVoiceT').addEventListener('change',e=>{ state.coachVoice=e.target.checked; save(); });
     $('rate').addEventListener('input',e=>{ state.rate=+e.target.value; $('rateVal').textContent=state.rate.toFixed(2)+'×'; save(); });
-    $('testVoice').addEventListener('click',e=>{ const b=e.currentTarget, c=AUDIO['s0-l1']; if(useFiles()&&c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')); });
+    $('testVoice').addEventListener('click',e=>{ const b=e.currentTarget, c=AUDIO['l1-p0']; if(useFiles()&&c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')); });
     document.querySelectorAll('[data-src]').forEach(b=>b.addEventListener('click',()=>{ stopAll(); state.voiceSrc=b.dataset.src; save(); render(); }));
     $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress, ratings and notes? This cannot be undone.')){ const keep={rate:state.rate,voice:state.voice}; try{ localStorage.removeItem(KEY); }catch(e){} state=Object.assign({route:{name:'home'},done:{},own:{},notes:{},ratings:{},intro:{name:'',who:'',get:'',avoid:''},scMode:'shadow',coach:true,scOwn:{},scDone:{},lastSc:null},keep); save(); render(); } });
   }
@@ -3568,7 +3585,7 @@ if(document.fonts) document.fonts.ready.then(()=>{ if(state.route.name==='home')
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{ if(state.route.name==='home') drawScene(); });
 $('backBtn').addEventListener('click',()=>{ if(sess) act('exit'); else go($('backBtn').dataset.go); });
 $('main').addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act,b); });
-load(); render(); if(state.route.name==='home') scrollToNow(); offlineInit(); setTimeout(()=>loadMineReady.then(pvBuild),4000);
+load(); state.route={name:'home'}; render(); scrollToNow(); offlineInit(); setTimeout(()=>loadMineReady.then(pvBuild),1000);   // every visit opens on the mountain, at your current step
 const loadMineReady=loadMine().then(()=>{ if(['studio','settings'].includes(state.route.name)) render(); });
 
 </script>
