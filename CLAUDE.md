@@ -22,7 +22,8 @@ real estate (his direction, 2026-09-29).
   added 2026-09-29 at the top so nobody's progress moves back; Tough Q&A is High Camp). A lesson joins a unit with `unit:"Clarity"` (none =
   Foundation); a scenario joins by its `cat`. Each unit is a camp (`CAMPS`, `ALTS` up to 5,000 m, `RANKS` one per
   camp, `ZONES` scenery, 11 each; `ALTS`/`RANKS` 12 with the summit). 23 lessons (8 Foundation, 3 each for Clarity, Video
-  calls, Listen and ask, Lead the room, Tough Q&A), 26 scenarios (A–Z: a 27th needs `letter()` to go past Z), 49 steps. Keep new lessons in
+  calls, Listen and ask, Lead the room, Tough Q&A), 26 scenarios, 49 steps. One numbering everywhere: the step number on the mountain
+  (`stepNo`, `pathSteps`, climbing order) in the lists, top bar, pages and prev/next (`pathNeighbour`). No letters. Keep new lessons in
   the form `  { title:"…", unit:"…",` so tools/make_voice.py can read them.
 - More session kinds on the lesson card engine (`lsess.kind`): 'lesson', 'r3', 'prep', 'breathe'; non-lesson kinds
   run on route `session`.
@@ -37,6 +38,8 @@ real estate (his direction, 2026-09-29).
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
   after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.
+- Wording (2026-09-30 review): natural spoken English, no weak words in model lines, no duplicate titles, gender-neutral
+  goals for Dara, industry-neutral terms (e.g. "utilization", not "occupancy").
 - Pacing (Nick, 2026-09-30: "the voice starts a bit too fast"): audio that starts by itself waits `LEAD` (500 ms) after
   the screen appears (cards, quiz reading, scenario setting and each new line); a tap plays at once. Every clip starts
   with 150 ms of silence (`LEAD` in make_voice.py; on-device lines too) so iPhones don't clip the first syllable.

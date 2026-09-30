@@ -544,9 +544,9 @@ const LESSONS = [
     rule:"Slower, lower, and steady to the very last word.",
     why:"Three habits make a voice sound junior: <b>speed</b> (rushing to finish), <b>rising pitch</b> (stress pushes your voice up), and <b>fading endings</b> (the last words get quieter). A voice with weight does the opposite. Speak about 20% slower than feels natural, use your natural lower range (don't fake a deep voice), and keep the volume up until the final word. The final word is usually the important one.",
     pairs:[
-      {moment:"Opening a presentation", normal:"Hi everyone thanks for coming so today I want to talk about our plan and some numbers and…", better:"Good morning. ‧‧‧ Thank you for coming. ‧‧‧ Today, one decision. ↘", note:"Same content, a third of the words, three times the weight."},
+      {moment:"Opening a presentation", normal:"Hi everyone thanks for coming so today I want to talk about our plan and some numbers and…", better:"Good morning. ‧‧‧ Thank you for coming. ‧‧‧ Today, we need *one* decision. ↘", note:"Same content, a third of the words, three times the weight."},
       {moment:"Giving your key number", normal:"…and the return is around twelve percent, so yeah.", better:"The return is ‧‧‧ twelve percent. ↘", note:"Slow down before the number, not after it. Then stop."}],
-    drill:{ tag:"Say each line on one breath. Keep the last word as strong as the first.", script:[["Good morning.",null],["","pause"],["Thank you for coming.",null],["","pause-long"],["Today, I'd like to agree on one decision.","down"],["","pause"],["By the end of this meeting,",null],["we'll know the next step.","down"]],
+    drill:{ tag:"Say each line on one breath. Keep the last word as strong as the first.", script:[["Good morning.",null],["","pause"],["Thank you for coming.",null],["","pause-long"],["Today, I'd like us to agree on one thing.","down"],["","pause"],["By the end of this meeting,",null],["we'll know the next step.","down"]],
       note:"Record it. Listen for three things: Did you rush? Did your pitch rise? Did the last word fade? Fix one, record again." },
     own:"Write the first two sentences you'd say to open your next important meeting. Then practice them with this voice." },
 
@@ -587,13 +587,13 @@ const LESSONS = [
 
   { title:"Introduce yourself",
     sub:"Your name alone is forgettable. The sentence after your name is what people remember and repeat.",
-    rule:"Short name, then one line that says what you do for people. Match the setting.",
-    why:"\"I'm Alex, head of sales at a software company\" gives people a name, a title and a category, and they forget all three. A strong intro has <b>one memorable line</b>: who you help, and what you help them get or avoid. The setting decides the order. <b>Across a table</b>: a short name first, then the line. <b>On a stage or in a pitch</b>: an idea first, then your name. <b>In a formal meeting abroad</b>: follow their greeting ritual first, done properly, and stand out later through calm and precision.",
+    rule:"Your name, then one line about what you do for people. Match the setting.",
+    why:"\"I'm Alex, head of sales at a software company\" gives people a name, a title and a category, and they forget all three. A strong intro has <b>one memorable line</b>: who you help, and what you help them get or avoid. The setting decides the order. <b>Across a table</b>: your name first, then the line. <b>On a stage or in a pitch</b>: an idea first, then your name. <b>In a formal meeting abroad</b>: follow their greeting ritual first, done properly, and stand out later through calm and precision.",
     pairs:[
-      {moment:"Across a table", normal:"Hi, my name is {name}, I'm the head of a team at our company, and we do a lot of different things.", better:"Good to meet you. I'm {name}. ‧‧‧ {intro}", note:"A short name, then a line they can repeat to someone else."},
+      {moment:"Across a table", normal:"Hi, my name is {name}, I'm the head of a team at our company, and we do a lot of different things.", better:"Good to meet you. I'm {name}. ‧‧‧ {intro}", note:"Your name, then a line they can repeat to someone else."},
       {moment:"On a stage or in a pitch", normal:"Hello everyone, my name is {name}, and today I'm going to talk about our work.", better:"Most teams make one expensive mistake with every new project. ‧‧‧ My job is to prevent it. ‧‧‧ I'm {name}.", note:"Idea first, name last. Only make a claim you can back up if someone asks."},
       {moment:"Formal meeting abroad", normal:"[skipping their greeting ritual to open with a clever line]", better:"[greet the way they do: a slight bow, your card offered with both hands] ‧‧‧‧‧ Thank you for meeting us today.", note:"Here the ritual is the respect. Stand out through calm and precision, not by breaking the form.", noPlay:true}],
-    drill:{ tag:"Your table intro. Short name, pause, then the line.", script:[["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null]],
+    drill:{ tag:"Your table intro. Your name, a pause, then your line.", script:[["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null]],
       note:"This is your own line from your profile. Say it until it sounds like something you'd say at dinner, not like a slogan." },
     builder:true,
     practice:{ secs:10, note:"Get a setting, start the timer, and introduce yourself for that setting in under 10 seconds.", list:["Networking event, a stranger asks what you do","First meeting with a potential investor","You're on a panel, introduced third","Phone call with someone you've never met","A senior person you admire, a chance meeting","Formal meeting with a Japanese company"] },
@@ -605,7 +605,7 @@ const LESSONS = [
     why:"Senior people judge intelligence by <b>precision</b> (exact numbers, short sentences), <b>questions</b> that show you understand their situation, <b>listening</b> (answering the real question, not the one you prepared for), and <b>brevity</b>. Two more signals: when you don't know, say so and give a time, because a guessed number destroys trust once it's discovered. And when you're challenged, ask instead of defending. Defending sounds nervous. A question sounds secure.",
     pairs:[
       {moment:"Showing you did your homework", normal:"So, tell me about your company.", better:"You opened in Singapore last year. ‧‧‧ What made this market the next step?", note:"A specific question impresses people more than anything you say about yourself."},
-      {moment:"A question you can't answer", normal:"Um, I'm not sure… maybe around eight percent? I think.", better:"I don't want to give you a rough number on that. ‧‧‧ I'll send you the exact figure tomorrow.", note:"Honesty with a deadline sounds more competent than a guess."},
+      {moment:"A question you can't answer", normal:"Um, I'm not sure… maybe around eight percent? I think.", better:"I'd rather not *guess*. ‧‧‧ I'll send you the *exact* figure tomorrow. ↘", note:"Honesty with a deadline sounds more competent than a guess."},
       {moment:"Being challenged: \"Your numbers look optimistic.\"", normal:"No, no, they're realistic, we checked very carefully, really.", better:"Fair question. ‧‧‧ Which number concerns you most?", note:"The question finds the real doubt, and shows you're not afraid of it."}],
     drill:{ tag:"Answer first, then one reason, then stop.", script:[["Fair question.",null],["","pause"],["Which number concerns you most?",null],["","pause-long"],["[they answer]","note"],["That figure is based on the last three years.",null],["","pause"],["I'll send you the full data today.","down"]],
       note:"Notice what's missing: no defending, no \"really\", no long explanation. The data does the defending for you." },
@@ -615,12 +615,12 @@ const LESSONS = [
   { title:"Open and close",
     sub:"People decide how to see you in the first minute and remember you by the last. This lesson puts everything together.",
     rule:"Settle. Greet. Your one line. Purpose. Then, at the end: summary, next step, stop.",
-    why:"<b>The first 60 seconds</b>: settle and breathe (Lesson 1), greet with a steady voice (2), pause (3), give your introduction (6), then say why you're here in one sentence, without apologizing for their time. <b>The last 60 seconds</b>: most meetings end with \"so, yeah, that's all\", which wastes the moment people remember most. Instead, summarize in one sentence, state the next step, and stop.",
+    why:"<b>The first 60 seconds</b>: settle and breathe (Step 1), greet with a steady voice (Step 2), pause (Step 3), give your introduction (Step 6), then say why you're here in one sentence, without apologizing for their time. <b>The last 60 seconds</b>: most meetings end with \"so, yeah, that's all\", which wastes the moment people remember most. Instead, summarize in one sentence, state the next step, and stop.",
     pairs:[
       {moment:"Opening a meeting you asked for", normal:"Thank you so much for your time, I know you're very busy, I'll try to be quick.", better:"Thank you for your time. ‧‧‧ I'd like to cover two things, and I'd value your view on the second.", note:"Apologizing for their time tells them your time is worth less."},
       {moment:"Closing the meeting", normal:"So… yeah, that's all. Thank you.", better:"To summarize: ‧‧‧ we agree the timing works. ‧‧‧ The next step is a proposal by Friday. ‧‧‧ Does that work for you?", note:"The last thing you say is what they remember. Make it the point and the next step."}],
     drill:{ tag:"The full opening. Record a video of this, from sitting down to the purpose.", script:[["[sit, settle, breathe out, look up]","note"],["Good to meet you.",null],["","pause"],["I'm {name}.",null],["","pause"],["{intro}",null],["","pause-long"],["Thank you for your time.",null],["","pause"],["I'd like to cover two things today,",null],["and I'd value your view on the second.","down"]],
-      note:"Final check: compare this video with your first recording from Lesson 1. The difference is your progress." },
+      note:"Final check: compare this video with your first recording in Step 1. The difference is your progress." },
     own:"Write the opening and closing for a real meeting you have coming up. Practice both out loud the day before." },
 
   { title:"Finish every word", unit:"Clarity",
@@ -694,7 +694,7 @@ const LESSONS = [
     rule:"Ask one question. Then stop talking.",
     why:"When you stack questions, people answer the easiest one, or the last one. Ask <b>one clear question</b>, then <b>stop</b>. Don't soften it with a second version, and don't answer it for them. The silence after a good question is where the real answer comes from.",
     pairs:[
-      {moment:"Asking about their needs", normal:"So what are your goals, and also your budget, and when do you want to start, roughly?", better:"What would make this a *success* for you? ‧‧‧‧‧", note:"One question, then silence. You'll learn more than from three."},
+      {moment:"Asking about their needs", normal:"So what are your goals, and also your budget, and when do you want to start, roughly?", better:"What would make this a *success* for you? ‧‧‧‧‧", note:"One question, then silence. You'll learn more than you would from three."},
       {moment:"Checking a plan with your team", normal:"Does that make sense? Is that okay? Any questions or anything?", better:"What's the *weakest* part of this plan?", note:"A specific question gets a real answer. \"Any questions?\" gets silence."},
       {moment:"Right after you ask", normal:"How did the launch go? Was it good? I heard it was good.", better:"How did the *launch* go? ‧‧‧‧‧ [wait]", note:"Don't answer your own question. Let them fill the silence."}],
     drill:{ tag:"Ask it once, then hold the silence for two full seconds.", script:[["What would make this a",null],["success","stress"],["for you?",null],["","pause-long"],["[wait for the answer]","note"]],
@@ -726,23 +726,23 @@ const LESSONS = [
 
   { title:"Open with the goal", unit:"Lead the room",
     sub:"The first thirty seconds decide whether the meeting has a leader.",
-    rule:"Say the goal, the time, and the decision. Then begin.",
-    why:"People relax when they know where a meeting ends. Open with three things: the <b>goal</b> (what we decide today), the <b>time</b> (and that you'll keep it), and the <b>decision</b> you need. It takes twenty seconds, and it quietly makes you the person running the room.",
+    rule:"Say the goal, the time, and what you need. Then begin.",
+    why:"People relax when they know where a meeting ends. Open with three things: the <b>goal</b> (what we're here to decide), the <b>time</b> (and that you'll keep to it), and <b>what you need</b> from them. It takes twenty seconds, and it quietly makes you the person running the room.",
     pairs:[
-      {moment:"Starting a team meeting", normal:"Okay, so, um, let's get started I guess, there's a few things to talk about…", better:"Good *morning*. ‧‧‧ In *thirty* minutes, ‧‧‧ we decide the *launch* date. ‧‧‧ Let's *begin*. ↘", note:"Goal and time first. Everyone relaxes when they know the end."},
+      {moment:"Starting a team meeting", normal:"Okay, so, um, let's get started I guess, there's a few things to talk about…", better:"Good *morning*. ‧‧‧ We have *thirty* minutes ‧‧‧ to decide the *launch* date. ‧‧‧ Let's *begin*. ↘", note:"Goal and time first. Everyone relaxes when they know the end."},
       {moment:"A meeting with senior people", normal:"I don't want to take too much of your time, so I'll try to be quick…", better:"We have *twenty* minutes. ‧‧‧ I need *one* decision from you: ‧‧‧ the *budget*. ↘", note:"Respect their time by being clear, not by apologizing for it."}],
-    drill:{ tag:"Three short sentences. A full pause between each.", script:[["Good morning.",null],["","pause"],["In thirty minutes, we decide the",null],["launch","stress"],["date.",null],["","pause"],["Let's begin.","down"]],
-      note:"Write your next meeting's opening on a card: goal, time, decision." },
+    drill:{ tag:"Three short sentences. A full pause between each.", script:[["Good morning.",null],["","pause"],["We have thirty minutes to decide the",null],["launch","stress"],["date.",null],["","pause"],["Let's begin.","down"]],
+      note:"Write your next meeting's opening on a card: goal, time, what you need." },
     own:"Write the first three sentences of your next meeting." },
 
   { title:"Hold the floor", unit:"Lead the room",
     sub:"When someone talks over you, the room watches what you do next.",
     rule:"Don't speed up or get louder. Pause, use their name, finish your point.",
-    why:"When you're interrupted, the instinct is to talk faster or louder to keep your turn. Both look anxious. Instead <b>stop</b>, use their <b>name</b> and one calm line: \"Let me finish this point, then I want your view.\" Finish <b>slower</b> than before. Then give them the floor as promised: that's what makes it respectful.",
+    why:"When you're interrupted, the instinct is to talk faster or louder to keep your turn. Both look anxious. Instead <b>stop</b>, use their <b>name</b> and one calm line: \"Let me finish this point, then I'd like your view.\" Finish <b>slower</b> than before. Then give them the floor as promised: that's what makes it respectful.",
     pairs:[
-      {moment:"Someone interrupts you", normal:"Sorry, sorry, can I just, sorry, if I could just finish…", better:"*James*, ‧‧‧ let me *finish* this point, ‧‧‧ then I want your *view*. ↘", note:"Name, pause, a promise. No apologies, no speed."},
+      {moment:"Someone interrupts you", normal:"Sorry, sorry, can I just, sorry, if I could just finish…", better:"*James*, ‧‧‧ let me *finish* this point, ‧‧‧ then I'd like your *view*. ↘", note:"Name, pause, a promise. No apologies, no speed."},
       {moment:"Two people start arguing", normal:"Okay guys, okay, let's, um, calm down maybe…", better:"Let's *pause* there. ‧‧‧ Both points *matter*. ‧‧‧ *Anna* first, ‧‧‧ then *Tom*. ↘", note:"You decide the order. That's what leading the room means."}],
-    drill:{ tag:"Slow and even. The name, then a full pause.", script:[["James,",null],["","pause"],["let me finish this point,",null],["","pause"],["then I want your view.","down"]],
+    drill:{ tag:"Slow and even. The name, then a full pause.", script:[["James,",null],["","pause"],["let me finish this point,",null],["","pause"],["then I'd like your view.","down"]],
       note:"Say the line out loud until it comes out without any heat." },
     own:"Who interrupts you most? Write the exact line you'll use next time." },
 
@@ -762,7 +762,7 @@ const LESSONS = [
     rule:"Pause. Restate it in neutral words. Answer the fair part, briefly.",
     why:"When a question arrives with an edge, don't match the edge. <b>Pause</b>, then restate the question in <b>neutral words</b>: it takes the heat out and buys you time. Answer the fair question underneath, <b>briefly</b>, and stop. Never repeat the loaded words: \"Why are you wasting money?\" becomes \"You're asking whether this is worth it.\"",
     pairs:[
-      {moment:"\"Why are you wasting our money on this?\"", normal:"We're not wasting money! That's not fair, we've worked really hard on…", better:"‧‧‧ You're asking whether this is *worth* it. ‧‧‧ *Fair* question. ‧‧‧ It pays back in *eighteen* months. ↘", note:"Neutral words, a short answer, no defence of your feelings."},
+      {moment:"\"Why are you wasting our money on this?\"", normal:"We're not wasting money! That's not fair, we've worked really hard on…", better:"‧‧‧ You're asking whether this is *worth* it. ‧‧‧ *Fair* question. ‧‧‧ It pays back in *eighteen* months. ↘", note:"Neutral words, a short answer, no defending your feelings."},
       {moment:"\"Isn't this just another failed project?\"", normal:"No, no, it's totally different, this time we…", better:"‧‧‧ The question is what's *different* this time. ‧‧‧ *Two* things. ↘", note:"Don't repeat \"failed\". Restate it, then give structure."}],
     drill:{ tag:"Pause first. Restate calmly. A short answer.", script:[["[pause]","note"],["You're asking whether this is worth it.",null],["","pause"],["Fair question.",null],["","pause"],["It pays back in eighteen months.","down"]],
       note:"Write the three hardest questions you could get this month. Restate each one in neutral words." },
@@ -794,7 +794,7 @@ const SCENARIOS = [
  {
   "cat": "First impressions",
   "title": "First Meeting With an Investor",
-  "setting": "A café. Mr. Lee, an investor, was introduced by a friend. He has 20 minutes and hasn't decided if you're worth his time.",
+  "setting": "A café. A friend introduced you to Mr. Lee, an investor. He has 20 minutes and hasn't decided if you're worth his time.",
   "goal": "Get a second meeting.",
   "them": "Mr. Lee",
   "lessons": [
@@ -953,7 +953,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ I started because I saw how many good ideas *died* in meetings, ‧‧‧ because nobody could *explain* them. ↘",
+    "‧‧‧ I started this work after watching good ideas *die* in meetings, ‧‧‧ just because nobody could *explain* them. ↘",
     "The reason you started, in one sentence. Replace it with your real reason."
    ],
    [
@@ -1131,7 +1131,7 @@ const SCENARIOS = [
    ],
    [
     "them",
-    "The occupancy rate. Ninety percent in the first year? That's not realistic."
+    "The utilization rate. Ninety percent in the first year? That's not realistic."
    ],
    [
     "you",
@@ -1195,7 +1195,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ I don't want to give you a *rough* number on that. ‧‧‧ I'll send you the *exact* figure tomorrow morning. ↘",
+    "‧‧‧ I'd rather not *guess* on that. ‧‧‧ You'll have the *exact* figure tomorrow morning. ↘",
     "Honesty with a deadline."
    ],
    [
@@ -1397,7 +1397,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Those are a fair reference for a *smaller* scope. ‧‧‧ This contract includes *round-the-clock* support, ‧‧‧ a *dedicated* team, ‧‧‧ and it's *already* proven with clients like you. ↘",
+    "Those are a fair reference for a *smaller* scope. ‧‧‧ This contract includes *round-the-clock* support, ‧‧‧ a *dedicated* team, ‧‧‧ and a *track* record with clients like you. ↘",
     "Accept the fair part, then show the difference with facts."
    ],
    [
@@ -1406,7 +1406,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ Our price is *firm* at three hundred twenty. ‧‧‧ If you can sign within *thirty* days, ‧‧‧ I can ask about three hundred *ten*. ↘",
+    "‧‧‧ Three hundred twenty is a *fair* price for this scope. ‧‧‧ If you can sign within *thirty* days, ‧‧‧ I can ask my director about three hundred *ten*. ↘",
     "Any move you make is traded for something."
    ],
    [
@@ -1585,7 +1585,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ Their track record is too *short* yet. ‧‧‧ My clients trust me because I only recommend what I'd *use* myself. ↘",
+    "‧‧‧ Their track record is still too *short*. ‧‧‧ My clients trust me because I only recommend what I'd *use* myself. ↘",
     "One reason, framed as your principle, not as criticism."
    ],
    [
@@ -1594,7 +1594,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧ I *understand*. ‧‧‧ Here's what I *can* do. ‧‧‧ Once they have a *year* of results, ‧‧‧ I'll review them again *myself*, ‧‧‧ *first*. ↘",
+    "‧‧‧ I *understand*. ‧‧‧ Here's what I *can* do. ‧‧‧ Once they have a *year* of results, ‧‧‧ I'll be the *first* to look at them again. ↘",
     "An offer, not a retreat."
    ],
    [
@@ -1612,7 +1612,7 @@ const SCENARIOS = [
   "cat": "People and hard conversations",
   "title": "Giving Tough Feedback",
   "setting": "Dara, a capable team member, delivered a report five hours late. A client asked you for it in a meeting and you didn't have it. You talk privately the next morning.",
-  "goal": "Be clear about the problem, keep his motivation, and agree on a fix.",
+  "goal": "Be clear about the problem, keep Dara motivated, and agree on a fix.",
   "them": "Dara",
   "lessons": [
    1,
@@ -1752,12 +1752,12 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "‧‧‧‧‧ Let me *pause* us for a moment. ↘",
+    "‧‧‧‧‧ Let's *pause* for a moment. ↘",
     "Pause first. Speak lower and slower than they are."
    ],
    [
     "you",
-    "‧‧‧ I think you *both* want the same thing: ‧‧‧ a project that finishes on *time*, ‧‧‧ and doesn't lose *money*. ↘ ‧‧‧ Is that *fair*?",
+    "‧‧‧ You *both* want the same thing: ‧‧‧ a project that finishes on *time*, ‧‧‧ and doesn't lose *money*. ↘ ‧‧‧ Is that *fair*?",
     "Find the shared goal before anything else."
    ],
    [
@@ -1838,7 +1838,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "We *hire* two people in *March*. ‧‧‧ I'll send you the *plan* tomorrow. ↘",
+    "We're *hiring* two people in *March*. ‧‧‧ I'll send you the *plan* tomorrow. ↘",
     "Numbers and dates carry the stress."
    ]
   ]
@@ -1989,7 +1989,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Then here's the *proposal*: ‧‧‧ *June*, ‧‧‧ with *two* people for sales training. ‧‧‧ Can everyone *live* with that?",
+    "Then here's the *proposal*: ‧‧‧ *June*, ‧‧‧ with *two* extra people for training. ‧‧‧ Can everyone *live* with that?",
     "Summarize into a decision and check it."
    ],
    [
@@ -2176,7 +2176,7 @@ const SCENARIOS = [
    ],
    [
     "you",
-    "Mr. *Brooks*, ‧‧‧ let me *finish* this point, ‧‧‧ then I want your *view*. ↘",
+    "Mr. *Brooks*, ‧‧‧ let me *finish* this point, ‧‧‧ then I'd like your *view*. ↘",
     "Name, pause, promise. Slower than before."
    ],
    [
@@ -2244,7 +2244,7 @@ const SCENARIOS = [
  },
  {
   "cat": "Tough Q&A",
-  "title": "The Question You Can't Answer",
+  "title": "The Number You Don't Have",
   "setting": "You're presenting quarterly results to senior leaders. Ms. Adler asks for a number you don't have.",
   "goal": "Say you don't know without losing the room, commit to a time, and get back on track.",
   "them": "Ms. Adler",
@@ -2292,7 +2292,11 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e
 function esc(t){ return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function fmt(line){ return esc(personal(line)).replace(/‧‧‧‧‧/g,'<span class="pause">‧‧‧‧‧</span>').replace(/‧‧‧(?!‧)/g,'<span class="pause">‧‧‧</span>').replace(/↘/g,'<span class="down" aria-label="falling pitch">↘</span>').replace(/\*([^*]+)\*/g,'<span class="stress">$1</span>'); }
 const $=id=>document.getElementById(id);
-const letter=i=>String.fromCharCode(65+i);
+/* One numbering everywhere: the step number on the mountain (1–49), in climbing order. */
+const pathSteps=()=>units().flatMap(u=>u.items);
+const stepNo=(kind,i)=>pathSteps().findIndex(x=>x.kind===kind&&x.i===i)+1;
+const byPath=(kind,list)=>list.slice().sort((a,b)=>stepNo(kind,a)-stepNo(kind,b));
+function pathNeighbour(kind,i,d){ const s=pathSteps().filter(x=>x.kind===kind), k=s.findIndex(x=>x.i===i)+d; return s[k]?s[k].i:null; }
 
 /* ---------------- VOICES ---------------- */
 let VOICES=[];
@@ -2603,10 +2607,10 @@ function playUnlock(prev){ const j=MTN.steps.indexOf(prev), next=MTN.steps[j+1],
     requestAnimationFrame(tick); }, reduce?0:1000); }
 
 function viewLessons(){ const col=l=>(UNIT_DEF.find(u=>u.name===(l.unit||'Foundation'))||UNIT_DEF[0]).color;
-  return `<h1 class="page-title">Lessons</h1><div class="list">${LESSONS.map((l,i)=>`<button class="row u-${col(l)}" type="button" data-act="ls-start" data-i="${i}">
-      <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':i+1}</span>
+  return `<h1 class="page-title">Lessons</h1><div class="list">${byPath('lesson',LESSONS.map((_,i)=>i)).map(i=>{ const l=LESSONS[i]; return `<button class="row u-${col(l)}" type="button" data-act="ls-start" data-i="${i}">
+      <span class="row-n ${state.done[i]?'done':''}">${state.done[i]?'✓':stepNo('lesson',i)}</span>
       <span class="row-body"><span class="row-title">${l.title}</span></span>
-      <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>
+      <span class="chev" aria-hidden="true">›</span></button>`; }).join('')}</div>
   <details class="fold principles"><summary>The five principles behind everything</summary><ol class="how">
     <li><b>Never apologize for being there.</b> Not for their time, your nerves, or having a view.</li>
     <li><b>Use fewer words.</b> Short sentences carry more weight.</li>
@@ -2624,7 +2628,8 @@ function viewLesson(i){
   if(lsess&&lsess.i===i) return viewLessonSession();
   const l=LESSONS[i]; let step=0; const S=t=>`<h2 class="step"><span class="step-n">${++step}</span>${t}</h2>`;
   const hist=(state.ratings[i]||[]).slice(-5);
-  let h=`<p class="eyebrow">Lesson ${i+1} of ${LESSONS.length}</p><h1 class="page-title">${l.title}</h1><p class="lead">${l.sub}</p>
+  const pvL=pathNeighbour('lesson',i,-1), nxL=pathNeighbour('lesson',i,1);
+  let h=`<p class="eyebrow">Step ${stepNo('lesson',i)} of ${pathSteps().length}</p><h1 class="page-title">${l.title}</h1><p class="lead">${l.sub}</p>
   <div class="coach-row">${coachBtn(`c-lesson${i}-intro`,'Listen')}</div>
   ${S('The rule')}<div class="rule">${l.rule}</div>
   <details class="fold"><summary>Why this works</summary><p class="body">${l.why}</p></details>
@@ -2656,8 +2661,8 @@ function viewLesson(i){
     <p class="hint">1 = reading a script · 5 = natural${hist.length?` · recent: ${hist.map(r=>r.s).join(', ')}`:''}</p>
     <textarea id="note" aria-label="Notes" placeholder="Notes: what you noticed, what you'll change">${esc(state.notes[i]||'')}</textarea>
     <div class="end-nav">
-      ${i>0?`<button class="ghost-btn" type="button" data-go="lesson" data-i="${i-1}">‹ Lesson ${i}</button>`:'<span></span>'}
-      <button class="solid-btn" type="button" id="doneBtn">${state.done[i]?'Done ✓':''}${i<LESSONS.length-1?(state.done[i]?' · Next lesson ›':'Mark done & next ›'):(state.done[i]?'':'Mark done')}</button>
+      ${pvL!=null?`<button class="ghost-btn" type="button" data-go="lesson" data-i="${pvL}">‹ Step ${stepNo('lesson',pvL)}</button>`:'<span></span>'}
+      <button class="solid-btn" type="button" id="doneBtn">${state.done[i]?'Done ✓':''}${nxL!=null?(state.done[i]?' · Next lesson ›':'Mark done & next ›'):(state.done[i]?'':'Mark done')}</button>
     </div>`;
   return h;
 }
@@ -2665,7 +2670,7 @@ function viewLesson(i){
 function viewScenarios(){
   return `<h1 class="page-title">Scenarios</h1>
   ${CATS.map(c=>`<h2 class="sec-h">${c}</h2><div class="list u-${catColor(c)}">${SCENARIOS.map((s,i)=>s.cat!==c?'':`<button class="row" type="button" data-act="sc-start" data-i="${i}">
-    <span class="row-n ${state.scDone[i]?'done':''}">${state.scDone[i]?'✓':letter(i)}</span>
+    <span class="row-n ${state.scDone[i]?'done':''}">${state.scDone[i]?'✓':stepNo('scenario',i)}</span>
     <span class="row-body"><span class="row-title">${s.title}</span></span>
     <span class="chev" aria-hidden="true">›</span></button>`).join('')}</div>`).join('')}`;
 }
@@ -2802,8 +2807,8 @@ function viewStudio(){
     <div class="j-bar"><i style="width:${Math.max(2,mine/all.length*100)}%"></i></div>
     <label class="toggle"><input type="checkbox" id="useMine" ${state.useMine!==false?'checked':''}> Use my recordings</label>
     <div class="studio-btns"><button class="ghost-btn" type="button" data-act="st-export" ${mine?'':'disabled'}>Export</button></div></div>
-  ${SCENARIOS.map((sc,si)=>{ const lines=yourLines(sc), n=lines.filter(li=>MINE[lineId(si,li)]).length;
-    return `<details class="studio-sc" data-si="${si}" ${studioOpen.has(si)?'open':''}><summary><span class="studio-l">${letter(si)}</span><span class="studio-t">${esc(sc.title)}</span><span class="studio-n${n===lines.length?' full':''}">${n}/${lines.length}</span></summary>
+  ${byPath('scenario',SCENARIOS.map((_,i)=>i)).map(si=>{ const sc=SCENARIOS[si], lines=yourLines(sc), n=lines.filter(li=>MINE[lineId(si,li)]).length;
+    return `<details class="studio-sc" data-si="${si}" ${studioOpen.has(si)?'open':''}><summary><span class="studio-l">${stepNo('scenario',si)}</span><span class="studio-t">${esc(sc.title)}</span><span class="studio-n${n===lines.length?' full':''}">${n}/${lines.length}</span></summary>
       ${lines.map(li=>{ const id=lineId(si,li), m=!!MINE[id], recNow=stRec&&stRec.id===id;
         return `<div class="take${recNow?' rec':''}"><div class="take-text">${fmt(sc.lines[li][1])}</div><div class="take-ctl">
           <span class="chip ${m?'mine':AUDIO[id]?'ai':''}">${m?'Your voice':AUDIO[id]?'built-in voice':'Browser voice'}</span>
@@ -2912,7 +2917,7 @@ function viewWelcome(){ const n=state.intro;
    JSON so tools/make_voice.py can read it (coach clips c-lesson{i}-q{k} and c-lesson{i}-q{k}-why). */
 const LESSON_QUIZ = {
  "0": [{"type": "choice", "prompt": "A hard question lands. What do you do first?", "options": ["Answer quickly to show confidence", "Say \"Great question\" to buy time", "Breathe out, pause, then answer"], "answer": 2, "why": "A slow exhale steadies your voice, and the pause looks thoughtful, not lost."}],
- "1": [{"type": "pause", "prompt": "Where does the pause go?", "text": "The return is twelve percent.", "answer": 2, "why": "Slow down just before the number. It tells them: this matters."}, {"type": "stress", "prompt": "Which word must stay strongest?", "text": "Today, one decision.", "answer": 2, "why": "Keep the volume up to the last word. It's usually the important one."}],
+ "1": [{"type": "pause", "prompt": "Where does the pause go?", "text": "The return is twelve percent.", "answer": 2, "why": "Slow down just before the number. It tells them: this matters."}, {"type": "stress", "prompt": "Which word must stay strongest?", "text": "Today, we need one decision.", "answer": 4, "why": "Keep the volume up to the last word. It's usually the important one."}],
  "2": [{"type": "pause", "prompt": "Where do you stay silent?", "text": "The price is fifty thousand.", "answer": 4, "why": "After a number, stop and wait. Whoever talks first usually gives something away."}, {"type": "choice", "prompt": "They ask a hard question. Your best first two seconds are…", "options": ["Silence, while you think", "\"Um, well, so…\"", "\"That's a really great question!\""], "answer": 0, "why": "Two seconds of silence looks thoughtful. Fillers look lost."}],
  "3": [{"type": "weak", "prompt": "Tap the weak words", "text": "I just wanted to maybe suggest that we could sort of try it.", "answer": [1, 4, 9, 10], "why": "Remove them and the same idea sounds twice as strong."}, {"type": "choice", "prompt": "How should your voice end a proposal?", "options": ["Rising, to sound open", "Falling, like setting something down", "Fading, to sound polite"], "answer": 1, "why": "A rising end turns a statement into a question."}],
  "4": [{"type": "choice", "prompt": "While you speak, where are your hands?", "options": ["In your lap, out of sight", "Holding a pen, to stay busy", "Visible and still on the table"], "answer": 2, "why": "Visible, still hands say: I belong here."}],
@@ -2928,7 +2933,7 @@ const LESSON_QUIZ = {
  "14": [{"type": "choice", "prompt": "You asked a question. Nobody answers for two seconds. You…", "options": ["Rephrase it to help them", "Wait. Let them think.", "Answer it yourself to move on"], "answer": 1, "why": "Two seconds is thinking time. Fill it and you lose the answer."}, {"type": "stress", "prompt": "Which word carries the question?", "text": "What would make this a success for you?", "answer": 5, "why": "Stress the word that matters to them: success."}],
  "15": [{"type": "choice", "prompt": "They pause in the middle of a thought. You…", "options": ["Finish the sentence for them", "Stay quiet and wait", "Jump in with your point"], "answer": 1, "why": "A pause is not your turn. The important part often comes after it."}],
  "16": [{"type": "choice", "prompt": "Which is the best play-back?", "options": ["\"I totally understand how you feel.\"", "\"So the delays are costing you customers. Is that right?\"", "\"Okay, noted. Let's move on.\""], "answer": 1, "why": "Specific, short, and checked. That's what makes people feel heard."}],
- "17": [{"type": "pause", "prompt": "Where does the pause go?", "text": "In thirty minutes we decide the launch date.", "answer": 2, "why": "Pause after the time. Then the goal lands on its own."}],
+ "17": [{"type": "pause", "prompt": "Where does the pause go?", "text": "We have thirty minutes to decide the launch date.", "answer": 3, "why": "Pause after the time. Then the goal lands on its own."}],
  "18": [{"type": "choice", "prompt": "Someone talks over you. Your first move?", "options": ["Talk louder to keep your turn", "Stop, then use their name", "Go quiet and let them take over"], "answer": 1, "why": "Stopping shows control. Their name gets attention without a fight."}],
  "19": [{"type": "weak", "prompt": "Tap the words that make it vague", "text": "Let's maybe follow up on this sometime soon.", "answer": [1, 6, 7], "why": "Replace them with a name and a date."}],
  "20": [{"type": "choice", "prompt": "\"Why are you wasting our money?\" You say…", "options": ["\"We're not wasting money!\"", "\"You're asking whether this is worth it.\"", "\"Why would you say that?\""], "answer": 1, "why": "Neutral words take the heat out. Never repeat the loaded ones."}],
@@ -3222,7 +3227,7 @@ function viewLessonSession(){
   const cont=(label='Continue')=>`<div class="fx-btns"><span></span><button class="solid-btn" type="button" data-act="ls-next">${label}</button></div>`;
   let body='', ft='', cls='';
   if(c.type==='idea'){
-    body=`<div class="ls-ico">${LICO[i]}</div><p class="eyebrow">Lesson ${i+1}</p><h1 class="fx-title">${l.title}</h1><p class="ls-rule">${l.rule}</p>
+    body=`<div class="ls-ico">${LICO[i]}</div><p class="eyebrow">Step ${stepNo('lesson',i)}</p><h1 class="fx-title">${l.title}</h1><p class="ls-rule">${l.rule}</p>
       ${c.why?`<p class="body ls-why">${l.why}</p>`:`<button class="link-btn ls-left" type="button" data-act="ls-why">Why it works</button>`}`;
     ft=cont(); }
   else if(c.type==='quiz'){ const p=l.pairs[c.k], opts=[{o:'a',t:p.normal},{o:'b',t:p.better}]; if((i+c.k)%2) opts.reverse();
@@ -3487,8 +3492,8 @@ function act(a,btn){
 
 function viewScenario(i){
   if(sess&&sess.i===i) return viewSession();
-  const sc=SCENARIOS[i], n=yourLines(sc).length;
-  return `<div class="u-${catColor(sc.cat)}"><div class="hero"><p class="eyebrow">${sc.cat} · Scenario ${letter(i)}</p><h1 class="page-title">${sc.title}</h1><p class="hero-goal">${sc.goal}</p></div></div>
+  const sc=SCENARIOS[i], n=yourLines(sc).length, pv=pathNeighbour('scenario',i,-1), nx=pathNeighbour('scenario',i,1);
+  return `<div class="u-${catColor(sc.cat)}"><div class="hero"><p class="eyebrow">${sc.cat} · Step ${stepNo('scenario',i)}</p><h1 class="page-title">${sc.title}</h1><p class="hero-goal">${sc.goal}</p></div></div>
   <div class="card brief"><p style="margin:0">${sc.setting}</p></div>
   <button class="solid-btn start-btn" type="button" data-act="start1">${state.scDone[i]?'Practice again':'Start practice'}</button>
   ${state.scDone[i]?'<button class="ghost-btn wide" type="button" data-act="start2">Round 2 · From memory</button><button class="ghost-btn wide" type="button" data-act="sc-r3">Round 3 · Your words</button>':''}
@@ -3499,7 +3504,7 @@ function viewScenario(i){
       :`<div class="sl ${who==='you'?'you':'them'+(altSpeaker(sc,who)?' alt':'')}"><div class="sl-who">${esc(nameOf(sc,who))}</div><div class="sl-text">${lineHTML(sc,li)}</div>${note?`<div class="sl-note">${note}</div>`:''}</div>`).join('')}</div></details>
   <h2 class="step"><span class="step-n">✎</span>Make it yours</h2>
   <textarea id="scOwn" aria-label="Make it yours" placeholder="Your three key lines, in your own words">${esc(state.scOwn[i]||'')}</textarea>
-  <div class="end-nav">${i>0?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${i-1}">‹ ${letter(i-1)}</button>`:'<span></span>'}${i<SCENARIOS.length-1?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${i+1}">${letter(i+1)} ›</button>`:''}</div>`;
+  <div class="end-nav">${pv!=null?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${pv}">‹ Step ${stepNo('scenario',pv)}</button>`:'<span></span>'}${nx!=null?`<button class="ghost-btn" type="button" data-go="scenario" data-i="${nx}">Step ${stepNo('scenario',nx)} ›</button>`:''}</div>`;
 }
 
 function viewSettings(){
@@ -3531,7 +3536,7 @@ function render(){
   const welcome=!state.onboarded;
   if((n==='session'&&!lsess)||(n==='prepedit'&&!pedit)){ state.route={name:n==='prepedit'?'prep':'home'}; return render(); }
   document.body.classList.toggle('focus', welcome||(n==='scenario'&&!!sess)||(n==='lesson'&&!!lsess)||n==='session'||n==='prepedit');
-  const tt=$('topTitle'); tt.textContent = n==='lesson'?`Lesson ${r.i+1}`:n==='scenario'?`Scenario ${letter(r.i)}`:n==='studio'?'Voice studio':'Speak Like a Leader'; tt.classList.toggle('logo',!parent);
+  const tt=$('topTitle'); tt.textContent = n==='lesson'?`Step ${stepNo('lesson',r.i)}`:n==='scenario'?`Step ${stepNo('scenario',r.i)}`:n==='studio'?'Voice studio':'Speak Like a Leader'; tt.classList.toggle('logo',!parent);
   $('backBtn').hidden=!parent; $('backBtn').dataset.go=parent||'';
   const done=Object.values(state.done).filter(Boolean).length+Object.values(state.scDone).filter(Boolean).length;
   $('topStats').innerHTML=`<span class="stat fire${practicedToday()?'':' off'}" title="Days in a row">${ICO.fire}${streak()}<small>${streak()===1?'day':'days'}</small></span><span class="stat chk" title="Lessons and scenarios done">${ICO.done}${done}<small>done</small></span>`;
@@ -3567,7 +3572,7 @@ function bind(n,i){
       document.querySelectorAll('.rate-btn').forEach(x=>x.classList.toggle('on',x===b)); }); });
     $('own').addEventListener('input',e=>{ state.own[i]=e.target.value; save(); });
     $('note').addEventListener('input',e=>{ state.notes[i]=e.target.value; save(); });
-    $('doneBtn').addEventListener('click',()=>{ state.done[i]=true; markDay(); save(); if(i<LESSONS.length-1) go('lesson',i+1); else go('lessons'); });
+    $('doneBtn').addEventListener('click',()=>{ state.done[i]=true; markDay(); save(); const nx=pathNeighbour('lesson',i,1); if(nx!=null) go('lesson',nx); else go('lessons'); });
   }
   if(n==='scenario'&&!sess){
     $('coachT').addEventListener('change',e=>{ state.coach=e.target.checked; save(); document.querySelector('.sc-script').classList.toggle('no-coach',!state.coach); });
