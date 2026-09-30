@@ -6,7 +6,7 @@
    - Safari plays audio with byte-range requests, so saved clips are answered with 206 partial responses.
    - Google Fonts are saved the first time they load. */
 const CORE = 'sla-core-v1', CLIPS = 'sla-clips-v1', FONTS = 'sla-fonts-v1';
-const CORE_FILES = ['./', 'index.html', 'manifest.webmanifest', 'audio/manifest.js',
+const CORE_FILES = ['./', 'index.html', 'manifest.webmanifest', 'audio/manifest.js', 'tts-worker.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

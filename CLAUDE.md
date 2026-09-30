@@ -145,7 +145,8 @@ real estate (his direction, 2026-09-29).
   / without what (`state.intro`, same data as the Lesson 6 builder; Settings → "Your introduction" reopens it).
   Script text may contain `{name}` and `{intro}`; `personal()` fills them everywhere text is parsed or shown
   (`parseLine`, `fmt`, `segsOf`, `renderScript`, `quizText`). Personal lines have no recorded clip
-  (`isPersonal`; the generator skips them). The phone makes them itself in the same Kokoro voices (`pvBuild`, kokoro-js
+  (`isPersonal`; the generator skips them). The phone makes them itself in the same Kokoro voices, in a background thread (`tts-worker.js`, module
+  Worker via `pvMake`; running it on the main thread froze the screen for up to 25 s at a time) (`pvBuild`, kokoro-js
   from jsdelivr + the q8 model from Hugging Face, ~90 MB once, cached by the browser): after the profile is saved and
   4s after each app open, all personal lines (`pvJobs`, cast via `kCast` = the generator's `speakers()`) are made in
   the background, same pauses and loudness as make_voice.py, repeated phrases made once, "Introduce yourself" first,
