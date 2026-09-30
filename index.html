@@ -2714,6 +2714,13 @@ function clipEnv(url){ return ENV[url]||(ENV[url]=(async()=>{ try{
   for(let f=0;f<n;f++) cum[f+1]=cum[f]+(rms[f]>thr?1:0); return cum; }catch(e){ return null; } })()); }
 /* Play a clip and move the word highlight through the line in proportion to word length, over voiced time only. */
 const PLAYER=new Audio(); let playSeq=0;   // which playClip call currently owns PLAYER
+/* iPhones let an audio element play by itself only after it has played once inside a tap. Audio now starts a moment
+   after a screen opens (LEAD), so the first tap plays a silent sound on the shared player to unlock it for the visit. */
+const SILENT='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+let audioReady=false;
+function unlockAudio(){ if(audioReady) return; audioReady=true; if(PLAYER.src&&!PLAYER.paused) return;
+  PLAYER.src=SILENT; PLAYER.play().then(()=>{ if(PLAYER.src===SILENT) PLAYER.pause(); }).catch(()=>{ audioReady=false; }); }
+['touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlockAudio,{capture:true}));
 function playClip(c,spans,t){ return new Promise(async res=>{ if(t!==tok) return res(false); const env=spans.length?await clipEnv(c.url):null; if(t!==tok) return res(false);
   const my=++playSeq, a=PLAYER; a.pause(); a.src=c.url; recAudio=a; a.defaultPlaybackRate=a.playbackRate=Math.min(1.35,Math.max(.7,state.rate/0.85));
   const w=spans.map(s=>s.textContent.length+1), tot=w.reduce((x,y)=>x+y,0)||1; let raf=0, done=false;

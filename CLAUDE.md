@@ -40,6 +40,8 @@ real estate (his direction, 2026-09-29).
 - Pacing (Nick, 2026-09-30: "the voice starts a bit too fast"): audio that starts by itself waits `LEAD` (500 ms) after
   the screen appears (cards, quiz reading, scenario setting and each new line); a tap plays at once. Every clip starts
   with 150 ms of silence (`LEAD` in make_voice.py; on-device lines too) so iPhones don't clip the first syllable.
+  Because auto audio now starts outside the tap, the first tap plays a silent sound on `PLAYER` (`unlockAudio`) so
+  iOS allows later playback without a gesture.
 - The situation a card is about is a readable `.ctx` line (unit colour bar, normal case), not a tiny eyebrow; the coach
   opens the first quiz with it (`c-lesson{i}-ask`: "Reporting a result. Which is stronger?").
 - Quiz audio (`quizRead`, `quizVerdict`): on every quiz card the coach asks the question, then each answer is read
