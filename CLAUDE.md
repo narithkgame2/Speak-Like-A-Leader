@@ -113,10 +113,11 @@ real estate (his direction, 2026-09-29).
   1) the user's own take from the Voice studio (route `studio`, under Settings; stored in IndexedDB `sla-voice`,
   this device only, trimmed to the speech), 2) a file in `audio/` listed in `audio/manifest.js`
   (`window.AUDIO_FILES` → `AUDIO`), 3) browser `speechSynthesis`.
-- Settings → Model voice: **Recorded** (the generated files, default) or **Device voice** (`state.voiceSrc='device'`:
+- Settings → Model voice: **Natural** (the generated files, default) or **Device voice (robotic)** (`state.voiceSrc='device'`:
   skip `AUDIO` for model, other speakers and coach, and use the device's best speechSynthesis voice, ranked by
   `rankVoice` so Premium/Enhanced come first; the coach uses a different voice via `themVoice`). The user's own
-  studio takes still win in both modes.
+  studio takes still win in both modes. A one-time migration (`state.vsV=2`, 2026-09-30) reset every device to Natural:
+  Nick's PC kept an old "Device voice" choice and sounded robotic everywhere.
 - `tools/make_voice.py` generates `audio/` + the manifest, free and offline. Default engine: **Kokoro-82M** neural
   voices (run with `tools/.venv/bin/python tools/make_voice.py`; setup steps in the script header; `tools/.venv/`
   and `tools/models/` are git-ignored). Cast: you = am_michael (speed 0.92), coach = af_heart, men = am_fenrir /
