@@ -104,6 +104,10 @@ real estate (his direction, 2026-09-29).
   first visit all voice clips are saved in the background (cache `sla-clips-v1`, old versions removed) and answered
   with 206 range responses for Safari. Clip URLs carry `?v=<hash>` from the manifest, so regenerated clips replace
   saved ones. Settings shows "Ready offline" / "Saving for offline… n%". Only on http(s).
+- Backup (Settings → Backup): "Back up" packs one JSON file (localStorage state + IndexedDB `takes` and `history`, blobs
+  as data URLs; `pv:` lines excluded, they rebuild), then "Save backup file" opens the share sheet (two taps: iOS only
+  shares straight from a tap) or downloads. "Restore" validates `app:'speak-like-a-leader'`, confirms, replaces state
+  and recordings, keeps `pv:` lines, reloads on home. `state.lastBackup` shows "Last backup: …".
 - Streak: `state.days` holds the dates practiced (a lesson marked done, a rating, or a scenario line reviewed).
 - Voice: each scenario line can have a recorded clip, id `s{scenario}-l{line}`. The model plays, in order:
   1) the user's own take from the Voice studio (route `studio`, under Settings; stored in IndexedDB `sla-voice`,

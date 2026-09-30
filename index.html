@@ -3523,10 +3523,45 @@ function viewSettings(){
     <div>${playBtn('id="testVoice"','▶ Test')}</div>
     ${useFiles()?'':'<p class="hint" style="margin:0">Better voices: phone Settings → Accessibility → Spoken Content → Voices → English. Download a Premium or Enhanced voice.</p>'}
   </div>
+  <p class="sec-k">Backup</p>
+  <div class="card settings">
+    <p class="hint" style="margin:0">Your progress, meeting prep and recordings, in one file. Last backup: <b>${bkLast()}</b></p>
+    <div class="src-row">${BK?`<button class="small-btn on" type="button" id="bkSave">Save backup file · ${BK.size<1048576?Math.max(1,Math.round(BK.size/1024))+' KB':(BK.size/1048576).toFixed(1)+' MB'}</button>`:`<button class="small-btn" type="button" id="bkBtn">Back up</button>`}
+      <label class="small-btn" style="cursor:pointer;color:var(--text)">Restore<input type="file" id="bkFile" accept="application/json,.json" hidden></label></div>
+  </div>
   <p class="hint" id="offRow" style="margin-top:28px">${offlineText()}</p>
   <p class="hint">Progress is saved on this device.</p>
   <button class="ghost-btn danger" type="button" id="resetBtn">Reset progress</button>`;
 }
+
+
+/* ---------------- BACKUP ----------------
+   Progress lives on this device only. "Back up" packs one file: progress, meeting prep, your recordings and first
+   takes (not the lines the phone makes itself; those rebuild). Two taps on purpose: preparing takes a moment, and
+   iPhones only open the share sheet straight from a tap. "Restore" reads the file back on any device. */
+let BK=null;   // the prepared backup file
+const blobTo64=b=>new Promise(r=>{ const f=new FileReader(); f.onload=()=>r(f.result); f.readAsDataURL(b); });
+async function bkPack(v){ if(v instanceof Blob) return {__blob:await blobTo64(v)}; if(Array.isArray(v)||!v||typeof v!=='object') return v;
+  const o={}; for(const [k,x] of Object.entries(v)) o[k]=await bkPack(x); return o; }
+async function bkUnpack(v){ if(v&&v.__blob) return (await fetch(v.__blob)).blob(); if(Array.isArray(v)||!v||typeof v!=='object') return v;
+  const o={}; for(const [k,x] of Object.entries(v)) o[k]=await bkUnpack(x); return o; }
+async function bkPrepare(){ const out={app:'speak-like-a-leader',v:1,at:new Date().toISOString(),state:JSON.parse(localStorage.getItem(KEY)||'{}'),takes:{},history:{}};
+  for(const store of ['takes','history']) for(const k of (await IDB.req('readonly',s=>s.getAllKeys(),store))||[]){
+    if(String(k).startsWith('pv:')) continue; out[store][k]=await bkPack(await IDB.req('readonly',s=>s.get(k),store)); }
+  BK=new File([JSON.stringify(out)],`speak-like-a-leader-backup-${ymd(new Date())}.json`,{type:'application/json'}); }
+function bkSave(){ const f=BK; if(!f) return; const done=()=>{ state.lastBackup=Date.now(); save(); BK=null; render(); };
+  const dl=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(f); a.download=f.name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },2000); done(); };
+  if(navigator.canShare&&navigator.canShare({files:[f]})) navigator.share({files:[f],title:'Speak Like a Leader backup'}).then(done).catch(e=>{ if(e&&e.name==='AbortError') return; dl(); });
+  else dl(); }
+async function bkRestore(file){ let d=null; try{ d=JSON.parse(await file.text()); }catch(e){}
+  if(!d||d.app!=='speak-like-a-leader'||!d.state) return alert("That file isn't a Speak Like a Leader backup.");
+  const when=new Date(d.at).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+  if(!confirm(`Restore the backup from ${when}? It replaces the progress on this device.`)) return;
+  for(const store of ['takes','history']){
+    for(const k of (await IDB.req('readonly',s=>s.getAllKeys(),store))||[]) if(!String(k).startsWith('pv:')) await IDB.req('readwrite',s=>s.delete(k),store);
+    for(const [k,v] of Object.entries(d[store]||{})){ const val=await bkUnpack(v); await IDB.req('readwrite',s=>s.put(val,k),store); } }
+  localStorage.setItem(KEY,JSON.stringify(Object.assign(d.state,{route:{name:'home'}}))); location.reload(); }
+function bkLast(){ return state.lastBackup?new Date(state.lastBackup).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'never'; }
 
 /* ---------------- RENDER ---------------- */
 const TABS=[['home','Learn','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>'],['prep','Prep','<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>'],['lessons','Lessons','<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>'],['scenarios','Scenarios','<path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>'],['settings','Settings','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>']];
@@ -3588,6 +3623,9 @@ function bind(n,i){
     $('rate').addEventListener('input',e=>{ state.rate=+e.target.value; $('rateVal').textContent=state.rate.toFixed(2)+'×'; save(); });
     $('testVoice').addEventListener('click',e=>{ const b=e.currentTarget, c=AUDIO['l1-p0']; if(useFiles()&&c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf('Good to meet you. ‧‧‧ Thank you for your time. ↘')); });
     document.querySelectorAll('[data-src]').forEach(b=>b.addEventListener('click',()=>{ stopAll(); state.voiceSrc=b.dataset.src; save(); render(); }));
+    $('bkBtn')?.addEventListener('click',async e=>{ const b=e.currentTarget; b.disabled=true; b.textContent='Preparing…'; try{ await bkPrepare(); }catch(err){ alert('The backup could not be prepared.'); } render(); });
+    $('bkSave')?.addEventListener('click',bkSave);
+    $('bkFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(f) bkRestore(f); e.target.value=''; });
     $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset all progress, ratings and notes? This cannot be undone.')){ const keep={rate:state.rate,voice:state.voice}; try{ localStorage.removeItem(KEY); }catch(e){} state=Object.assign({route:{name:'home'},done:{},own:{},notes:{},ratings:{},intro:{name:'',who:'',get:'',avoid:''},scMode:'shadow',coach:true,scOwn:{},scDone:{},lastSc:null},keep); save(); render(); } });
   }
 }
