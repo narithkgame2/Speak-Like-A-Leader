@@ -39,6 +39,36 @@ CAST = CASTS[ENGINE]
 YOU, COACH, MALE, FEMALE, NEUTRAL = CAST["YOU"], CAST["COACH"], CAST["MALE"], CAST["FEMALE"], CAST["NEUTRAL"]
 
 
+# ---- say numbers the way people do: "$1,000" is "one thousand dollars", not "dollar one thousand" ----
+_ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+_TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+def words(n):
+    n = int(n)
+    if n < 20: return _ONES[n]
+    if n < 100: return _TENS[n // 10] + ("-" + _ONES[n % 10] if n % 10 else "")
+    if n < 1000: return _ONES[n // 100] + " hundred" + (" and " + words(n % 100) if n % 100 else "")
+    for size, name in ((10**9, "billion"), (10**6, "million"), (1000, "thousand")):
+        if n >= size: return words(n // size) + " " + name + ((" and " if n % size < 100 else " ") + words(n % size) if n % size else "")
+def number(txt):
+    txt = txt.replace(",", "")
+    if "." in txt:
+        i, d = txt.split("."); return words(i) + " point " + " ".join(_ONES[int(c)] for c in d)
+    return words(txt)
+def speakable(t):
+    t = t.replace("–", " to ").replace("&", " and ").replace("G.A.T.O", "Gato").replace("~", "about ")
+    def money(m):
+        v = float(m.group(1).replace(",", "")) * {"K": 1000, "k": 1000, "M": 1000000}.get(m.group(2) or "", 1)
+        return (number(f"{v:g}") if v != int(v) else words(v)) + " dollars"
+    t = re.sub(r"\$([\d,]*\d(?:\.\d+)?)([KkM])?(?![A-Za-z])", money, t)
+    t = re.sub(r"/sqm\b", " per square meter", t); t = re.sub(r"\bsqm\b", "square meters", t)
+    t = re.sub(r"(\d+(?:\.\d+)?)\s?%", lambda m: number(m.group(1)) + " percent", t)
+    t = re.sub(r"/yr\b", " a year", t)
+    t = re.sub(r"\b([1-4])BR\b", lambda m: words(m.group(1)) + "-bedroom", t)
+    t = re.sub(r"(?<![\d,$])\b(19|20)(\d\d)\b(?!,\d)", lambda m: words(m.group(1)) + " " + (words(m.group(2)) if m.group(2) != "00" else "hundred") if int(m.group(2)) >= 10 else words(m.group(1) + m.group(2)), t)
+    t = re.sub(r"\b(\d{1,3}(?:,\d{3})+|\d+)\+", lambda m: number(m.group(1)) + " plus", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def source():
     return open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
 
@@ -205,6 +235,7 @@ def main():
     for lid, text in coach_lines().items(): jobs.append((lid, *COACH, text))
     jobs = [j for j in jobs if not re.search(r"\{(name|intro)\}", j[3])]   # personal lines use the device voice
     for lid, voice, speed, text in jobs:
+        text = speakable(text)   # "$320,000" is "three hundred and twenty thousand dollars"
         h = hashlib.sha1(f"{ENGINE}|norm1|lead{LEAD}|{voice}|{speed}|{SHORT}|{LONG}|{text}".encode()).hexdigest()[:12]
         fn = f"{lid}.m4a"; path = os.path.join(OUT, fn)
         if old.get(lid, {}).get("h") == h and os.path.exists(path):
