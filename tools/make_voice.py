@@ -67,8 +67,10 @@ def coach_lines():
         out[f"c-lesson{n}-intro"] = plain(f"{l['title']}. {l['sub']} The rule. {l['rule']} {l['why']}")
         out[f"c-lesson{n}-drill"] = plain(f"{l['tag']} {l['drill_note']}")
         out[f"c-lesson{n}-rule"] = plain(f"{l['title']}. {l['rule']}")
-        mo = plain(l["pairs"][0]["moment"])   # the quiz opens with its situation, so the topic is heard, not just seen
-        out[f"c-lesson{n}-ask"] = mo + ("" if re.search(r'[.?!"”]$', mo) else ".") + " Which is stronger?"
+        for k, pr in enumerate(l["pairs"]):   # each quiz opens with its situation, so the topic is heard, not just seen
+            if k and not pr["noPlay"]: continue   # quizzes: the first example, plus every body-language (picture) example
+            mo = plain(pr["moment"])
+            out[f"c-lesson{n}-ask" if k == 0 else f"c-lesson{n}-p{k}-ask"] = mo + ("" if re.search(r'[.?!"”]$', mo) else ".") + (" Which looks stronger?" if pr["noPlay"] else " Which is stronger?")
         for k, pr in enumerate(l["pairs"]): out[f"c-lesson{n}-p{k}-note"] = plain(pr["note"])
     i = s.index("const LESSON_QUIZ = ") + len("const LESSON_QUIZ = ")
     for n, qs in json.loads(s[i:s.index("\n};", i) + 2]).items():
