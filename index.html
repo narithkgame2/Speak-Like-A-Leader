@@ -2830,24 +2830,28 @@ function kCast(sc){ const cast={you:KCAST.you}; let m=0,f=0;
 function fnv(t){ let h=0x811c9dc5; for(let i=0;i<t.length;i++){ h^=t.charCodeAt(i); h=Math.imul(h,0x01000193); } return (h>>>0).toString(16); }
 const pvKey=(text,v)=>'pv:'+fnv(personal(text)+'|'+v[0]+'|'+v[1]);
 function pvClip(text,v){ return useFiles()&&isPersonal(text)&&MINE[pvKey(text,v||KCAST.you)]||null; }
-function pvJobs(){ const jobs=new Map(), add=(t,v)=>{ if(isPersonal(t)) jobs.set(pvKey(t,v),[t,v]); };
+const prepClip=text=>useFiles()&&MINE[pvKey(text,KCAST.you)]||null;   // Meeting prep lines: your own words, made on this device
+function pvJobs(){ const jobs=new Map(), add=(t,v,pri=2)=>{ if(isPersonal(t)) jobs.set(pvKey(t,v),[t,v,pri]); };
+  preps().forEach(m=>m.lines.forEach(ln=>{ const t=prepMarkup(ln); jobs.set(pvKey(t,KCAST.you),[t,KCAST.you,0]); }));
   SCENARIOS.forEach(sc=>{ const c=kCast(sc); sc.lines.forEach(([w,t])=>{ if(w!=='stage') add(t,c[w]); }); });
   LESSONS.forEach(l=>{ l.pairs.forEach(p=>{ if(!p.noPlay&&!p.lang){ add(p.normal,KCAST.you); add(p.better,KCAST.you); } }); add(drillMarkup(l.drill.script),KCAST.you); });
-  add("Good to meet you. I'm {name}. ‧‧‧ {intro}",KCAST.you); return jobs; }
-let PV={state:'idle',done:0,total:0}, pvTTS=null, pvRun=false;
-function pvStatusText(){ const p=PV; if(p.state==='ready') return 'Your name and introduction play in the same voice.';
-  if(p.state==='work') return `Preparing your name and introduction in the lesson voice… ${p.done}/${p.total}`;
-  if(p.state==='fail') return 'Your name and introduction use the device voice on this browser.'; return ''; }
-function pvShow(){ const el=$('pvRow'); if(el) el.textContent=pvStatusText(); }
-async function pvBuild(){ if(pvRun||!useFiles()||!state.onboarded||!state.intro.name) return; pvRun=true;
+  add("Good to meet you. I'm {name}. ‧‧‧ {intro}",KCAST.you,1); return jobs; }
+let PV={state:'idle',done:0,total:0}, pvTTS=null, pvRun=false, pvAgain=false;
+function pvStatusText(){ const p=PV; if(p.state==='ready') return 'Your name, introduction and meeting lines play in the lesson voice.';
+  if(p.state==='work') return `Preparing your lines in the lesson voice… ${p.done}/${p.total}`;
+  if(p.state==='fail') return 'Your own lines use the device voice on this browser.'; return ''; }
+function pvShow(){ const el=$('pvRow'); if(el) el.textContent=pvStatusText(); if(state.route.name==='prep') document.querySelectorAll('[data-pvm]').forEach(el=>el.textContent=prepVoiceText(preps().find(m=>m.id===el.dataset.pvm))); }
+function prepVoiceText(m){ if(!m||!useFiles()) return ''; const ready=m.lines.every(ln=>prepClip(prepMarkup(ln)));
+  return ready?' · lesson voice':PV.state==='fail'?'':' · preparing voice…'; }
+async function pvBuild(){ if(pvRun){ pvAgain=true; return; } if(!useFiles()||!state.onboarded) return; pvRun=true;
   try{ const jobs=pvJobs(), keys=new Set(jobs.keys());
     for(const k of Object.keys(MINE)) if(k.startsWith('pv:')&&!keys.has(k)){ URL.revokeObjectURL(MINE[k].url); delete MINE[k]; try{ await IDB.del(k); }catch(e){} }
-    const todo=[...jobs].filter(([k])=>!MINE[k]).sort((a,b)=>/^Good to meet you/.test(b[1][0])-/^Good to meet you/.test(a[1][0])); PV={state:todo.length?'work':'ready',done:jobs.size-todo.length,total:jobs.size}; pvShow();
+    const todo=[...jobs].filter(([k])=>!MINE[k]).sort((a,b)=>a[1][2]-b[1][2]); PV={state:todo.length?'work':'ready',done:jobs.size-todo.length,total:jobs.size}; pvShow();
     if(!todo.length) return;
     if(!pvTTS){ const { KokoroTTS }=await import('https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm');
       pvTTS=await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX',{dtype:'q8',device:'wasm'}); }
     const seg=new Map();   // the same phrase in the same voice is made once (the introduction appears in several lines)
-    for(const [k,[text,v]] of todo){ if(!state.intro.name) break;
+    for(const [k,[text,v]] of todo){ if(isPersonal(text)&&!state.intro.name) continue;
       const parts=[]; let sr=24000;
       for(const [t,type] of segsOf(text)){
         if(type==='pause'||type==='pause-long'){ parts.push(new Float32Array(Math.round(sr*(type==='pause'?0.65:1.3)))); continue; }
@@ -2863,7 +2867,7 @@ async function pvBuild(){ if(pvRun||!useFiles()||!state.onboarded||!state.intro.
       MINE[k]={url:URL.createObjectURL(blob)}; PV.done++; pvShow(); }
     PV.state=PV.done>=PV.total?'ready':'work'; pvShow();
   }catch(e){ PV.state='fail'; pvShow(); }
-  finally{ pvRun=false; } }
+  finally{ pvRun=false; if(pvAgain){ pvAgain=false; setTimeout(pvBuild,100); } } }
 
 function personal(t){ return String(t??'').replace(/\{name\}/g, state.intro.name||'Alex').replace(/\{intro\}/g, introBody()); }
 const isPersonal=t=>/\{(name|intro)\}/.test(t||'');
@@ -3016,7 +3020,7 @@ function viewPrep(){ const list=preps();
   return `<h1 class="page-title">Meeting prep</h1>
   ${list.length?'':`<div class="card prep-empty"><p class="ls-rule" style="font-size:1.2rem">Rehearse the lines that must land in your next real meeting.</p></div>`}
   ${list.map(m=>`<div class="card prep-card"><p class="eyebrow">${esc(m.who||'Meeting')}</p><div class="j-rank" style="font-size:1.25rem">${esc(m.goal||'Your key lines')}</div>
-    <p class="j-next">${m.lines.length} line${m.lines.length>1?'s':''} · rehearsed ${m.reps||0}×</p>
+    <p class="j-next">${m.lines.length} line${m.lines.length>1?'s':''} · rehearsed ${m.reps||0}×<span data-pvm="${m.id}">${prepVoiceText(m)}</span></p>
     <div class="prep-btns"><button class="solid-btn" type="button" data-act="pp-go" data-id="${m.id}">Rehearse</button><button class="ghost-btn" type="button" data-act="pp-edit" data-id="${m.id}">Edit</button><button class="small-btn quiet" type="button" data-act="pp-del" data-id="${m.id}">Delete</button></div></div>`).join('')}
   <button class="${list.length?'ghost-btn':'solid-btn'} wide" type="button" data-act="pp-new">New meeting</button>
   <button class="link-btn" type="button" data-act="pp-breathe">Breathe first</button>`; }
@@ -3039,7 +3043,7 @@ function prepAct(a,btn){ const id=btn&&btn.dataset.id;
   if(a==='pp-edit'){ const m=preps().find(x=>x.id===id); if(!m) return;
     pedit={id,who:m.who,goal:m.goal,raw:m.lines.map(l=>l.words.join(' ')).join('\n'),lines:m.lines.map(l=>({words:[...l.words],stress:[...l.stress],pauses:[...l.pauses]})),step:'form',k:0};
     state.route={name:'prepedit'}; render(); window.scrollTo(0,0); return; }
-  if(a==='pp-del'){ if(!confirm('Delete this meeting?')) return; state.preps=preps().filter(x=>x.id!==id); save(); return render(); }
+  if(a==='pp-del'){ if(!confirm('Delete this meeting?')) return; state.preps=preps().filter(x=>x.id!==id); save(); setTimeout(pvBuild,300); return render(); }
   if(a==='pp-go') return startPrep(id);
   if(a==='pp-breathe') return startBreathe();
   if(a==='pp-cancel'){ pedit=null; return go('prep'); }
@@ -3052,7 +3056,7 @@ function prepAct(a,btn){ const id=btn&&btn.dataset.id;
   if(a==='pp-back'){ if(e.k>0) e.k--; else e.step='form'; return render(); }
   if(a==='pp-next'){ if(e.k<e.lines.length-1){ e.k++; return render(); }
     const m={id:e.id||('m'+Date.now().toString(36)),who:e.who,goal:e.goal,lines:e.lines,reps:(preps().find(x=>x.id===e.id)||{}).reps||0,at:Date.now()};
-    state.preps=[m,...preps().filter(x=>x.id!==m.id)]; save(); pedit=null; return go('prep'); } }
+    state.preps=[m,...preps().filter(x=>x.id!==m.id)]; save(); pedit=null; setTimeout(pvBuild,300); return go('prep'); } }
 
 /* ---------------- LESSON SESSIONS ----------------
    A lesson runs as short cards, one idea per screen (Duolingo style):
@@ -3118,7 +3122,7 @@ function enterCard(){ stopAll(); cancelRec(); const c=lsess.cards[lsess.n], i=ls
 async function lsListen(){ const c=lsess.cards[lsess.n]; stopAll(); c.step='listen'; render(); const t=++tok;
   if(coachOn()&&!lsess.sayIntro){ lsess.sayIntro=true; if(!await coachSay('c-fx-say',t)||!await wait(250,t)) return; }
   if(!await lsModel(t)) return; if(t===tok&&lsess){ c.step='ready'; render(); } }
-async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you); let ok=true;
+async function lsModel(t){ const c=lsess.cards[lsess.n], t0=performance.now(), clip=MINE[c.id]||(useFiles()&&AUDIO[c.clip])||pvClip(c.text,KCAST.you)||(lsess.kind==='prep'&&prepClip(c.text)); let ok=true;
   if(clip) ok=await playClip(clip,[...document.querySelectorAll('.w[data-l="L"]')],t);
   else for(const s of parseLine(c.text)){
     if(s.type==='pause'){ if(!(ok=await wait(800/state.rate,t))) break; }
@@ -3514,8 +3518,11 @@ function bindBuilder(){ const map={bName:'name',bWho:'who',bGet:'get',bAvoid:'av
 function bind(n,i){
   document.querySelectorAll('#main [data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go, b.dataset.i!==undefined?+b.dataset.i:undefined)));
   if(n==='lesson'){ if(lsess){ if(lsess.cards[lsess.n].type==='builder') bindBuilder(); return; } const l=LESSONS[i];
-    document.querySelectorAll('[data-pair]').forEach(b=>b.addEventListener('click',()=>{ const p=l.pairs[+b.dataset.pair]; playSegs(b, segsOf(p.better), p.lang); }));
-    $('drillPlay').addEventListener('click',e=>playSegs(e.currentTarget, l.drill.script));
+    // The same voice as the lesson cards: the recorded clip, or the line made on this device, else the device voice.
+    document.querySelectorAll('[data-pair]').forEach(b=>b.addEventListener('click',()=>{ const k=+b.dataset.pair, p=l.pairs[k], c=!p.lang&&((useFiles()&&AUDIO[`l${i}-p${k}`])||pvClip(p.better,KCAST.you));
+      if(c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, segsOf(p.better), p.lang); }));
+    $('drillPlay').addEventListener('click',e=>{ const b=e.currentTarget, dm=drillMarkup(l.drill.script), c=(useFiles()&&AUDIO[`l${i}-d`])||pvClip(dm,KCAST.you);
+      if(c) runBtn(b,t=>playClip(c,[],t)); else playSegs(b, l.drill.script); });
     if(l.builder) bindBuilder();
     if(l.practice){ let last=-1; const P=l.practice, nt=$('newTopic'), st=$('startT'), tm=$('timer'), tp=$('topic');
       nt.addEventListener('click',()=>{ if(timerId){ clearInterval(timerId); timerId=null; } let k; do{ k=Math.floor(Math.random()*P.list.length); }while(k===last&&P.list.length>1); last=k; tp.textContent=P.list[k]; tm.textContent=P.secs; tm.classList.remove('up'); st.disabled=false; st.textContent='Start timer'; });

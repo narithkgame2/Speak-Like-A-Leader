@@ -31,7 +31,8 @@ real estate (his direction, 2026-09-29).
   no speech recognition). Starts from a scenario once round 2 is done; `state.scR3`. Clips `r3-{scenario}-{k}`.
 - Meeting prep (Prep tab, routes `prep` / `prepedit`, `state.preps`): who, goal, up to 6 key lines; per line tap
   words to stress and dots to pause (stored as word indices, `prepMarkup`), rehearse with record/compare, First vs
-  Today, a "Ready" screen, and "Breathe first". The model is the device voice until "Use this take as my model"
+  Today, a "Ready" screen, and "Breathe first". The model is your line made on this device in the lesson voice
+  (`prepClip`, built by `pvBuild` right after saving; "· lesson voice" on the card when ready), else the device voice, until "Use this take as my model"
   (saved like a studio take, id `pp-{id}-l{k}`). No reminders (needs a server).
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
@@ -135,7 +136,9 @@ real estate (his direction, 2026-09-29).
   stored in IndexedDB `takes` as `pv:<fnv hash of filled text|voice|speed>` and played via `pvClip` (hooked into
   `clipFor`, `lsModel`, `qzPlay`, the intro builder). A new name/intro = new keys; old ones are deleted. Until
   ready, or if the model can't run, those lines use the device voice. Settings shows the status (`#pvRow`).
-  ~2.5 min on a Mac; slower on a phone.
+  ~2.5 min on a Mac; slower on a phone. Meeting prep lines use the same builder (priority 0, first), keyed the
+  same way; deleting a meeting deletes its lines. The lesson More page plays clips too (`l{i}-p{k}` for every
+  speakable example, `l{i}-d`).
 - Scenario lines render as chat bubbles: `them` left, `you` right, a second speaker gets `.alt`.
 
 ## Teaching principles (keep these when adding content)
