@@ -35,6 +35,11 @@ real estate (his direction, 2026-09-29).
   Today, a "Ready" screen, and "Breathe first". The model is your line made on this device in the lesson voice
   (`prepClip`, built by `pvBuild` right after saving; "· lesson voice" on the card when ready), else the device voice, until "Use this take as my model"
   (saved like a studio take, id `pp-{id}-l{k}`). No reminders (needs a server).
+- Pictures for body language (`ILLUS`, `illusSVG`, 2026-09-30): the 7 `noPlay` example pairs (posture, hands, eyes,
+  camera set-up) are drawn as inline SVG line art (`.il`, theme colours; both sides the same colours so the quiz answer
+  isn't given away). Each is a "Which looks stronger?" picture quiz card (`lessonCards` adds k>0 picture pairs; the
+  coach asks `c-lesson{i}-ask` / `c-lesson{i}-p{k}-ask` and doesn't read the options), and the More page shows the
+  pair side by side. Captions via `capText` ("action: “what you say”").
 - Lesson quizzes: one "Which is stronger?" (first example) plus `LESSON_QUIZ` (JSON by lesson index): `choice`,
   `weak` (tap the weak words, then Check), `stress` (tap the stressed word), `pause` (tap the gap; answer n =
   after word n). Word indices count words split on spaces. Coach clips `c-lesson{i}-q{k}` / `-why`.
